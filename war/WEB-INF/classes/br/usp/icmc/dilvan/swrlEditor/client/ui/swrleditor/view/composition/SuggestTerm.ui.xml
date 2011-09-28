@@ -1,0 +1,13 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+	<g:HorizontalPanel spacing="3">
+		<g:HTML ui:field="htmlAtom"/>
+		<g:Label text="Add in antecedent" ui:field="lblAddAntecedent" styleName="mlink" />
+		<g:Label text=" or " styleName="peq" />
+		<g:Label text="Add in consequent" ui:field="lblAddConsequent" styleName="mlink" />
+
+	</g:HorizontalPanel>
+
+</ui:UiBinder> 

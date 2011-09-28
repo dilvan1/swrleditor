@@ -1,0 +1,257 @@
+/*html,body{
+	margin:0px;
+	min-height: 550px;
+	min-width: 1000px;
+	height:98%;
+}*/
+
+.swrltext {
+	background-color: white;
+	border: 1px solid #777777;
+}
+
+.properties,.panel {
+	background-color: ivory;
+	float: left;
+	height: 98%;
+	border: 1px solid #AAA;
+}
+
+.properties {
+	width: 100%;
+	margin-right: 10px;
+}
+
+.panel {
+	width: 100%;
+}
+
+/** Add css rules here for your application. */
+h1 {
+	font-size: 2em;
+	font-weight: bold;
+	color: #777777;
+	margin: 10px 0px 10px;
+	text-align: center;
+}
+
+code,.peq {
+	font-size: 7pt;
+}
+
+.header-name-class {
+	font-weight: bold;
+}
+
+.white-background {
+	border: 1px solid #BBBBBB;
+	padding: 2px;
+	background: white;
+	font-weight: bold;
+}
+
+.decision-tree-background {
+	background: #E1E1D5;
+}
+
+.hint {
+	margin-top: -4px;
+	border: 1px solid #c93;
+	padding: 10px 12px;
+	background-color: #ffc;
+}
+
+.pointer-cursor {
+	cursor: pointer;
+}
+
+/* SWRL highlights */
+.swrl-rule,.editor_DVARIABLE,.editor_IVARIABLE {
+	font-family: courier new;
+	font-size: 8pt;
+	padding: 1px;
+	font-weight: bold;
+}
+
+.atom_CLASS { color: #FFA500; }
+
+.atom_DATAVALUE_PROPERTY,.editor_DVARIABLE {
+	color: #32CD32;
+}
+
+.atom_INDIVIDUAL_PROPERTY,.editor_IVARIABLE {
+	color: #1874CD;
+}
+
+.atom_BUILTIN {
+	color: #CD3700;
+}
+
+.atom_SAME_DIFERENT {
+	color: #999999;
+}
+
+.param_IVARIABLE,.param_DVARIABLE {
+	
+}
+
+.param_INDIVIDUALID,.param_DATALITERAL {
+	color: #7D26CD;
+}
+
+.separador {
+	font-size: 12pt;
+	line-height: 150%;
+	font-weight: bold;
+}
+
+/* SWRL Visualizations */
+h2 {
+	margin-top: 10px;
+	margin-bottom: 0px;
+}
+
+.q_class,.q_subnivel,.q_builtin {
+	font-size: 10pt;
+	font-family: courier new;
+	vertical-align: middle;
+}
+
+.q_class {
+	border: 3px solid #dee855;
+	margin: 3px;
+	padding: 3px;
+	text-align: center;
+}
+
+.border_panel {
+	border: 1px solid black;
+}
+
+.q_subnivel {
+	border: 1px dashed #dee855;
+	padding: 5px;
+}
+
+.q_subnivel div,.q_builtin {
+	line-height: 20px;
+}
+
+.q_subnivel div img,.q_builtin img {
+	margin-top: 2px;
+	margin-right: 5px;
+	height: 15px;
+	float: left;
+}
+
+/* Tree Entity */
+.link {
+	font-size: 9pt;
+	color: #0000FF;
+	cursor: pointer;
+	padding: 4px;
+}
+
+.vtlink {
+	cursor: pointer;
+}
+
+.mlink {
+	font-size: 8pt;
+	color: #0000FF;
+	cursor: pointer;
+}
+
+.link:hover,.mlink:hover {
+	color: #5555CC;
+	text-decoration: underline;
+}
+
+.linkselected {
+	font-weight: bold;
+	color: black;
+	cursor: default;
+	background: #92C1F0;
+	border-bottom: 1px solid black;
+}
+
+.linkselected:hover {
+	color: black;
+	text-decoration: none;
+}
+
+.treeEntity .gwt-TreeItem {
+	font-size: 8pt;
+}
+
+.treeItemLink {
+	cursor: pointer;.atom_SAME_DIFERENT {
+	color: #999999;
+}
+	
+}
+
+.treeItemLink:hover {
+	color: gray;
+}
+
+/* Errors */
+.error:hover,.warning:hover {
+	font-weight: bold;
+	background-color: #FFFFFF;
+}
+
+.noerror,.error,.warning {
+	font-family: courier new;
+	font-size: 8pt;
+	line-height: 12px;
+	padding: 2px;
+	padding-left: 15px;
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+
+.noerror {
+	color: green;
+	background-image: url(../images/swrleditor/ok.png);
+}
+
+.error {
+	color: red;
+	background-image: url(../images/swrleditor/error.png);
+}
+
+.warning {
+	background-image: url(../images/swrleditor/warning.png);
+}
+
+/*Filters*/
+.itemFilter {
+	padding: 2px;
+	border: 1px solid #EEE;
+	border-right: none;
+	background: #FFFFFF;
+}
+
+.link-remove {
+	cursor: pointer;
+	border: 1px solid #EEE;
+	border-left: none;
+	margin-left: -5px;
+	height: 19px;
+}
+
+.det {
+	color: #55CC99;
+}
+
+/*Pop up*/
+.popup-title {
+	background: #92C1F0;
+	padding: 3px;
+	font-weight: bold;
+}
+
+.popup-title .label {
+	text-transform: uppercase;
+}
