@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="MacRoman" standalone="no"?>
 <jardesc>
-    <jar path="web-protege-who-swrl-editor/war/WEB-INF/lib/swrlEditor.jar"/>
+    <jar path="wpswrleditor2/war/WEB-INF/lib/swrlEditor.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/swrleditor/swrlEditor.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>

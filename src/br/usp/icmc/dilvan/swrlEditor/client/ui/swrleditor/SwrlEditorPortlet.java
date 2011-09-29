@@ -75,7 +75,6 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 	}
 
 	private void loadSWRLEditor() {
-		
 		String urlWebProtege = "ontology="
 				+ project.getProjectName().replace(" ", "+")
 				+ "&tab=SwrlEditorTab";
@@ -83,10 +82,18 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 		if (Window.Location.getHash().trim().isEmpty()){
 			String newURL;
 			// TODO remover na vers‹o final
-			if (Window.Location.getHref().contains("?gwt.codesvr=127.0.0.1"))
-				newURL = "?gwt.codesvr=127.0.0.1:9997#visualization:"
+			
+			if (Window.Location.getHref().contains("?gwt.codesvr=127.0.0.1")){
+				String href = Window.Location.getHref();
+				
+				href =  href.substring(href.indexOf("?gwt.codesvr=127.0.0.1"));
+
+				if (href.indexOf("#") >= 0)
+					href =  href.substring(0, href.indexOf("#"));
+				
+				newURL = href+"#visualization:"
 						+ urlWebProtege;
-			else
+			}else
 				newURL = "#visualization:" + urlWebProtege;
 
 			Window.Location.replace(newURL);

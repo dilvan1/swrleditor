@@ -86,9 +86,6 @@ public class ClientFactoryImpl implements ClientFactory{
 
 	@Override
 	public VisualizationView getVisualizationView() {
-		
-		System.out.println(Resources.INSTANCE.builtin().getURL());
-		
 		if (visualizationView == null){
 			visualizationView = new VisualizationViewImpl();
 			visualizationView.setWritePermission(hasWritePermission);
