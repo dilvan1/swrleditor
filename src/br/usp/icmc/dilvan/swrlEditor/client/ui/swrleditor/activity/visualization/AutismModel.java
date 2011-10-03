@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import br.usp.icmc.dilvan.swrlEditor.client.resources.UtilResource;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Rule;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Variable;
@@ -226,18 +227,21 @@ public class AutismModel {
 			public String getValue(List<Variable> params, TYPE_VIEW typeView) {
 				Variable p1 = params.get(1);
 
+				
+				
+				
 				String html;
 				if (typeView == TYPE_VIEW.ID){
-					html = "<span class='param_"+p1.getTypeVariable().name()+"'>"+p1.getFormatedID()+"</span>";
+					html = "<span class='"+UtilResource.getCssTypeVariableView(p1.getTypeVariable())+"'>"+p1.getFormatedID()+"</span>";
 					for(int i = 2; i < params.size(); i++){
 						Variable p2 = params.get(i);
-						html += " + <span class='param_"+p2.getTypeVariable().name()+"'>"+p2.getFormatedID()+"</span>";
+						html += " + <span class='"+UtilResource.getCssTypeVariableView(p2.getTypeVariable())+"'>"+p2.getFormatedID()+"</span>";
 					}
 				}else{
-					html = "<span class='param_"+p1.getTypeVariable().name()+"'>"+p1.getFormatedLabel()+"</span>";
+					html = "<span class='"+UtilResource.getCssTypeVariableView(p1.getTypeVariable())+"'>"+p1.getFormatedLabel()+"</span>";
 					for(int i = 2; i < params.size(); i++){
 						Variable p2 = params.get(i);
-						html += " + <span class='param_"+p2.getTypeVariable().name()+"'>"+p2.getFormatedLabel()+"</span>";
+						html += " + <span class='"+UtilResource.getCssTypeVariableView(p2.getTypeVariable())+"'>"+p2.getFormatedLabel()+"</span>";
 					}
 				}
 
@@ -253,7 +257,7 @@ public class AutismModel {
 				Variable p1 = params.get(1);
 				Variable p2 = params.get(2);
 				if (typeView == TYPE_VIEW.ID)
-					return "<span class='param_"+p1.getTypeVariable().name()+"'>"+p1.getFormatedID()+"</span> / <span class='param_"+p2.getTypeVariable().name()+"'>"+p2.getFormatedID()+"</span>";
+					return "<span class='"+UtilResource.getCssTypeVariableView(p1.getTypeVariable())+"'>"+p1.getFormatedID()+"</span> / <span class='"+UtilResource.getCssTypeVariableView(p2.getTypeVariable())+"'>"+p2.getFormatedID()+"</span>";
 				else
 					return "<span class='param_"+p1.getTypeVariable().name()+"'>"+p1.getFormatedLabel()+"</span> / <span class='param_"+p2.getTypeVariable().name()+"'>"+p2.getFormatedLabel()+"</span>";
 			}

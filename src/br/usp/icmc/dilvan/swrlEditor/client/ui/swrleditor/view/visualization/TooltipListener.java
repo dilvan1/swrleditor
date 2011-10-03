@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 @SuppressWarnings("deprecation")
 public class TooltipListener extends MouseListenerAdapter {
-	private static final String DEFAULT_TOOLTIP_STYLE = "TooltipPopup";
 	private static final int DEFAULT_OFFSET_X = 10;
 	private static final int DEFAULT_OFFSET_Y = 35;
 
@@ -68,10 +67,6 @@ public class TooltipListener extends MouseListenerAdapter {
 	private int delay;
 	private int offsetX = DEFAULT_OFFSET_X;
 	private int offsetY = DEFAULT_OFFSET_Y;
-
-	public TooltipListener(String text, int delay) {
-		this(text, delay, DEFAULT_TOOLTIP_STYLE);
-	}
 
 	public TooltipListener(String text, int delay, String styleName) {
 		this.text = text;

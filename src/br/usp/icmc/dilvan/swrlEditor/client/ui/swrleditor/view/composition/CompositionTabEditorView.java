@@ -3,6 +3,8 @@ package br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.composition;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.usp.icmc.dilvan.swrlEditor.client.resources.Resources;
+import br.usp.icmc.dilvan.swrlEditor.client.resources.UtilResource;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.AtomImpl;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Rule;
@@ -170,7 +172,7 @@ public class CompositionTabEditorView extends Composite implements CompositionTa
 			newTextBox = new TextBox();
 			newTextBox.setText("?p"+i);
 			newTextBox.setWidth("100%");
-			newTextBox.setStyleName("swrl-rule");
+			newTextBox.setStyleName(Resources.INSTANCE.swrleditor().swrlRule());
 
 			result.add(newTextBox);
 		}
@@ -416,19 +418,24 @@ public class CompositionTabEditorView extends Composite implements CompositionTa
 	private void setStyleNameInSWRLComponents(){
 
 		if (lstAtomTypes.getSelectedIndex() > 0){
-			txtPredicate.setStyleName("swrl-rule");
+			txtPredicate.setStyleName(Resources.INSTANCE.swrleditor().swrlRule());
 			if (!styleNameTxtPredicate.equals(""))
 				txtPredicate.removeStyleName(styleNameTxtPredicate);
 
-			styleNameTxtPredicate = "atom_" + lstAtomTypes.getValue(lstAtomTypes.getSelectedIndex());
+			//styleNameTxtPredicate = "atom_" + lstAtomTypes.getValue(lstAtomTypes.getSelectedIndex());
+
+			styleNameTxtPredicate = UtilResource.getCssTypeAtom(TYPE_ATOM.valueOf(lstAtomTypes.getValue(lstAtomTypes.getSelectedIndex())));
+			
+			 
 			txtPredicate.addStyleName(styleNameTxtPredicate);
 
 			int i = 1;
 			for (TextBox txtBox : lstTxtVariables){
-				TYPE_VARIABLE aux = 
-						VariableImpl.getTYPE_VARIABLE(TYPE_ATOM.valueOf(lstAtomTypes.getValue(lstAtomTypes.getSelectedIndex())), 
-								txtPredicate.getText(), txtBox.getText(), i++);
-				txtBox.addStyleName("editor_"+ aux.name());
+				
+				String aux = UtilResource.getCssTypeVariableEditor(VariableImpl.getTYPE_VARIABLE(TYPE_ATOM.valueOf(lstAtomTypes.getValue(lstAtomTypes.getSelectedIndex())), 
+						txtPredicate.getText(), txtBox.getText(), i++));
+						
+				txtBox.addStyleName(aux);
 			}
 		}else{
 			if (!styleNameTxtPredicate.equals(""))

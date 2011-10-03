@@ -5,6 +5,10 @@ import java.util.Collection;
 import br.usp.icmc.dilvan.swrlEditor.client.resources.Resources;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.mvp.AppActivityMapper;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.mvp.AppPlaceHistoryMapper;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.CompositionPlace;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.FilterPlace;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.InfoPlace;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.OptionsPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.VisualizationPlace;
 
 import com.google.gwt.activity.shared.ActivityManager;
@@ -46,7 +50,6 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 
 	public SwrlEditorPortlet(final Project project) {
 		super(project, true);
-		Resources.INSTANCE.swrleditor().ensureInjected();
 	}
 
 	@Override
@@ -60,6 +63,8 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 
 	@Override
 	public void initialize() {
+		Resources.INSTANCE.swrleditor().ensureInjected();
+
 		setTitle("SWRL Editor");
 
 		swrlEditorWidget = new SimplePanel();
@@ -79,25 +84,30 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 				+ project.getProjectName().replace(" ", "+")
 				+ "&tab=SwrlEditorTab";
 
-		if (Window.Location.getHash().trim().isEmpty()){
-			String newURL;
-			// TODO remover na vers‹o final
-			
-			if (Window.Location.getHref().contains("?gwt.codesvr=127.0.0.1")){
-				String href = Window.Location.getHref();
-				
-				href =  href.substring(href.indexOf("?gwt.codesvr=127.0.0.1"));
+		String newURL;
 
-				if (href.indexOf("#") >= 0)
-					href =  href.substring(0, href.indexOf("#"));
-				
-				newURL = href+"#visualization:"
-						+ urlWebProtege;
-			}else
-				newURL = "#visualization:" + urlWebProtege;
+		if (Window.Location.getHref().contains("?gwt.codesvr=127.0.0.1")){
+			String href = Window.Location.getHref();
 
+			href =  href.substring(href.indexOf("?gwt.codesvr=127.0.0.1"));
+
+			if (href.indexOf("#") >= 0)
+				href =  href.substring(0, href.indexOf("#"));
+
+			newURL = href+"#visualization:"
+					+ urlWebProtege;
+		}else
+			newURL = "#visualization:" + urlWebProtege;
+
+		if (!Window.Location.getHref().trim().contains(newURL) && 
+				Window.Location.getHref().trim().contains("#"+CompositionPlace.getNamePlace()+":") &&
+				Window.Location.getHref().trim().contains("#"+FilterPlace.getNamePlace()+":") &&
+				Window.Location.getHref().trim().contains("#"+InfoPlace.getNamePlace()+":") &&
+				Window.Location.getHref().trim().contains("#"+OptionsPlace.getNamePlace()+":") &&
+				Window.Location.getHref().trim().contains("#"+VisualizationPlace.getNamePlace()+":") 
+				)
 			Window.Location.replace(newURL);
-		}
+		
 
 		defaultPlace = new VisualizationPlace("");
 

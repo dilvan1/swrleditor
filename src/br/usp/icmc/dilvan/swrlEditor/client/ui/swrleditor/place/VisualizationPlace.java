@@ -15,6 +15,12 @@ public class VisualizationPlace extends DefaultPlace
 		return getParameter(ID_RULE_NAME);
 	}
 	
+	
+	public static String getNamePlace() {
+		return "visualization";
+	}
+
+	
 	@Prefix (value="visualization")
 	public static class Tokenizer implements PlaceTokenizer<VisualizationPlace>
 	{

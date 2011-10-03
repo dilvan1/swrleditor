@@ -54,7 +54,7 @@ public class SimpleRuleViewAutism extends SimpleRuleView {
 		}
 
 		HTML block = new HTML("<span class='det peq'>class</span><br /><img src=\""+Resources.INSTANCE.class_().getURL()+"\" /> "+ antecedentMainText);
-		block.setStyleName("q_class");
+		block.setStyleName(Resources.INSTANCE.swrleditor().q_class());
 		title.add(block);
 		title.add(new HTML("<span class='det peq'>match</span><br /><b>"+match+"</b>"));
 		vp.add(title);
@@ -81,7 +81,7 @@ public class SimpleRuleViewAutism extends SimpleRuleView {
 					String label = a.getPredicateID().substring(a.getPredicateID().indexOf(":")+1).replace("_", " ").replace("'","");
 
 					line.add(new HTML("<div style='width: 300px; text-align: right;'>"+img+" "+label+"</div>"));
-					line.getWidget(0).setStyleName("q_subnivel");
+					line.getWidget(0).setStyleName(Resources.INSTANCE.swrleditor().q_subnivel());
 					Variable secondParam = a.getVariables().get(1);
 
 					if( !secondParam.getFormatedID().startsWith("?") ){
@@ -141,7 +141,7 @@ public class SimpleRuleViewAutism extends SimpleRuleView {
 					String label = a.getPredicateLabel().substring(a.getPredicateLabel().indexOf(":")+1).replace("_", " ").replace("'","");
 
 					line.add(new HTML("<div style='width: 300px; text-align: right;'>"+img+" "+label+"</div>"));
-					line.getWidget(0).setStyleName("q_subnivel");
+					line.getWidget(0).setStyleName(Resources.INSTANCE.swrleditor().q_subnivel());
 					Variable secondParam = a.getVariables().get(1);
 
 					if( !secondParam.getFormatedLabel().startsWith("?") ){
@@ -192,7 +192,7 @@ public class SimpleRuleViewAutism extends SimpleRuleView {
 			vp.add(new HTML("<hr>"));
 			for(String s : au.getErrors()){
 				HTML e = new HTML(s);
-				e.addStyleName("error");
+				e.addStyleName(Resources.INSTANCE.swrleditor().error());
 				vp.add(e);
 			}
 		}

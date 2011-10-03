@@ -16,7 +16,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/RDF Backend "/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Standard Extensions Library"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/wpswrleditor2"/>
 	<classpathentry kind="lib" path="/wpswrleditor2/war/WEB-INF/lib/commons-codec-1.2.jar"/>
 	<classpathentry kind="lib" path="/wpswrleditor2/war/WEB-INF/lib/commons-httpclient-3.1.jar"/>
 	<classpathentry kind="lib" path="/wpswrleditor2/war/WEB-INF/lib/gwt-crypto-1.0.3.jar"/>
@@ -27,8 +26,8 @@
 	<classpathentry kind="lib" path="/wpswrleditor2/war/WEB-INF/lib/log4j.jar"/>
 	<classpathentry kind="lib" path="/wpswrleditor2/war/WEB-INF/lib/mail.jar"/>
 	<classpathentry kind="lib" path="/wpswrleditor2/war/WEB-INF/lib/openid4java-0.9.5.jar"/>
-	<classpathentry kind="lib" path="/wpswrleditor2/war/WEB-INF/lib/swrlEditor.jar"/>
 	<classpathentry kind="lib" path="/wpswrleditor2/war/WEB-INF/lib/xpp3-1.1.3.4.C.jar"/>
 	<classpathentry kind="lib" path="/wpswrleditor2/war/WEB-INF/lib/xstream-1.3.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/WP.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

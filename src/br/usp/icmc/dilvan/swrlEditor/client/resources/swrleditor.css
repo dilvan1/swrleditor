@@ -73,6 +73,13 @@ code,.peq {
 	font-weight: bold;
 }
 
+.antecedent {
+
+}
+.consequent{
+	
+}
+
 .atom_CLASS { color: #FFA500; }
 
 .atom_DATAVALUE_PROPERTY,.editor_DVARIABLE {
@@ -85,6 +92,10 @@ code,.peq {
 
 .atom_BUILTIN {
 	color: #CD3700;
+}
+
+.atom_DATA_RANGE {
+	
 }
 
 .atom_SAME_DIFERENT {
@@ -185,11 +196,14 @@ h2 {
 }
 
 .treeItemLink {
-	cursor: pointer;.atom_SAME_DIFERENT {
+	cursor: pointer;
+}
+	
+.atom_SAME_DIFERENT {
 	color: #999999;
 }
 	
-}
+
 
 .treeItemLink:hover {
 	color: gray;

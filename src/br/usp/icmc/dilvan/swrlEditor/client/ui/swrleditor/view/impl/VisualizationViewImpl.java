@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import br.usp.icmc.dilvan.swrlEditor.client.resources.Resources;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.Filter;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.NameGroupAlgorithm;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.RuleSet;
@@ -538,9 +539,9 @@ public class VisualizationViewImpl extends Composite implements
 			if (cont > 0)
 				listFilterPanel.add(new HTML("<b>AND</b>"));
 			HTML lbl = new HTML(UtilView.formatFilter(f));
-			lbl.addStyleName("itemFilter");
-			listFilterPanel.add(lbl);
+			lbl.addStyleName(Resources.INSTANCE.swrleditor().itemFilter());
 
+			listFilterPanel.add(lbl);
 			cont++;
 		}
 	}
@@ -629,7 +630,7 @@ public class VisualizationViewImpl extends Composite implements
 			DisclosurePanel pnlClo = new DisclosurePanel("Group"
 					+ Integer.toString(count++) + " (" + group.size()
 					+ " rules)");
-			pnlClo.getHeader().setStyleName("header-name-class");
+			pnlClo.getHeader().setStyleName(Resources.INSTANCE.swrleditor().headerNameClass());
 
 			VerticalPanel pnlItens = new VerticalPanel();
 			pnlClo.add(pnlItens);

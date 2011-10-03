@@ -10,6 +10,10 @@ public class FilterPlace extends DefaultPlace{
 		super(token);
 	}
 	
+	public static String getNamePlace() {
+		return "filter";
+	}
+	
 	@Prefix (value="filter")
 	public static class Tokenizer implements PlaceTokenizer<FilterPlace>
 	{

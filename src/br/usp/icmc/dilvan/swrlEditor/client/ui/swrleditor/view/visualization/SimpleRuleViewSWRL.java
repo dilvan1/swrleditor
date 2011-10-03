@@ -2,6 +2,8 @@ package br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.visualization;
 
 import java.util.List;
 
+import br.usp.icmc.dilvan.swrlEditor.client.resources.Resources;
+import br.usp.icmc.dilvan.swrlEditor.client.resources.UtilResource;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Rule;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.UtilView;
@@ -49,9 +51,9 @@ public class SimpleRuleViewSWRL extends SimpleRuleView {
 			else 
 				line.setTitle(at.getAtomLabel());
 
-			line.addStyleName(rulePart);
+			line.addStyleName(UtilResource.getCssRulePart(rulePart));
 			if(handler != null){
-				line.addStyleName("vtlink");
+				line.addStyleName(Resources.INSTANCE.swrleditor().vtlink());
 				line.addClickHandler(handler);
 			}
 			verticalPanel.add(line);

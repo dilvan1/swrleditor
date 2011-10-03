@@ -20,12 +20,12 @@
 	<!-- Other module inherits -->
 	<inherits name="com.google.gwt.activity.Activity" />
 	<inherits name="com.google.gwt.place.Place" />
+	<inherits name="com.google.gwt.resources.Resources" />
 
 
-<!--
-	<stylesheet src="/css/swrleditor.css" />
-	 -->
 
+	<!--  <stylesheet src="/css/swrleditor.css" />
+-->
 
 	<!-- <entry-point class="edu.stanford.bmir.protege.web.client.WebProtege"/> -->
 	<!-- Use ClientFactoryImpl by default -->

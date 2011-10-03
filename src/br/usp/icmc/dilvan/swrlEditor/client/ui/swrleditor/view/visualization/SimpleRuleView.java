@@ -1,5 +1,6 @@
 package br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.visualization;
 
+import br.usp.icmc.dilvan.swrlEditor.client.resources.Resources;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Rule;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.VisualizationView.Presenter;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.VisualizationView.TYPE_VIEW;
@@ -58,7 +59,7 @@ public abstract class SimpleRuleView extends Composite {
 		this();
 		this.presenter =  presenter;
 		this.typeView = typeView;
-		panelContent.getHeader().setStyleName("header-name-class");
+		panelContent.getHeader().setStyleName(Resources.INSTANCE.swrleditor().headerNameClass());
 		setRule(rule);
 	}
 	

@@ -10,6 +10,10 @@ public class InfoPlace extends DefaultPlace{
 		super(token);
 	}
 	
+	public static String getNamePlace() {
+		return "informations";
+	}
+	
 	@Prefix (value="informations")
 	public static class Tokenizer implements PlaceTokenizer<InfoPlace>
 	{

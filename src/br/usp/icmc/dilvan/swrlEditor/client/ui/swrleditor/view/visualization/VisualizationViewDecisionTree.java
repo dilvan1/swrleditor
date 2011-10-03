@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import br.usp.icmc.dilvan.swrlEditor.client.resources.Resources;
+import br.usp.icmc.dilvan.swrlEditor.client.resources.UtilResource;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.decisiontree.NodeDecisionTree;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.decisiontree.NodeDecisionTree.ATOM_TYPE;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.WaitingCreateToRun;
@@ -80,10 +82,10 @@ public class VisualizationViewDecisionTree extends Composite {
 
 		this.presenter = presenter;
 
-		panelPath.addStyleName("decision-tree-background");
-		panelPathLabels.addStyleName("decision-tree-background");
-		panelTree.addStyleName("decision-tree-background");
-		scroolTree.addStyleName("decision-tree-background");
+		panelPath.addStyleName(Resources.INSTANCE.swrleditor().decisionTreeBackground());
+		panelPathLabels.addStyleName(Resources.INSTANCE.swrleditor().decisionTreeBackground());
+		panelTree.addStyleName(Resources.INSTANCE.swrleditor().decisionTreeBackground());
+		scroolTree.addStyleName(Resources.INSTANCE.swrleditor().decisionTreeBackground());
 
 		canvasTree = new GWTCanvas(1000, 1000);
 		//canvasTree.setSize("100%", "500px");
@@ -243,8 +245,8 @@ public class VisualizationViewDecisionTree extends Composite {
 			}else{
 
 				DefaultNodeInRulesTreeLabel labelAux = new DefaultNodeInRulesTreeLabel("...", node);
-				labelAux.addStyleName("white-background");
-				labelAux.addStyleName("swrl-rule");
+				labelAux.addStyleName(Resources.INSTANCE.swrleditor().whiteBackground());
+				labelAux.addStyleName(Resources.INSTANCE.swrleditor().swrlRule());
 
 				labelAux.addClickHandler(new ClickHandler() {
 					public void onClick(ClickEvent event) {
@@ -324,7 +326,7 @@ public class VisualizationViewDecisionTree extends Composite {
 		if (!label.getNode().getToolTip().trim().equals(""))
 			label.addMouseListener(
 					new TooltipListener(
-							label.getNode().getToolTip(), 5000,"hint"));
+							label.getNode().getToolTip(), 5000, Resources.INSTANCE.swrleditor().hint()));
 	}
 
 	public String getAlgorithmName(){
@@ -398,11 +400,11 @@ public class VisualizationViewDecisionTree extends Composite {
 			this.node = node;
 			addEvent();
 			
-			this.addStyleName("swrl-rule");
+			this.addStyleName(Resources.INSTANCE.swrleditor().swrlRule());
 			if ((this.node.getAtomType() != ATOM_TYPE.ROOT) && (this.node.getAtomType() != ATOM_TYPE.CONSEQUENT))
-				this.addStyleName("atom_"+this.node.getAtomType());
+				this.addStyleName(UtilResource.getCssTypeNodeAtom(this.node.getAtomType()));
 			
-			this.addStyleName("white-background");
+			this.addStyleName(Resources.INSTANCE.swrleditor().whiteBackground());
 		}
 		
 		public DefaultNodeInRulesTreeLabel(NodeDecisionTree node) {
@@ -413,7 +415,7 @@ public class VisualizationViewDecisionTree extends Composite {
 			this.addMouseMoveHandler(new MouseMoveHandler() {
 
 				public void onMouseMove(MouseMoveEvent event) {
-					((DefaultNodeInRulesTreeLabel)event.getSource()).addStyleName("pointer-cursor");
+					((DefaultNodeInRulesTreeLabel)event.getSource()).addStyleName(Resources.INSTANCE.swrleditor().pointerCursor());
 					
 				}
 			});

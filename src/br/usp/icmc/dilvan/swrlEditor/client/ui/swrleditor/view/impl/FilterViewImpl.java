@@ -80,7 +80,7 @@ public class FilterViewImpl extends Composite implements FilterView{
 		
 		HTML btn = new HTML("<img src=\""+Resources.INSTANCE.fechar().getURL()+"\">");
 
-		btn.setStyleName("link-remove");
+		btn.setStyleName(Resources.INSTANCE.swrleditor().linkRemove());
 		btn.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -89,7 +89,7 @@ public class FilterViewImpl extends Composite implements FilterView{
 		});
 
 		HTML lbl = new HTML(UtilView.formatFilter(filter));
-		lbl.addStyleName("itemFilter");
+		lbl.addStyleName(Resources.INSTANCE.swrleditor().itemFilter());
 
 		pnlFilter.add(btn);
 		pnlFilter.add(lbl);

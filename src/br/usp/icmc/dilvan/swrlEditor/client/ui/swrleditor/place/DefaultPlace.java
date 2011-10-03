@@ -40,6 +40,4 @@ public abstract class DefaultPlace extends Place{
 	}
 	
 	
-	
-	
 }

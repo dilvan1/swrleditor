@@ -30,6 +30,11 @@ public class CompositionPlace extends DefaultPlace{
 		return getParameter(ID_RULE_NAME);
 	}
 
+
+	public static String getNamePlace() {
+		return "composition";
+	}
+	
 	@Prefix (value="composition")
 	public static class Tokenizer implements PlaceTokenizer<CompositionPlace>
 	{
@@ -45,4 +50,5 @@ public class CompositionPlace extends DefaultPlace{
 		}
 
 	}
+
 }

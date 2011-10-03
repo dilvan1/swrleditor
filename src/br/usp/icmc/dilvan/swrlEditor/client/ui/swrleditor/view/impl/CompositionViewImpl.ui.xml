@@ -2,6 +2,10 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
+	<ui:with field='res'
+		type='br.usp.icmc.dilvan.swrlEditor.client.resources.Resources' />
+
+
 	<ui:style>
 		.pnl2 {
 			background-color: white;
@@ -21,8 +25,11 @@
 
 				<g:north size="50">
 					<g:HorizontalPanel spacing="5" verticalAlignment="ALIGN_MIDDLE">
-						<g:Image url="images/swrleditor/edit.png" width="24px"
+						<g:Image url='{res.edit.getURL}' width="24px"
 							height="22px" altText="New/Edit Rule" />
+							
+							
+							
 						<g:Button text="Similar Rules" ui:field="btnSimilarRules"/>
 						<g:InlineHTML>
 							<b>Rule Name: </b>

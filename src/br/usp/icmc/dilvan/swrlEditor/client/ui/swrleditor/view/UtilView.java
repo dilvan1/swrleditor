@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import br.usp.icmc.dilvan.swrlEditor.client.resources.Resources;
+import br.usp.icmc.dilvan.swrlEditor.client.resources.UtilResource;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.Filter;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Variable;
@@ -30,7 +31,7 @@ public class UtilView {
 			Variable pr = atom.getVariables().get(i);
 			if(!params.isEmpty())
 				params += ", ";
-
+			
 			if (typeView == TYPE_VIEW.ID)
 				params += "<span class=\"param_"+pr.getTypeVariable().name()+"\">"+pr.getFormatedID()+"</span>";
 			else
@@ -43,9 +44,9 @@ public class UtilView {
 			endAtom = "</div>";
 
 		if (typeView == TYPE_VIEW.ID)
-			return "<div class=\"swrl-rule\"><span class=\"atom_"+ atom.getAtomType().name() +"\">"+ atom.getPredicateID() +"</span>("+params+")"+endAtom;
+			return "<div class=\"swrl-rule\"><span class=\""+ UtilResource.getCssTypeAtom(atom.getAtomType()) +"\">"+ atom.getPredicateID() +"</span>("+params+")"+endAtom;
 		else
-			return "<div class=\"swrl-rule\"><span class=\"atom_"+ atom.getAtomType().name() +"\">"+ atom.getPredicateLabel() +"</span>("+params+")"+endAtom;
+			return "<div class=\"swrl-rule\"><span class=\""+ UtilResource.getCssTypeAtom(atom.getAtomType()) +"\">"+ atom.getPredicateLabel() +"</span>("+params+")"+endAtom;
 	}
 
 	public static String getAtomsHightlights(List<Atom> atoms, TYPE_VIEW typeView){
@@ -125,9 +126,9 @@ public class UtilView {
 							HTML obj = new HTML(img+lastMain.getPredicateID()+" "+getHTMLParameter(param, typeView));
 							//HTML obj = new HTML(img+lastMain.getPredicateID()+" "+getHTMLParameter(param, typeView));
 							obj.setTitle(lastMain.getAtomID());
-							obj.addStyleName(rulePart);
+							obj.addStyleName(UtilResource.getCssRulePart(rulePart));
 							if(handler!=null){
-								obj.addStyleName("vtlink");
+								obj.addStyleName(Resources.INSTANCE.swrleditor().vtlink());
 								obj.addClickHandler(handler);
 							}
 							linhas.add(obj); 
@@ -144,9 +145,9 @@ public class UtilView {
 
 							HTML obj = new HTML(img+lastMain.getPredicateLabel()+" "+getHTMLParameter(param, typeView));
 							obj.setTitle(lastMain.getAtomLabel());
-							obj.addStyleName(rulePart);
+							obj.addStyleName(UtilResource.getCssRulePart(rulePart));
 							if(handler!=null){
-								obj.addStyleName("vtlink");
+								obj.addStyleName(Resources.INSTANCE.swrleditor().vtlink());
 								obj.addClickHandler(handler);
 							}
 							linhas.add(obj); 
@@ -162,16 +163,16 @@ public class UtilView {
 					obj.setTitle(a.getAtomLabel());
 				}
 
-				obj.addStyleName(rulePart);
+				obj.addStyleName(UtilResource.getCssRulePart(rulePart));
 				if(handler!=null){
-					obj.addStyleName("vtlink");
+					obj.addStyleName(Resources.INSTANCE.swrleditor().vtlink());
 					obj.addClickHandler(handler);
 				}
 
 				table.setWidget(row, 0, obj);
-				table.getFlexCellFormatter().setStyleName(row, 0, "q_class");
+				table.getFlexCellFormatter().setStyleName(row, 0, Resources.INSTANCE.swrleditor().q_class());
 				table.setWidget(row, 1, linhas);
-				table.getFlexCellFormatter().setStyleName(row, 1, "q_subnivel");
+				table.getFlexCellFormatter().setStyleName(row, 1, Resources.INSTANCE.swrleditor().q_subnivel());
 				row++;
 			} 
 		}
@@ -189,15 +190,15 @@ public class UtilView {
 				else
 					obj.setTitle(a.getAtomLabel());
 
-				obj.addStyleName(rulePart);
+				obj.addStyleName(UtilResource.getCssRulePart(rulePart));
 				if(handler!=null){
-					obj.addStyleName("vtlink");
+					obj.addStyleName(Resources.INSTANCE.swrleditor().vtlink());
 					obj.addClickHandler(handler);
 				}
 
 				table.setWidget(row, 0, obj);
 				table.getFlexCellFormatter().setColSpan(row, 0, 2);
-				table.getFlexCellFormatter().setStyleName(row, 0, "q_builtin");
+				table.getFlexCellFormatter().setStyleName(row, 0, Resources.INSTANCE.swrleditor().q_builtin());
 				row++;
 			} else if(a.getAtomType() == Atom.TYPE_ATOM.SAME_DIFERENT ){
 				used.add(a);
@@ -219,14 +220,14 @@ public class UtilView {
 					obj.setTitle(a.getAtomLabel());
 
 
-				obj.addStyleName(rulePart);
+				obj.addStyleName(UtilResource.getCssRulePart(rulePart));
 				if(handler!=null){
-					obj.addStyleName("vtlink");
+					obj.addStyleName(Resources.INSTANCE.swrleditor().vtlink());
 					obj.addClickHandler(handler);
 				}
 				table.setWidget(row, 0, obj);
 				table.getFlexCellFormatter().setColSpan(row, 0, 2);
-				table.getFlexCellFormatter().setStyleName(row, 0, "q_builtin");
+				table.getFlexCellFormatter().setStyleName(row, 0, Resources.INSTANCE.swrleditor().q_builtin());
 				row++;
 			} else if ((a.getAtomType() == Atom.TYPE_ATOM.INDIVIDUAL_PROPERTY ) || (a.getAtomType() == Atom.TYPE_ATOM.DATAVALUE_PROPERTY)) {
 				String img;
@@ -245,14 +246,14 @@ public class UtilView {
 				}
 
 
-				obj.addStyleName(rulePart);
+				obj.addStyleName(UtilResource.getCssRulePart(rulePart));
 				if(handler!=null){
-					obj.addStyleName("vtlink");
+					obj.addStyleName(Resources.INSTANCE.swrleditor().vtlink());
 					obj.addClickHandler(handler);
 				}
 				table.setWidget(row, 0, obj);
 				table.getFlexCellFormatter().setColSpan(row, 0, 2);
-				table.getFlexCellFormatter().setStyleName(row, 0, "q_builtin");
+				table.getFlexCellFormatter().setStyleName(row, 0, Resources.INSTANCE.swrleditor().q_builtin());
 				row++;
 			} else {
 				HTML obj;
@@ -265,18 +266,17 @@ public class UtilView {
 				}
 
 
-				obj.addStyleName(rulePart);
+				obj.addStyleName(UtilResource.getCssRulePart(rulePart));
 				if(handler!=null){
-					obj.addStyleName("vtlink");
+					obj.addStyleName(Resources.INSTANCE.swrleditor().vtlink());
 					obj.addClickHandler(handler);
 				}
 				table.setWidget(row, 0, obj);
 				table.getFlexCellFormatter().setColSpan(row, 0, 2);
-				table.getFlexCellFormatter().setStyleName(row, 0, "q_builtin");
+				table.getFlexCellFormatter().setStyleName(row, 0, Resources.INSTANCE.swrleditor().q_builtin());
 				row++;
 			}
 		}
-		table.addStyleName("q_vis");
 
 		return table;
 	}

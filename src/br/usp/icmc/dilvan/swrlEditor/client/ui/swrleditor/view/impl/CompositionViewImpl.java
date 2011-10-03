@@ -2,6 +2,7 @@ package br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.impl;
 
 import java.util.List;
 
+import br.usp.icmc.dilvan.swrlEditor.client.resources.Resources;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Rule;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom.TYPE_ATOM;
@@ -150,7 +151,7 @@ public class CompositionViewImpl extends Composite implements CompositionView {
 		
 		if( (listErros == null && listWarnings == null) || (listErros.size() == 0 && listWarnings.size() == 0) ){
 			Label lbl = new Label("No Error :)");
-			lbl.setStyleName("noerror");
+			lbl.setStyleName(Resources.INSTANCE.swrleditor().noerror());
 			pnlAddErrors.add(lbl);
 			if (this.writePermission)
 				btnSave.setEnabled(true);
@@ -159,12 +160,12 @@ public class CompositionViewImpl extends Composite implements CompositionView {
 		btnSave.setEnabled(false);
 		for(String error : listErros){
 			HTML lbl = new HTML(error);
-			lbl.setStyleName("error");
+			lbl.setStyleName(Resources.INSTANCE.swrleditor().error());
 			pnlAddErrors.add(lbl);
 		}
 		for(String error : listWarnings){
 			HTML lbl = new HTML(error);
-			lbl.setStyleName("warning");
+			lbl.setStyleName(Resources.INSTANCE.swrleditor().warning());
 			pnlAddErrors.add(lbl);
 		}
 		

@@ -10,6 +10,10 @@ public class OptionsPlace extends DefaultPlace{
 		super(token);
 	}
 	
+	public static String getNamePlace() {
+		return "options";
+	}
+	
 	@Prefix (value="options")
 	public static class Tokenizer implements PlaceTokenizer<OptionsPlace>
 	{
