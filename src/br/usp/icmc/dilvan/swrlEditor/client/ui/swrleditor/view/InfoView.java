@@ -11,8 +11,7 @@ import com.google.gwt.user.client.ui.IsWidget;
  *
  * @author Jo‹o Paulo Orlando
  */
-public interface InfoView extends IsWidget
-{
+public interface InfoView extends IsWidget{
 	void setPresenter(Presenter presenter);
 	
 	void setRuleInfo(List<RuleInfo> ruleInfo);

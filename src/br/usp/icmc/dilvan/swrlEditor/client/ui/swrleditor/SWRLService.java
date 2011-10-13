@@ -42,9 +42,11 @@ public interface SWRLService extends RemoteService {
 	ArrayList<String> getSimilarRulesAlgorithmsList();
 	ArrayList<String> getSuggestTermsAlgorithmsList();
 	
-	
 	boolean deleteRule(String projectName, String ruleName);
 	boolean saveNewRule(String projectName, String ruleName, Rule rule);
 	boolean saveEditRule(String projectName, String ruleName, String oldRuleName, Rule rule);
- 
+
+	boolean runRules(String projectName);
+	
+
 }

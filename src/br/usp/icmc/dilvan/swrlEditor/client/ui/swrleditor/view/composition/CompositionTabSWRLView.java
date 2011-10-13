@@ -85,8 +85,7 @@ public class CompositionTabSWRLView extends Composite implements
 	}
 
 	private String getHTMLFormat(List<Atom> atoms) {
-		String aux = UtilView
-				.getAtomsHightlights(atoms, typeView)
+		String aux = UtilView.getAtomsHightlights(atoms, typeView);/*
 				.replace("class=\"swrl-rule\"", "style=\"" + STYLE_RULE + "\"")
 				.replace("class=\"atom_CLASS\"",
 						"style=\"" + STYLE_CLASS + "\"")
@@ -104,7 +103,7 @@ public class CompositionTabSWRLView extends Composite implements
 						"style=\"" + STYLE_DATATYPE + "\"")
 				.replace("class=\"param_INDIVIDUALID\"",
 						"style=\"" + STYLE_DATATYPE + "\"");
-
+*/
 		return aux;
 	}
 

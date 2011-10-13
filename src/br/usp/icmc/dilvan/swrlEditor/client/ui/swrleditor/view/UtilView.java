@@ -32,10 +32,11 @@ public class UtilView {
 			if(!params.isEmpty())
 				params += ", ";
 			
+			
 			if (typeView == TYPE_VIEW.ID)
-				params += "<span class=\"param_"+pr.getTypeVariable().name()+"\">"+pr.getFormatedID()+"</span>";
+				params += "<span class=\""+UtilResource.getCssTypeVariableView(pr.getTypeVariable())+"\">"+pr.getFormatedID()+"</span>";
 			else
-				params += "<span class=\"param_"+pr.getTypeVariable().name()+"\">"+pr.getFormatedLabel()+"</span>";
+				params += "<span class=\""+UtilResource.getCssTypeVariableView(pr.getTypeVariable())+"\">"+pr.getFormatedLabel()+"</span>";
 		}
 		String endAtom;
 		if(useAnd)
@@ -58,17 +59,18 @@ public class UtilView {
 				if(!params.isEmpty())
 					params += ", ";
 				if (typeView == TYPE_VIEW.ID)
-					params += "<span class=\"param_"+pr.getTypeVariable().name()+"\">"+pr.getFormatedID()+"</span>";
+					params += "<span class=\""+UtilResource.getCssTypeVariableView(pr.getTypeVariable())+"\">"+pr.getFormatedID()+"</span>";
 				else
-					params += "<span class=\"param_"+pr.getTypeVariable().name()+"\">"+pr.getFormatedLabel()+"</span>";
+					params += "<span class=\""+UtilResource.getCssTypeVariableView(pr.getTypeVariable())+"\">"+pr.getFormatedLabel()+"</span>";
 			}
 			if(!strAtom.isEmpty())
 				strAtom += " ^ </div>";
 
+			
 			if (typeView == TYPE_VIEW.ID)
-				strAtom += "<div class=\"swrl-rule\"><span class=\"atom_"+ at.getAtomType().name() +"\">"+ at.getPredicateID() +"</span>("+params+")";
+				strAtom += "<div class=\"swrl-rule\"><span class=\""+ UtilResource.getCssTypeAtom(at.getAtomType()) +"\">"+ at.getPredicateID() +"</span>("+params+")";
 			else
-				strAtom += "<div class=\"swrl-rule\"><span class=\"atom_"+ at.getAtomType().name() +"\">"+ at.getPredicateLabel() +"</span>("+params+")";
+				strAtom += "<div class=\"swrl-rule\"><span class=\""+ UtilResource.getCssTypeAtom(at.getAtomType()) +"\">"+ at.getPredicateLabel() +"</span>("+params+")";
 		}
 		strAtom += "</div>";
 		return strAtom;
@@ -76,9 +78,9 @@ public class UtilView {
 
 	public static String formatFilter(Filter f){
 		if(f.getFilterType().equalsIgnoreCase("rule name"))
-			return "rule name: <span class='det'>\""+f.getQryString()+"\"</span>";
+			return "rule name: <span class='"+Resources.INSTANCE.swrleditor().det()+"'>\""+f.getQryString()+"\"</span>";
 		else
-			return (f.getFilterType().equalsIgnoreCase("all")?"":f.getFilterType()+":")+" <span class='det'>\""+f.getQryString()+"\"</span>"+(f.getRulePart().equalsIgnoreCase("all parts")?"":" in "+f.getRulePart());
+			return (f.getFilterType().equalsIgnoreCase("all")?"":f.getFilterType()+":")+" <span class='"+Resources.INSTANCE.swrleditor().det()+"'>\""+f.getQryString()+"\"</span>"+(f.getRulePart().equalsIgnoreCase("all parts")?"":" in "+f.getRulePart());
 	}
 
 
@@ -209,9 +211,11 @@ public class UtilView {
 				else
 					label = a.getPredicateLabel().equalsIgnoreCase("differentFrom") ? "different from" : "same as";
 
+				
+				
 				HTML obj = new HTML("<img src=\""+Resources.INSTANCE.sameDifferent().getURL()+"\" /> "+
 						getHTMLParameter(a.getVariables().get(0), typeView)+
-						" <span class='atom_"+a.getAtomType().name()+"'>"+label+"</span> "+
+						" <span class='"+UtilResource.getCssTypeAtom(a.getAtomType())+"'>"+label+"</span> "+
 						getHTMLParameter(a.getVariables().get(1), typeView));
 
 				if (typeView == TYPE_VIEW.ID)
@@ -282,10 +286,12 @@ public class UtilView {
 	}
 
 	private static String getHTMLParameter(Variable param, TYPE_VIEW typeView){
+		
+		
 		if (typeView == TYPE_VIEW.ID)
-			return "<b class=\"param_"+param.getTypeVariable().name()+"\">"+param.getFormatedID()+"</b>";
+			return "<b class=\""+UtilResource.getCssTypeVariableView(param.getTypeVariable())+"\">"+param.getFormatedID()+"</b>";
 		else 
-			return "<b class=\"param_"+param.getTypeVariable().name()+"\">"+param.getFormatedLabel()+"</b>";
+			return "<b class=\""+UtilResource.getCssTypeVariableView(param.getTypeVariable())+"\">"+param.getFormatedLabel()+"</b>";
 	}
 	private static String getFormatedBuiltin(Atom a, TYPE_VIEW typeView){
 		if(a.getAtomType() != Atom.TYPE_ATOM.BUILTIN) return "";

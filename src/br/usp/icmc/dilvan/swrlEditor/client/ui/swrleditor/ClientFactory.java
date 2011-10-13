@@ -15,7 +15,7 @@ import com.google.gwt.place.shared.PlaceController;
 
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 
 
 public interface ClientFactory
@@ -33,7 +33,7 @@ public interface ClientFactory
 	void setProject(Project project);
 	Project getProject();
 	String getProjectName();
-	void setPortletConfiguration(PortletConfiguration portletConfiguration);
+	void setPortlet(AbstractEntityPortlet portlet);
 	Map<String, Object> getPortletConfiguration();
 	
 	

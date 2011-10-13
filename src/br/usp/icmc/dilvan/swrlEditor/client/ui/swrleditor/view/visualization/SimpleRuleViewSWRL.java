@@ -31,7 +31,7 @@ public class SimpleRuleViewSWRL extends SimpleRuleView {
 	private VerticalPanel getSWRLHighlightPanel(Rule rl, ClickHandler handler){
 		VerticalPanel verticalPanel = new VerticalPanel();
 		verticalPanel.add(getAtomsHightlightsPanel(rl.getAntecedent(), handler, "antecedent"));
-		verticalPanel.add(new HTML("<div class=\"separador\">-></div>"));
+		verticalPanel.add(new HTML("<div class=\""+Resources.INSTANCE.swrleditor().separador()+"\">-></div>"));
 		verticalPanel.add(getAtomsHightlightsPanel(rl.getConsequent(), handler, "consequent"));
 		return verticalPanel;
 	}

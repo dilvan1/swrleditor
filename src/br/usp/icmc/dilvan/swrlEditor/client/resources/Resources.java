@@ -25,7 +25,7 @@ public interface Resources extends ClientBundle {
 
 	ImageResource individuo();
 
-	ImageResource loading_gif();
+	ImageResource loading();
 
 	ImageResource ok();
 

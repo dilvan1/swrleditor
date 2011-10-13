@@ -259,7 +259,7 @@ public class AutismModel {
 				if (typeView == TYPE_VIEW.ID)
 					return "<span class='"+UtilResource.getCssTypeVariableView(p1.getTypeVariable())+"'>"+p1.getFormatedID()+"</span> / <span class='"+UtilResource.getCssTypeVariableView(p2.getTypeVariable())+"'>"+p2.getFormatedID()+"</span>";
 				else
-					return "<span class='param_"+p1.getTypeVariable().name()+"'>"+p1.getFormatedLabel()+"</span> / <span class='param_"+p2.getTypeVariable().name()+"'>"+p2.getFormatedLabel()+"</span>";
+					return "<span class='"+UtilResource.getCssTypeVariableView(p1.getTypeVariable())+"'>"+p1.getFormatedLabel()+"</span> / <span class='param_"+UtilResource.getCssTypeVariableView(p2.getTypeVariable())+"'>"+p2.getFormatedLabel()+"</span>";
 			}
 		});
 
@@ -270,9 +270,9 @@ public class AutismModel {
 				Variable p0 = params.get(0);
 				Variable p1 = params.get(1);
 				if (typeView == TYPE_VIEW.ID)
-					return  "<span class='param_"+p0.getTypeVariable().name()+"'>"+p0.getFormatedID()+"</span> = <span class='param_"+p1.getTypeVariable().name()+"'>"+p1.getFormatedID()+"</span>";
+					return  "<span class='"+UtilResource.getCssTypeVariableView(p0.getTypeVariable())+"'>"+p0.getFormatedID()+"</span> = <span class='"+UtilResource.getCssTypeVariableView(p1.getTypeVariable())+"'>"+p1.getFormatedID()+"</span>";
 				else
-					return  "<span class='param_"+p0.getTypeVariable().name()+"'>"+p0.getFormatedLabel()+"</span> = <span class='param_"+p1.getTypeVariable().name()+"'>"+p1.getFormatedLabel()+"</span>";
+					return  "<span class='"+UtilResource.getCssTypeVariableView(p0.getTypeVariable())+"'>"+p0.getFormatedLabel()+"</span> = <span class='"+UtilResource.getCssTypeVariableView(p1.getTypeVariable())+"'>"+p1.getFormatedLabel()+"</span>";
 			}
 		});
 
@@ -284,9 +284,9 @@ public class AutismModel {
 				Variable p1 = params.get(1);
 				if (typeView == TYPE_VIEW.ID)
 
-					return  "<span class='param_"+p0.getTypeVariable().name()+"'>"+p0.getFormatedID()+"</span> > <span class='param_"+p1.getTypeVariable().name()+"'>"+p1.getFormatedID()+"</span>";
+					return  "<span class='"+UtilResource.getCssTypeVariableView(p0.getTypeVariable())+"'>"+p0.getFormatedID()+"</span> > <span class='"+UtilResource.getCssTypeVariableView(p1.getTypeVariable())+"'>"+p1.getFormatedID()+"</span>";
 				else
-					return  "<span class='param_"+p0.getTypeVariable().name()+"'>"+p0.getFormatedLabel()+"</span> > <span class='param_"+p1.getTypeVariable().name()+"'>"+p1.getFormatedLabel()+"</span>";
+					return  "<span class='"+UtilResource.getCssTypeVariableView(p0.getTypeVariable())+"'>"+p0.getFormatedLabel()+"</span> > <span class='"+UtilResource.getCssTypeVariableView(p1.getTypeVariable())+"'>"+p1.getFormatedLabel()+"</span>";
 			}
 		});
 
@@ -298,9 +298,9 @@ public class AutismModel {
 				Variable p1 = params.get(1);
 				if (typeView == TYPE_VIEW.ID)
 
-					return  "<span class='param_"+p0.getTypeVariable().name()+"'>"+p0.getFormatedID()+"</span> >= <span class='param_"+p1.getTypeVariable().name()+"'>"+p1.getFormatedID()+"</span>";
+					return  "<span class='"+UtilResource.getCssTypeVariableView(p0.getTypeVariable())+"'>"+p0.getFormatedID()+"</span> >= <span class='"+UtilResource.getCssTypeVariableView(p1.getTypeVariable())+"'>"+p1.getFormatedID()+"</span>";
 				else
-					return  "<span class='param_"+p0.getTypeVariable().name()+"'>"+p0.getFormatedLabel()+"</span> >= <span class='param_"+p1.getTypeVariable().name()+"'>"+p1.getFormatedLabel()+"</span>";
+					return  "<span class='"+UtilResource.getCssTypeVariableView(p0.getTypeVariable())+"'>"+p0.getFormatedLabel()+"</span> >= <span class='"+UtilResource.getCssTypeVariableView(p1.getTypeVariable())+"'>"+p1.getFormatedLabel()+"</span>";
 			}
 		});
 
@@ -312,9 +312,9 @@ public class AutismModel {
 				Variable p1 = params.get(1);
 				if (typeView == TYPE_VIEW.ID)
 
-					return  "<span class='param_"+p0.getTypeVariable().name()+"'>"+p0.getFormatedID()+"</span> < <span class='param_"+p1.getTypeVariable().name()+"'>"+p1.getFormatedID()+"</span>";
+					return  "<span class='"+UtilResource.getCssTypeVariableView(p0.getTypeVariable())+"'>"+p0.getFormatedID()+"</span> < <span class='"+UtilResource.getCssTypeVariableView(p1.getTypeVariable())+"'>"+p1.getFormatedID()+"</span>";
 				else
-					return  "<span class='param_"+p0.getTypeVariable().name()+"'>"+p0.getFormatedLabel()+"</span> < <span class='param_"+p1.getTypeVariable().name()+"'>"+p1.getFormatedLabel()+"</span>";
+					return  "<span class='"+UtilResource.getCssTypeVariableView(p0.getTypeVariable())+"'>"+p0.getFormatedLabel()+"</span> < <span class='"+UtilResource.getCssTypeVariableView(p1.getTypeVariable())+"'>"+p1.getFormatedLabel()+"</span>";
 			}
 		});
 
@@ -325,9 +325,9 @@ public class AutismModel {
 				Variable p0 = params.get(0);
 				Variable p1 = params.get(1);
 				if (typeView == TYPE_VIEW.ID)
-					return  "<span class='param_"+p0.getTypeVariable().name()+"'>"+p0.getFormatedID()+"</span> <= <span class='param_"+p1.getTypeVariable().name()+"'>"+p1.getFormatedID()+"</span>";
+					return  "<span class='"+UtilResource.getCssTypeVariableView(p0.getTypeVariable())+"'>"+p0.getFormatedID()+"</span> <= <span class='"+UtilResource.getCssTypeVariableView(p1.getTypeVariable())+"'>"+p1.getFormatedID()+"</span>";
 				else
-					return  "<span class='param_"+p0.getTypeVariable().name()+"'>"+p0.getFormatedLabel()+"</span> <= <span class='param_"+p1.getTypeVariable().name()+"'>"+p1.getFormatedLabel()+"</span>";
+					return  "<span class='"+UtilResource.getCssTypeVariableView(p0.getTypeVariable())+"'>"+p0.getFormatedLabel()+"</span> <= <span class='"+UtilResource.getCssTypeVariableView(p1.getTypeVariable())+"'>"+p1.getFormatedLabel()+"</span>";
 			}
 		});
 

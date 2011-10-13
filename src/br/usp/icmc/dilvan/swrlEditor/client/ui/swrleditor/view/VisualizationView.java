@@ -42,6 +42,8 @@ public interface VisualizationView extends IsWidget
 	void addRuleEvent(int index, Rule rule);
 	void deleteRuleEvent(int index, Rule rule);
 	
+	void finishedRun();
+	
 	public interface Presenter
 	{
 		public static final int DEFAULT_NUMBER_GROUPS = 8;
@@ -68,10 +70,10 @@ public interface VisualizationView extends IsWidget
 		void goToFilter();
 		void goToEditRule(String ruleName);
 		void goToDuplicateAndEditRule(String ruleName);
+
+		void runRules();
 		
 	}
-
-	
 
 }
 

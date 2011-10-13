@@ -152,6 +152,7 @@ public class CompositionViewImpl extends Composite implements CompositionView {
 		if( (listErros == null && listWarnings == null) || (listErros.size() == 0 && listWarnings.size() == 0) ){
 			Label lbl = new Label("No Error :)");
 			lbl.setStyleName(Resources.INSTANCE.swrleditor().noerror());
+			lbl.setWidth("95%");
 			pnlAddErrors.add(lbl);
 			if (this.writePermission)
 				btnSave.setEnabled(true);
@@ -161,11 +162,13 @@ public class CompositionViewImpl extends Composite implements CompositionView {
 		for(String error : listErros){
 			HTML lbl = new HTML(error);
 			lbl.setStyleName(Resources.INSTANCE.swrleditor().error());
+			lbl.setWidth("95%");
 			pnlAddErrors.add(lbl);
 		}
 		for(String error : listWarnings){
 			HTML lbl = new HTML(error);
 			lbl.setStyleName(Resources.INSTANCE.swrleditor().warning());
+			lbl.setWidth("95%");
 			pnlAddErrors.add(lbl);
 		}
 		

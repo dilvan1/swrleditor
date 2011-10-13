@@ -7,7 +7,7 @@ import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.InfoView;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.uibinder.client.UiField;
@@ -20,7 +20,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 
 
-public class InfoViewImpl extends Composite implements InfoView{
+public class InfoViewImpl extends DialogBox implements InfoView{
 
 	private static InfoViewImplUiBinder uiBinder = GWT
 			.create(InfoViewImplUiBinder.class);
@@ -36,7 +36,7 @@ public class InfoViewImpl extends Composite implements InfoView{
 	}
 
 	public InfoViewImpl() {
-		initWidget(uiBinder.createAndBindUi(this));
+		setWidget(uiBinder.createAndBindUi(this));
 		MontInformationTab();
 	}
 

@@ -12,6 +12,7 @@ import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.decisiontree.NodeDeci
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Rule;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.WaitingCreateToRun;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.util.Options;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.util.UtilLoading;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.OptionsView;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.UtilView;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.VisualizationView;
@@ -32,6 +33,7 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -69,6 +71,11 @@ public class VisualizationViewImpl extends Composite implements
 	Button btnOptions;
 	@UiField
 	Button btnEditFilter;
+	@UiField
+	Button btnRun;
+	@UiField 
+	Image imgWaiting;
+	
 	@UiField
 	TabLayoutPanel tabVisualization;
 
@@ -174,6 +181,7 @@ public class VisualizationViewImpl extends Composite implements
 	public void setWritePermission(boolean permission) {
 		this.writePermission = permission;
 		btnNewRule.setEnabled(writePermission);
+		btnRun.setEnabled(writePermission);
 
 		if (simpleRulesList != null)
 			for (SimpleRuleView rw : simpleRulesList)
@@ -345,6 +353,8 @@ public class VisualizationViewImpl extends Composite implements
 
 	private void mountTabList() {
 		if (simpleRulesList == null) {
+			UtilLoading.hide();
+			UtilLoading.showLoadRules();
 			simpleRulesList = new ArrayList<SimpleRuleView>();
 
 			for (Rule rl : rules) {
@@ -362,6 +372,8 @@ public class VisualizationViewImpl extends Composite implements
 
 	private void mountTabText() {
 		if (simpleRulesText == null) {
+			UtilLoading.hide();
+			UtilLoading.showLoadRules();
 			simpleRulesText = new ArrayList<SimpleRuleView>();
 
 			for (Rule rl : rules) {
@@ -379,6 +391,8 @@ public class VisualizationViewImpl extends Composite implements
 
 	private void mountTabSWRL() {
 		if (simpleRulesSWRL == null) {
+			UtilLoading.hide();
+			UtilLoading.showLoadRules();
 			simpleRulesSWRL = new ArrayList<SimpleRuleView>();
 
 			for (Rule rl : rules) {
@@ -396,6 +410,8 @@ public class VisualizationViewImpl extends Composite implements
 
 	private void mountTabAutism() {
 		if (simpleRulesAutism == null) {
+			UtilLoading.hide();
+			UtilLoading.showLoadRules();
 			simpleRulesAutism = new ArrayList<SimpleRuleView>();
 
 			for (Rule rl : rules) {
@@ -413,6 +429,9 @@ public class VisualizationViewImpl extends Composite implements
 	}
 
 	private void mountTabGroups() {
+		UtilLoading.hide();
+		UtilLoading.showLoadGroups();
+		
 		String algorithm = cboAlgorithmsGroups.getValue(cboAlgorithmsGroups
 				.getSelectedIndex());
 		int number = 0;
@@ -549,7 +568,6 @@ public class VisualizationViewImpl extends Composite implements
 	private void mountTabDecisionTree() {
 		createViewDecisionTree();
 		presenter.getDecisionTree(viewDecisionTree.getAlgorithmName());
-
 	}
 
 	private void createViewDecisionTree() {
@@ -581,6 +599,8 @@ public class VisualizationViewImpl extends Composite implements
 			pnlBase.add(panel);
 			ajustRuleView(panel);
 		}
+		
+		UtilLoading.hide();
 
 	}
 
@@ -656,15 +676,13 @@ public class VisualizationViewImpl extends Composite implements
 			}
 			treeGroup.add(pnlClo);
 		}
+		UtilLoading.hide();
 	}
 
 	@Override
 	public void setDecisionTreeAlgorithmList(List<String> algorithms, Map<String, Object> config) {
 		createViewDecisionTree();
 		viewDecisionTree.setListAlgorithm(algorithms, config);
-		
-		if (tabVisualization.getSelectedIndex() == 5)
-			mountTabDecisionTree();
 	}
 
 	@Override
@@ -691,6 +709,13 @@ public class VisualizationViewImpl extends Composite implements
 	@UiHandler("btnEditFilter")
 	void onBtnEditFilterClick(ClickEvent event) {
 		presenter.goToFilter();
+		
+	}
+
+	@UiHandler("btnRun")
+	void onBtnRunClick(ClickEvent event) {
+		imgWaiting.setVisible(true);
+		presenter.runRules();
 	}
 
 	@UiHandler("tabVisualization")
@@ -728,6 +753,9 @@ public class VisualizationViewImpl extends Composite implements
 		case 5:
 			if (viewDecisionTree == null)
 				mountTabDecisionTree();
+			else{
+				viewDecisionTree.loadDecisionTree();
+			}
 			break;
 
 		}
@@ -909,6 +937,11 @@ public class VisualizationViewImpl extends Composite implements
 	private void ajustRuleView(SimpleRuleView ruleview) {
 		ruleview.show();
 		ruleview.setHeight();
+	}
+
+	@Override
+	public void finishedRun() {
+		imgWaiting.setVisible(false);
 	}
 
 }

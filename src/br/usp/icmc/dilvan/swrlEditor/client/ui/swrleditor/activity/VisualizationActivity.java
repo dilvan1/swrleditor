@@ -8,17 +8,20 @@ import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.RuleSet;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.decisiontree.NodeDecisionTree;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Rule;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.ClientFactory;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.activity.info.GeneratedRulesInfo;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.activity.visualization.AutismModel;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.mvp.AppActivityMapper;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.CompositionPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.DefaultPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.FilterPlace;
-import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.InfoPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.OptionsPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.VisualizationPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.CompositionPlace.COMPOSITION_MODE;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.util.UtilLoading;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.InfoView;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.VisualizationView;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.VisualizationView.TYPE_VIEW;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.impl.InfoViewImpl;
 
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
@@ -28,8 +31,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 
-public class VisualizationActivity extends AbstractActivity implements
-VisualizationView.Presenter {
+public class VisualizationActivity extends AbstractActivity implements VisualizationView.Presenter, InfoView.Presenter {
 
 	private ClientFactory clientFactory;
 	private AppActivityMapper activityMapper;
@@ -79,7 +81,11 @@ VisualizationView.Presenter {
 
 	@Override
 	public void goToInfo() {
-		clientFactory.getPlaceController().goTo(new InfoPlace(clientFactory.getURLWebProtege()));
+		InfoView info = clientFactory.getInfoView();
+
+		info.setPresenter(this);
+		info.setRuleInfo(new GeneratedRulesInfo(activityMapper.getRules()).getRulesInfo());
+		((InfoViewImpl)info).show();
 	}
 
 	@Override
@@ -114,6 +120,7 @@ VisualizationView.Presenter {
 						}
 
 						public void onFailure(Throwable caught) {
+							UtilLoading.hide();
 							Window.alert("Error fetching rule information details");
 						}
 					});
@@ -151,6 +158,7 @@ VisualizationView.Presenter {
 			}
 
 			public void onFailure(Throwable caught) {
+				UtilLoading.hide();
 				Window.alert("Error fetching Group Algorithm");
 			}
 		});
@@ -183,6 +191,7 @@ VisualizationView.Presenter {
 					}
 
 					public void onFailure(Throwable caught) {
+						UtilLoading.hide();
 						Window.alert("Error fetching DecisionTree Algorithm");
 					}
 				});
@@ -234,6 +243,7 @@ VisualizationView.Presenter {
 
 					@Override
 					public void onFailure(Throwable caught) {
+						UtilLoading.hide();
 						Window.alert("Error fetching similar rules");
 					}
 				});
@@ -251,9 +261,36 @@ VisualizationView.Presenter {
 			}
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("Error to deleting rule");
+				UtilLoading.hide();
+				Window.alert("Error to deleting rule.");
 			}
 
 		});
+	}
+
+	@Override
+	public void runRules() {
+		Window.alert("The rules will be executed in the background.");
+
+		clientFactory.getRpcService().runRules(clientFactory.getProjectName(), new AsyncCallback<Boolean>() {
+			@Override
+			public void onSuccess(Boolean result) {
+				clientFactory.getVisualizationView().finishedRun();
+				Window.alert("Rules execute successfully");
+			}
+			@Override
+			public void onFailure(Throwable caught) {
+				UtilLoading.hide();
+				clientFactory.getVisualizationView().finishedRun();
+				Window.alert("Error to run rules");
+			}
+
+		});
+		
+	}
+
+	@Override
+	public void goToVisualization() {
+		((InfoViewImpl) clientFactory.getInfoView()).hide();
 	}
 }

@@ -7,9 +7,10 @@ import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.mvp.AppActivityMapper;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.mvp.AppPlaceHistoryMapper;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.CompositionPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.FilterPlace;
-import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.InfoPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.OptionsPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.VisualizationPlace;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.util.UtilLoading;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.OptionsView;
 
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.activity.shared.ActivityMapper;
@@ -24,17 +25,15 @@ import com.google.gwt.user.client.ui.SimplePanel;
 
 import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
 import edu.stanford.bmir.protege.web.client.model.Project;
-import edu.stanford.bmir.protege.web.client.model.event.EntityCreateEvent;
-import edu.stanford.bmir.protege.web.client.model.event.EntityDeleteEvent;
-import edu.stanford.bmir.protege.web.client.model.event.EntityRenameEvent;
-import edu.stanford.bmir.protege.web.client.model.event.OntologyEvent;
-import edu.stanford.bmir.protege.web.client.model.event.PropertyValueEvent;
-import edu.stanford.bmir.protege.web.client.model.listener.OntologyListener;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectConfigurationServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectConfiguration;
+import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabColumnConfiguration;
+import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 
 @SuppressWarnings("unchecked")
 public class SwrlEditorPortlet extends AbstractEntityPortlet {
@@ -59,6 +58,8 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 
 	@Override
 	public void reload() {
+		System.out.println("teste");
+		createHashURL(clientFactory.getURLWebProtege());
 	}
 
 	@Override
@@ -80,34 +81,16 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 	}
 
 	private void loadSWRLEditor() {
+
+
+		UtilLoading.showLoadSWRLEditor();
+		
 		String urlWebProtege = "ontology="
 				+ project.getProjectName().replace(" ", "+")
 				+ "&tab=SwrlEditorTab";
 
-		String newURL;
+		createHashURL(urlWebProtege);
 
-		if (Window.Location.getHref().contains("?gwt.codesvr=127.0.0.1")){
-			String href = Window.Location.getHref();
-
-			href =  href.substring(href.indexOf("?gwt.codesvr=127.0.0.1"));
-
-			if (href.indexOf("#") >= 0)
-				href =  href.substring(0, href.indexOf("#"));
-
-			newURL = href+"#visualization:"
-					+ urlWebProtege;
-		}else
-			newURL = "#visualization:" + urlWebProtege;
-
-		if (!Window.Location.getHref().trim().contains(newURL) && 
-				Window.Location.getHref().trim().contains("#"+CompositionPlace.getNamePlace()+":") &&
-				Window.Location.getHref().trim().contains("#"+FilterPlace.getNamePlace()+":") &&
-				Window.Location.getHref().trim().contains("#"+InfoPlace.getNamePlace()+":") &&
-				Window.Location.getHref().trim().contains("#"+OptionsPlace.getNamePlace()+":") &&
-				Window.Location.getHref().trim().contains("#"+VisualizationPlace.getNamePlace()+":") 
-				)
-			Window.Location.replace(newURL);
-		
 
 		defaultPlace = new VisualizationPlace("");
 
@@ -122,7 +105,7 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 				.hasWritePermission(GlobalSettings.getGlobalSettings()
 						.getUserName()));
 		clientFactory.setURLWebProtege(urlWebProtege);
-		clientFactory.setPortletConfiguration(getPortletConfiguration());
+		clientFactory.setPortlet(this);
 
 		EventBus eventBus = clientFactory.getEventBus();
 		PlaceController placeController = clientFactory.getPlaceController();
@@ -143,7 +126,36 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 		// Goes to place represented on URL or default place
 		historyHandler.handleCurrentHistory();
 
+		UtilLoading.showLoadSWRLEditor();		
+	}
 
+	private void createHashURL(String urlWebProtege){
+
+		String newURL;
+
+		if (Window.Location.getHref().contains("?gwt.codesvr=127.0.0.1")){
+			String href = Window.Location.getHref();
+
+			href =  href.substring(href.indexOf("?gwt.codesvr=127.0.0.1"));
+
+			if (href.indexOf("#") >= 0)
+				href =  href.substring(0, href.indexOf("#"));
+
+			newURL = href+"#visualization:"
+					+ urlWebProtege;
+		}else
+			newURL = "#visualization:" + urlWebProtege;
+
+		if (!Window.Location.getHref().trim().contains(newURL) || ( 
+				!Window.Location.getHref().trim().contains("#"+CompositionPlace.getNamePlace()+":") &&
+				!Window.Location.getHref().trim().contains("#"+FilterPlace.getNamePlace()+":") &&
+				!Window.Location.getHref().trim().contains("#"+OptionsPlace.getNamePlace()+":") &&
+				!Window.Location.getHref().trim().contains("#"+VisualizationPlace.getNamePlace()+":"))
+			){
+			Window.Location.replace(newURL);
+		}else{
+
+		}
 	}
 
 	@Override
@@ -155,5 +167,62 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 							.getUserName()));
 		}
 	}
+
+	@Override
+	public void onLogin(String userName) {
+		ProjectConfigurationServiceManager.getInstance().getProjectConfiguration(project.getProjectName(),
+				userName, new GetProjectConfigurationHandler(project));
+	}
+
+	@Override
+	public void onLogout(String userName) {
+		ProjectConfigurationServiceManager.getInstance().getProjectConfiguration(project.getProjectName(),
+				userName, new GetProjectConfigurationHandler(project));
+	}
+
+	class GetProjectConfigurationHandler extends AbstractAsyncHandler<ProjectConfiguration> {
+		private final Project project;
+
+		public GetProjectConfigurationHandler(Project project) {
+			this.project = project;
+		}
+
+		@Override
+		public void handleFailure(Throwable caught) {
+			GWT.log("There were errors at loading project configuration for " + project.getProjectName(), caught);
+			UIUtil.hideLoadProgessBar();
+			com.google.gwt.user.client.Window.alert("Load project configuration for " + project.getProjectName()
+					+ " failed. " + " Message: " + caught.getMessage());
+		}
+
+		@Override
+		public void handleSuccess(ProjectConfiguration config) {
+			project.setProjectConfiguration(config);
+			for (TabConfiguration tab: config.getTabs()){
+				if (tab.getName().equals(SwrlEditorTab.class.getName())){
+					//System.out.println(tab.getProperties());
+					//System.out.println(tab.getStringProperty(OptionsView.AlgorithmSimilarRulesStr, "putz"));
+
+					for(TabColumnConfiguration colTab : tab.getColumns()){
+						for(PortletConfiguration portletConfig : colTab.getPortlets()){
+							if(portletConfig.getName().equals(SwrlEditorPortlet.class.getName())){
+								//System.out.println(portletConfig.getProperties());
+								//System.out.println(portletConfig.getStringProperty(OptionsView.AlgorithmDecisionTreeStr_, "putz"));
+							}
+						}
+					}
+				}
+
+			}
+		}
+	}
+
+	/*
+	 protected void getProjectConfiguration(Project project) {
+		UIUtil.showLoadProgessBar("Loading " + project.getProjectName() + " configuration", "Loading");
+		ProjectConfigurationServiceManager.getInstance().getProjectConfiguration(project.getProjectName(),
+				GlobalSettings.getGlobalSettings().getUserName(), new GetProjectConfigurationHandler(project));
+	 */
+
 
 }

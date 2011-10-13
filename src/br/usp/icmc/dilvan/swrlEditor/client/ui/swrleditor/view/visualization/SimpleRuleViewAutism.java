@@ -3,6 +3,7 @@ package br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.visualization;
 import java.util.List;
 
 import br.usp.icmc.dilvan.swrlEditor.client.resources.Resources;
+import br.usp.icmc.dilvan.swrlEditor.client.resources.UtilResource;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Rule;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Variable;
@@ -52,11 +53,11 @@ public class SimpleRuleViewAutism extends SimpleRuleView {
 			else
 				antecedentMainText = antMain.getPredicateLabel();
 		}
-
-		HTML block = new HTML("<span class='det peq'>class</span><br /><img src=\""+Resources.INSTANCE.class_().getURL()+"\" /> "+ antecedentMainText);
+		
+		HTML block = new HTML("<span class='"+ Resources.INSTANCE.swrleditor().det()+" "+Resources.INSTANCE.swrleditor().peq()+"'>class</span><br /><img src=\""+Resources.INSTANCE.class_().getURL()+"\" /> "+ antecedentMainText);
 		block.setStyleName(Resources.INSTANCE.swrleditor().q_class());
 		title.add(block);
-		title.add(new HTML("<span class='det peq'>match</span><br /><b>"+match+"</b>"));
+		title.add(new HTML("<span class='"+ Resources.INSTANCE.swrleditor().det()+" "+Resources.INSTANCE.swrleditor().peq()+"'>match</span><br /><b>"+match+"</b>"));
 		vp.add(title);
 
 		// Linhas N - form to each class in consequent
@@ -86,9 +87,10 @@ public class SimpleRuleViewAutism extends SimpleRuleView {
 
 					if( !secondParam.getFormatedID().startsWith("?") ){
 						if(Variable.TYPE_VARIABLE.INDIVIDUALID.equals(secondParam.getTypeVariable())){
-							line.add(new HTML("<b class='param_INDIVIDUALID'><img src=\""+Resources.INSTANCE.class_().getURL()+"\" />"+secondParam.getFormatedID()+"</b>"));
+							
+							line.add(new HTML("<b class='"+Resources.INSTANCE.swrleditor().param_INDIVIDUALID()+"'><img src=\""+Resources.INSTANCE.class_().getURL()+"\" />"+secondParam.getFormatedID()+"</b>"));
 						} else {
-							line.add(new HTML("<b class='param_DATALITERAL'>"+secondParam.getFormatedID()+"</b>"));
+							line.add(new HTML("<b class='"+Resources.INSTANCE.swrleditor().param_DATALITERAL()+"'>"+secondParam.getFormatedID()+"</b>"));
 						}
 					} else {
 						List<Atom> subAtoms = au.getLastParam(a.getVariables().get(1).getFormatedID());
@@ -103,7 +105,8 @@ public class SimpleRuleViewAutism extends SimpleRuleView {
 							if(rule.getAntecedent().contains(oa)){
 								imgDeriv = "<img src=\""+Resources.INSTANCE.classAntecedent().getURL()+"\" align='left'/>&nbsp; ";
 							}
-							line.add(new HTML(imgDeriv+"<b class='atom_"+ oa.getAtomType().name() +"'>"+oa.getPredicateID()+"</b>"));
+							
+							line.add(new HTML(imgDeriv+"<b class='"+ UtilResource.getCssTypeAtom(oa.getAtomType()) +"'>"+oa.getPredicateID()+"</b>"));
 						} else if (subAtoms.size() == 1){
 							Atom aa = subAtoms.get(0); 
 							String atomName = "";
@@ -146,9 +149,9 @@ public class SimpleRuleViewAutism extends SimpleRuleView {
 
 					if( !secondParam.getFormatedLabel().startsWith("?") ){
 						if(Variable.TYPE_VARIABLE.INDIVIDUALID.equals(secondParam.getTypeVariable())){
-							line.add(new HTML("<b class='param_INDIVIDUALID'><img src=\""+Resources.INSTANCE.class_().getURL()+"\" />"+secondParam.getFormatedLabel()+"</b>"));
+							line.add(new HTML("<b class='"+Resources.INSTANCE.swrleditor().param_INDIVIDUALID()+"'><img src=\""+Resources.INSTANCE.class_().getURL()+"\" />"+secondParam.getFormatedLabel()+"</b>"));
 						} else {
-							line.add(new HTML("<b class='param_DATALITERAL'>"+secondParam.getFormatedLabel()+"</b>"));
+							line.add(new HTML("<b class='"+Resources.INSTANCE.swrleditor().param_DATALITERAL()+"'>"+secondParam.getFormatedLabel()+"</b>"));
 						}
 					} else {
 						List<Atom> subAtoms = au.getLastParam(a.getVariables().get(1).getFormatedLabel());
@@ -163,7 +166,7 @@ public class SimpleRuleViewAutism extends SimpleRuleView {
 							if(rule.getAntecedent().contains(oa)){
 								imgDeriv = "<img src=\""+Resources.INSTANCE.classAntecedent().getURL()+"\" align='left'/>&nbsp; ";
 							}
-							line.add(new HTML(imgDeriv+"<b class='atom_"+ oa.getAtomType().name() +"'>"+oa.getPredicateLabel()+"</b>"));
+							line.add(new HTML(imgDeriv+"<b class='"+ UtilResource.getCssTypeAtom(oa.getAtomType()) +"'>"+oa.getPredicateLabel()+"</b>"));
 						} else if (subAtoms.size() == 1){
 							Atom aa = subAtoms.get(0); 
 							String atomName = "";

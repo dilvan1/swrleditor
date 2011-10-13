@@ -2,7 +2,6 @@ package br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor;
 
 import java.util.Map;
 
-import br.usp.icmc.dilvan.swrlEditor.client.resources.Resources;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.RuleEvent;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.RuleEvents;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.RuleSet;
@@ -30,7 +29,7 @@ import com.google.gwt.place.shared.PlaceController;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectConfigurationServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 
 public class ClientFactoryImpl implements ClientFactory{
@@ -59,7 +58,7 @@ public class ClientFactoryImpl implements ClientFactory{
 
 
 	private Project project = null;
-	private PortletConfiguration portletConfiguration = null;
+	private AbstractEntityPortlet portlet = null;
 
 	@Override
 	public EventBus getEventBus()
@@ -113,8 +112,14 @@ public class ClientFactoryImpl implements ClientFactory{
 
 	@Override
 	public InfoView getInfoView() {
-		if (infoView == null)
+		if (infoView == null){
 			infoView = new InfoViewImpl();
+
+			((InfoViewImpl)infoView).setAutoHideEnabled(true);
+			
+			VisualizationViewImpl visua = (VisualizationViewImpl) getVisualizationView();
+			((InfoViewImpl)infoView).setPopupPosition((visua.getAbsoluteLeft()-700)+ (visua.getOffsetWidth()/2), visua.getAbsoluteTop());
+		}
 		return infoView;
 	}
 
@@ -175,16 +180,16 @@ public class ClientFactoryImpl implements ClientFactory{
 	}
 	
 	@Override
-	public void setPortletConfiguration(PortletConfiguration portletConfiguration) {
-		this.portletConfiguration = portletConfiguration;
+	public void setPortlet(AbstractEntityPortlet portlet) {
+		this.portlet = portlet;
 
 		if (optionsView != null)
-			optionsView.setOptions(portletConfiguration.getProperties());
+			optionsView.setOptions(portlet.getPortletConfiguration().getProperties());
 	}
 	
 	@Override
 	public Map<String, Object> getPortletConfiguration(){
-		return portletConfiguration.getProperties();
+		return portlet.getPortletConfiguration().getProperties();
 	}
 
 	@Override
@@ -199,7 +204,7 @@ public class ClientFactoryImpl implements ClientFactory{
 		}
 		if (optionsView != null){
 			optionsView.setWritePermission(this.hasWritePermission);
-			optionsView.setOptions(portletConfiguration.getProperties());
+			optionsView.setOptions(portlet.getPortletConfiguration().getProperties());
 		}
 
 
@@ -293,7 +298,7 @@ public class ClientFactoryImpl implements ClientFactory{
 
 	@Override
 	public void setOption(String name, Object value) {
-		UIUtil.setConfigurationPropertyValue(portletConfiguration, name, value);
+		UIUtil.setConfigurationPropertyValue(portlet.getPortletConfiguration(), name, value);
 	}
 
 	@Override

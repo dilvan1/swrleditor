@@ -43,5 +43,7 @@ public interface SWRLServiceAsync {
 	void deleteRule(String projectName, String ruleName, AsyncCallback<Boolean> callback);
 	void saveNewRule(String projectName, String ruleName, Rule rule, AsyncCallback<Boolean> callback);
 	void saveEditRule(String projectName, String ruleName, String oldRuleName, Rule rule, AsyncCallback<Boolean> callback);
+
+	void runRules(String projectName, AsyncCallback<Boolean> callback);
  
 }

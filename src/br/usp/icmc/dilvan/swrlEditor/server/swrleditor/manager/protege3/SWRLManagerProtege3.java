@@ -25,6 +25,9 @@ import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.manager.SWRLManager;
 
 import edu.stanford.smi.protegex.owl.model.NamespaceUtil;
 import edu.stanford.smi.protegex.owl.model.impl.DefaultRDFSLiteral;
+import edu.stanford.smi.protegex.owl.swrl.SWRLRuleEngine;
+import edu.stanford.smi.protegex.owl.swrl.bridge.SWRLRuleEngineFactory;
+import edu.stanford.smi.protegex.owl.swrl.exceptions.SWRLRuleEngineException;
 import edu.stanford.smi.protegex.owl.swrl.model.SWRLAtom;
 import edu.stanford.smi.protegex.owl.swrl.model.SWRLBuiltin;
 import edu.stanford.smi.protegex.owl.swrl.model.SWRLBuiltinAtom;
@@ -499,6 +502,26 @@ public class SWRLManagerProtege3 implements SWRLManager {
 				return ontologyManager.getOwlModel().getPrefixForResourceName(uri) +":"+NamespaceUtil.getLocalName(uri);
 		}else
 			return uri;
+	}
+
+	@Override
+	public boolean runRules() {
+		try {
+			SWRLRuleEngine ruleEngine = SWRLRuleEngineFactory.create(ontologyManager.getOwlModel());
+			/*ruleEngine.reset();
+			ruleEngine.importSWRLRulesAndOWLKnowledge();
+			ruleEngine.run();
+			ruleEngine.writeInferredKnowledge2OWL();
+			*/
+			ruleEngine.infer();
+			
+			return true;
+		} catch (SWRLRuleEngineException e) {
+			System.out.println("Error:"+e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+		
 	}
 
 

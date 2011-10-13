@@ -2,7 +2,6 @@ package br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.mvp;
 
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.CompositionPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.FilterPlace;
-import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.InfoPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.OptionsPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.VisualizationPlace;
 
@@ -17,7 +16,7 @@ import com.google.gwt.place.shared.WithTokenizers;
  * separate TokenizerFactory.
  */
 @WithTokenizers( { VisualizationPlace.Tokenizer.class, CompositionPlace.Tokenizer.class, 
-	OptionsPlace.Tokenizer.class, InfoPlace.Tokenizer.class, FilterPlace.Tokenizer.class})
+	OptionsPlace.Tokenizer.class, FilterPlace.Tokenizer.class})
 	
 public interface AppPlaceHistoryMapper extends PlaceHistoryMapper {
 }

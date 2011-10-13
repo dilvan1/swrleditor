@@ -26,5 +26,7 @@ public interface SWRLManager {
 	public boolean deleteRule(String ruleName);
 	
 	public Errors getErrorsList(Rule rule, boolean isNew);
+
+	public boolean runRules();
 	
 }

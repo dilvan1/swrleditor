@@ -10,12 +10,10 @@ import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.RuleSet;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.ClientFactory;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.activity.CompositionActivity;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.activity.FilterActivity;
-import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.activity.InfoActivity;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.activity.OptionsActivity;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.activity.VisualizationActivity;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.CompositionPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.FilterPlace;
-import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.InfoPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.OptionsPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.VisualizationPlace;
 
@@ -159,8 +157,6 @@ public class AppActivityMapper implements ActivityMapper {
 			return new CompositionActivity((CompositionPlace) place, clientFactory, this);	
 		else if (place instanceof OptionsPlace)
 			return new OptionsActivity((OptionsPlace) place, clientFactory, this);
-		else if (place instanceof InfoPlace)
-			return new InfoActivity((InfoPlace) place, clientFactory, this);
 		else if (place instanceof FilterPlace)
 			return new FilterActivity((FilterPlace) place, clientFactory, this);
 

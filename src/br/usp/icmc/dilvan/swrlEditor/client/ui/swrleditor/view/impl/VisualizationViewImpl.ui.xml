@@ -12,6 +12,9 @@
 			<g:Button text="Info" ui:field="btnInfo" />
 			<g:Button text="New Rule" ui:field="btnNewRule" />
 
+			<g:Button text="Run Rules" ui:field="btnRun" />
+			<g:Image ui:field="imgWaiting" url='{res.loading.getURL}' visible="false"/>
+
 			<g:HorizontalPanel borderWidth="1">
 				<g:HorizontalPanel>
 					<g:Image altText="Rule Filter" height="22px"
@@ -28,6 +31,7 @@
 					<g:Button ui:field="btnEditFilter" text="Edit" />
 				</g:HorizontalPanel>
 			</g:HorizontalPanel>
+			
 		</g:HorizontalPanel>
 		<g:Cell width="100%" height="100%">
 			<g:SimplePanel width="100%" height="100%">

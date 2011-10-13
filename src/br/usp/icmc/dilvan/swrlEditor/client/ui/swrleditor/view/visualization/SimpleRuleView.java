@@ -13,6 +13,7 @@ import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DisclosurePanel;
@@ -148,7 +149,8 @@ public abstract class SimpleRuleView extends Composite {
 
 	@UiHandler("btnDeleteRule")
 	void onBtnDeleteRuleClick(ClickEvent event) {
-		presenter.deleteRule(rule.getNameRule());
+		if (Window.confirm("Are you sure you want to delete "+rule.getNameRule()+"?"))
+			presenter.deleteRule(rule.getNameRule());
 	}
 
 	/**

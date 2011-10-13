@@ -10,6 +10,7 @@ import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.decisiontree.NodeDeci
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.decisiontree.NodeDecisionTree.ATOM_TYPE;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.WaitingCreateToRun;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.util.Options;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.util.UtilLoading;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.OptionsView;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.VisualizationView.Presenter;
 
@@ -88,13 +89,11 @@ public class VisualizationViewDecisionTree extends Composite {
 		scroolTree.addStyleName(Resources.INSTANCE.swrleditor().decisionTreeBackground());
 
 		canvasTree = new GWTCanvas(1000, 1000);
-		//canvasTree.setSize("100%", "500px");
 		canvasTree.setSize("100%", "100%");
 		canvasTree.setLineWidth(1);
 		canvasTree.setStrokeStyle(Color.BLACK);
 
 		panelTreeLabels = new AbsolutePanel();
-		//panelTreeLabels.setSize("100px", "500px");
 		panelTreeLabels.setSize("100px", "100%");
 
 		panelTree.add(canvasTree, 0, 0);
@@ -115,24 +114,20 @@ public class VisualizationViewDecisionTree extends Composite {
 				}
 			};
 			waiting.start();
-			
-			
-			showDecisionTree();
-			
 		}
 	}
 
 
 	private void showDecisionTree() {
-	
 		scroolPath.setWidth(Integer.toString(this.getOffsetWidth())+"px");
 		scroolTree.setWidth(Integer.toString(this.getOffsetWidth())+"px");
 		scroolTree.setHeight(Integer.toString(pnlBase.getOffsetHeight()-(scroolPath.getOffsetHeight()+pnlOptions.getOffsetHeight()))+"px");
 
 		drawTree(tree, 50, NUMBER_LEVELS_DISPLAYED);
+
+		UtilLoading.hide();
 	}
-	
-	//TODO refazer o método de visualizar a árvore
+
 	private void drawTree(NodeDecisionTree node, int left, int viewLevel){
 
 		scroolTree.setHeight(Integer.toString(pnlBase.getOffsetHeight()-(scroolPath.getOffsetHeight()+pnlOptions.getOffsetHeight()))+"px");
@@ -144,27 +139,24 @@ public class VisualizationViewDecisionTree extends Composite {
 		NodeTreeInt sheetNumber = new NodeTreeInt(0);
 
 		int[] majorWidth = new int[NUMBER_LEVELS_DISPLAYED];
+		for (int i = 0; i < NUMBER_LEVELS_DISPLAYED; i++)
+			majorWidth[i] = 0;
 
 		calculatesSizeNode(node, sheetNumber, viewLevel, majorWidth);
 
+		int sizePath = drawPath(node)+50;
+
+		setWidthPath(sizePath);
+		
 		int sumWidth = 0;
 
 		for (int i = 0; i < majorWidth.length; i++)
 			sumWidth = (int)(sumWidth + (majorWidth[i]*widthChar)+SPACE_BETWEEN_NODES);
 
-
 		sumWidth += 200; 
 
-		int sizePath = drawPath(node)+50;
-
-		setWidthPath(sizePath);
 
 		setSizePanelTree(sumWidth, NODE_HEIGHT * (sheetNumber.getValue()+2)+PANELTREE_HEIGHT_INITIAL);
-
-		//if (sumWidth > sizePath)
-		//	setWidthDecisionTree(sumWidth);
-		//else
-		//	setWidthDecisionTree(sizePath);
 
 		int scroolTop = drawNode(-1, -1, node, sheetNumber, left, PANELTREE_HEIGHT_INITIAL, viewLevel, majorWidth);
 
@@ -338,6 +330,11 @@ public class VisualizationViewDecisionTree extends Composite {
 	}
 	@UiHandler("btnRefresh")
 	void onBtnRefreshClick(ClickEvent event) {
+		loadDecisionTree();
+	}
+	
+	public void loadDecisionTree(){
+		UtilLoading.showLoadDecisionTree();
 		presenter.getDecisionTree(listAlgorithm.getItemText(listAlgorithm.getSelectedIndex()));
 	}
 

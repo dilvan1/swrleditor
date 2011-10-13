@@ -1,9 +1,10 @@
-/*html,body{
-	margin:0px;
-	min-height: 550px;
-	min-width: 1000px;
-	height:98%;
-}*/
+.panel_white {
+	background-color: white;
+}
+
+.bold {
+	font-weight: bold;
+}
 
 .swrltext {
 	background-color: white;
@@ -74,13 +75,16 @@ code,.peq {
 }
 
 .antecedent {
-
-}
-.consequent{
 	
 }
 
-.atom_CLASS { color: #FFA500; }
+.consequent {
+	
+}
+
+.atom_CLASS {
+	color: #FFA500;
+}
 
 .atom_DATAVALUE_PROPERTY,.editor_DVARIABLE {
 	color: #32CD32;
@@ -198,12 +202,10 @@ h2 {
 .treeItemLink {
 	cursor: pointer;
 }
-	
+
 .atom_SAME_DIFERENT {
 	color: #999999;
 }
-	
-
 
 .treeItemLink:hover {
 	color: gray;
@@ -225,18 +227,22 @@ h2 {
 	background-position: left center;
 }
 
-.noerror {
+@sprite .noerror {
 	color: green;
-	background-image: url(../images/swrleditor/ok.png);
+	gwt-image: 'ok';
+	/*background-image: url(../images/swrleditor/ok.png);*/
 }
 
-.error {
+@sprite .error {
 	color: red;
-	background-image: url(../images/swrleditor/error.png);
+	gwt-image: 'error';
+
+	/*background-image: url(../images/swrleditor/error.png);*/
 }
 
-.warning {
-	background-image: url(../images/swrleditor/warning.png);
+@sprite .warning {
+	gwt-image: 'warning';
+	/*background-image: url(../images/swrleditor/warning.png);*/
 }
 
 /*Filters*/
@@ -266,6 +272,11 @@ h2 {
 	font-weight: bold;
 }
 
-.popup-title .label {
+.popup-title .label-uppercase {
 	text-transform: uppercase;
+}
+
+.titleViews{
+	font-size: 2em;
+	font-weight: bold;
 }

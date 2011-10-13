@@ -119,13 +119,13 @@ public class CompositionTabEditorView extends Composite implements CompositionTa
 						|| p.getTypeVariable() == TYPE_VARIABLE.INDIVIDUALID)
 					continue;
 				String var;
+				
+				
 				if (typeView == TYPE_VIEW.ID)
-					var = "<span class=\"editor_"
-							+ p.getTypeVariable().name() + "\">"
+					var = "<span class=\""+ UtilResource.getCssTypeVariableEditor(p.getTypeVariable()) + "\">"
 							+ p.getFormatedID() + "</span>";
 				else
-					var = "<span class=\"editor_"
-							+ p.getTypeVariable().name() + "\">"
+					var = "<span class=\""+ UtilResource.getCssTypeVariableEditor(p.getTypeVariable()) + "\">"
 							+ p.getFormatedLabel() + "</span>";
 
 

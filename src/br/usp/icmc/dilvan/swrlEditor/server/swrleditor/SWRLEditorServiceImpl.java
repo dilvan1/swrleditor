@@ -413,4 +413,9 @@ public class SWRLEditorServiceImpl extends RemoteServiceServlet implements SWRLS
 		return ret;
 	}
 
+	@Override
+	public boolean runRules(String projectName) {
+		return  getSWRLManager(projectName).runRules();
+	}
+
 }

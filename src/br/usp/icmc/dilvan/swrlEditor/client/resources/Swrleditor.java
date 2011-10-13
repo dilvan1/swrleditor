@@ -69,7 +69,8 @@ public interface Swrleditor extends CssResource {
 	@ClassName("header-name-class")
 	String headerNameClass();
 
-	String label();
+	@ClassName("label-uppercase")
+	String labelUppercase();
 
 	String hint();
 
@@ -101,4 +102,10 @@ public interface Swrleditor extends CssResource {
 
 	String param_DATALITERAL();
 
+	
+	String panel_white ();
+
+	String bold();
+	
+	String titleViews();
 }
