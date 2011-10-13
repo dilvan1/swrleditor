@@ -25,6 +25,7 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -44,6 +45,7 @@ public class CompositionViewImpl extends Composite implements CompositionView {
 	@UiField Button btnSimilarRules;
 	@UiField TextBox txtRuleName;
 	@UiField Button btnSave;
+	@UiField Button btnCancel;
 	@UiField TabLayoutPanel tabsComposition;
 	@UiField SimplePanel tabList;
 	@UiField SimplePanel tabSWRL;
@@ -219,6 +221,12 @@ public class CompositionViewImpl extends Composite implements CompositionView {
 		if(this.writePermission && btnSave.isEnabled()){
 			presenter.saveRule();
 		}
+	}
+	
+	@UiHandler("btnCancel")
+	void onBtnCancelClick(ClickEvent event) {
+		if (Window.confirm("Do you really want to discard the changes?"))
+			presenter.goToVisualization();
 	}
 	
 	@UiHandler("btnSimilarRules")

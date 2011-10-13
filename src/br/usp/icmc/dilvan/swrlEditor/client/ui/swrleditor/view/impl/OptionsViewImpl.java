@@ -146,8 +146,10 @@ public class OptionsViewImpl extends Composite implements OptionsView {
 	
 	@UiHandler("btnSave")
 	void onBtnSaveClick(ClickEvent event) {
-		if (!this.writePermission)
+		if (!this.writePermission){
 			Window.alert("The options are valid only for that session. You must log in to save it for future sessions!");
+			presenter.goToVisualization();
+		}
 		if (this.writePermission)
 			saveOptions();
 	}

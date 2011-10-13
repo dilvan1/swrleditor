@@ -13,6 +13,7 @@ import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.mvp.AppActivityMapper;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.CompositionPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.VisualizationPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.CompositionPlace.COMPOSITION_MODE;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.util.UtilLoading;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.CompositionView;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.OntologyView;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.VisualizationView.TYPE_VIEW;
@@ -81,10 +82,12 @@ public class CompositionActivity extends AbstractActivity implements
 						
 						originalNameRule = rule.getNameRule();
 						clientFactory.getCompositionView().setRule(rule);
+						UtilLoading.hide();
 					}
 
 					public void onFailure(Throwable caught) {
 						Window.alert("Error fetching rule : " + ruleName);
+						UtilLoading.hide();
 					}
 				});
 	}
@@ -280,7 +283,8 @@ public class CompositionActivity extends AbstractActivity implements
 		clientFactory.getCompositionView().addAtom(atom, isAntecedent);
 	}
 	
-	private void goToVisualization(){
+	@Override
+	public void goToVisualization(){
 		clientFactory.getPlaceController().goTo(new VisualizationPlace(VisualizationPlace.ID_RULE_NAME+"="+rule.getNameRule()+"&"+clientFactory.getURLWebProtege()));
 	}
 

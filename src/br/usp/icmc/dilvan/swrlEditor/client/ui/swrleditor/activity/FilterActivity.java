@@ -8,6 +8,7 @@ import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.ClientFactory;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.mvp.AppActivityMapper;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.FilterPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.VisualizationPlace;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.util.UtilLoading;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.FilterView;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.OntologyView;
 
@@ -32,9 +33,11 @@ public class FilterActivity extends AbstractActivity implements FilterView.Prese
 	 */
 	@Override
 	public void start(AcceptsOneWidget containerWidget, EventBus eventBus) {
+		UtilLoading.showLoadSWRLEditor();
 		FilterView filterView = clientFactory.getFilterView();
 		filterView.setPresenter(this);
 		containerWidget.setWidget(filterView.asWidget());
+		UtilLoading.hide();
 	}
 
 	@Override

@@ -9,8 +9,6 @@ import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.CompositionPlace
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.FilterPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.OptionsPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.VisualizationPlace;
-import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.util.UtilLoading;
-import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.OptionsView;
 
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.activity.shared.ActivityMapper;
@@ -55,12 +53,8 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 	public Collection<EntityData> getSelection() {
 		return null;
 	}
-
 	@Override
-	public void reload() {
-		System.out.println("teste");
-		createHashURL(clientFactory.getURLWebProtege());
-	}
+	public void reload() {}
 
 	@Override
 	public void initialize() {
@@ -81,15 +75,8 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 	}
 
 	private void loadSWRLEditor() {
-
-
-		UtilLoading.showLoadSWRLEditor();
 		
-		String urlWebProtege = "ontology="
-				+ project.getProjectName().replace(" ", "+")
-				+ "&tab=SwrlEditorTab";
-
-		createHashURL(urlWebProtege);
+		String urlWebProtege = createHashURL();
 
 
 		defaultPlace = new VisualizationPlace("");
@@ -104,8 +91,10 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 		clientFactory.setWritePermission(project
 				.hasWritePermission(GlobalSettings.getGlobalSettings()
 						.getUserName()));
-		clientFactory.setURLWebProtege(urlWebProtege);
+		
 		clientFactory.setPortlet(this);
+		clientFactory.setURLWebProtege(urlWebProtege);
+		
 
 		EventBus eventBus = clientFactory.getEventBus();
 		PlaceController placeController = clientFactory.getPlaceController();
@@ -125,16 +114,23 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 
 		// Goes to place represented on URL or default place
 		historyHandler.handleCurrentHistory();
-
-		UtilLoading.showLoadSWRLEditor();		
+	
 	}
 
-	private void createHashURL(String urlWebProtege){
+	private String createHashURL(){
+
+		String ontology = project.getProjectName().replace(" ", "+");
+		String tab = "SwrlEditorTab";
+		
+		String urlWebProtege = "ontology="
+				+ ontology
+				+ "&tab="+tab;
 
 		String newURL;
 
-		if (Window.Location.getHref().contains("?gwt.codesvr=127.0.0.1")){
-			String href = Window.Location.getHref();
+		String href = Window.Location.getHref();
+
+		if (href.contains("?gwt.codesvr=127.0.0.1")){
 
 			href =  href.substring(href.indexOf("?gwt.codesvr=127.0.0.1"));
 
@@ -146,16 +142,23 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 		}else
 			newURL = "#visualization:" + urlWebProtege;
 
-		if (!Window.Location.getHref().trim().contains(newURL) || ( 
-				!Window.Location.getHref().trim().contains("#"+CompositionPlace.getNamePlace()+":") &&
-				!Window.Location.getHref().trim().contains("#"+FilterPlace.getNamePlace()+":") &&
-				!Window.Location.getHref().trim().contains("#"+OptionsPlace.getNamePlace()+":") &&
-				!Window.Location.getHref().trim().contains("#"+VisualizationPlace.getNamePlace()+":"))
-			){
-			Window.Location.replace(newURL);
-		}else{
+		String hash = Window.Location.getHash();
 
+		if ((!hash.contains(ontology)) || (!hash.contains(tab))){
+			Window.Location.replace(newURL);
+			//System.out.println("replace1");
+		}else if (hash.trim().contains("#"+CompositionPlace.getNamePlace()+":") ||
+				hash.trim().contains("#"+FilterPlace.getNamePlace()+":") ||
+				hash.trim().contains("#"+OptionsPlace.getNamePlace()+":")){
+			
+		}else if (!hash.trim().contains(newURL)){
+			Window.Location.replace(newURL);
+			//System.out.println("replace2");
+		}else{
+			Window.Location.replace(newURL);
+			//System.out.println("replace3");
 		}
+		return urlWebProtege;
 	}
 
 	@Override
@@ -216,7 +219,7 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 			}
 		}
 	}
-
+	
 	/*
 	 protected void getProjectConfiguration(Project project) {
 		UIUtil.showLoadProgessBar("Loading " + project.getProjectName() + " configuration", "Loading");

@@ -49,6 +49,7 @@ public class VisualizationActivity extends AbstractActivity implements Visualiza
 	 */
 	@Override
 	public void start(AcceptsOneWidget containerWidget, EventBus eventBus) {
+		UtilLoading.showLoadSWRLEditor();	
 		
 		getDecisionTreeAlgorithmList();
 		getGroupAlgorithmList();
@@ -124,6 +125,8 @@ public class VisualizationActivity extends AbstractActivity implements Visualiza
 							Window.alert("Error fetching rule information details");
 						}
 					});
+		}else{
+			UtilLoading.hide();
 		}
 	}
 

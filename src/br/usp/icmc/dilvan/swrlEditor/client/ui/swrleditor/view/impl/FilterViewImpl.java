@@ -61,7 +61,6 @@ public class FilterViewImpl extends Composite implements FilterView{
 	@Override
 	public void setPresenter(Presenter presenter) {
 		this.presenter = presenter;
-		//TODO Pedir para o Dilvan, se eh certo assim?
 		ontologyView.setPresenter((OntologyView.Presenter) presenter);
 	}
 
@@ -75,9 +74,6 @@ public class FilterViewImpl extends Composite implements FilterView{
 	private void addFilter(final Filter filter){
 		HorizontalPanel pnlFilter = new HorizontalPanel();
 
-		
-		
-		
 		HTML btn = new HTML("<img src=\""+Resources.INSTANCE.fechar().getURL()+"\">");
 
 		btn.setStyleName(Resources.INSTANCE.swrleditor().linkRemove());
@@ -112,8 +108,8 @@ public class FilterViewImpl extends Composite implements FilterView{
 		for (String aux : listFilter)
 			listTypes.addItem(aux);
 
-				for (String aux : listRulePart)
-					listParts.addItem(aux);
+		for (String aux : listRulePart)
+			listParts.addItem(aux);
 	}
 
 	@Override
@@ -161,7 +157,6 @@ public class FilterViewImpl extends Composite implements FilterView{
 
 	@UiHandler("listTypes")
 	void onFilterTypeChange(ChangeEvent event) {
-		// Test if user selected the type ruleName or not
 		if("Rule name".equals(listTypes.getItemText(listTypes.getSelectedIndex()))){
 			listParts.setEnabled(false);
 		} else {
@@ -171,8 +166,8 @@ public class FilterViewImpl extends Composite implements FilterView{
 
 	@UiHandler("txtFilter")
 	void onFilterStringKeyUp(KeyUpEvent event) {
-		// User press enter to filter
 		if( event.getNativeKeyCode() == 13 && !txtFilter.getValue().isEmpty())
 			btnAddFilter.click();
+		
 	}
 }

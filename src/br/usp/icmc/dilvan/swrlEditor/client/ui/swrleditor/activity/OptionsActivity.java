@@ -4,6 +4,7 @@ import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.ClientFactory;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.mvp.AppActivityMapper;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.OptionsPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.VisualizationPlace;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.util.UtilLoading;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.OptionsView;
 
 import com.google.gwt.activity.shared.AbstractActivity;
@@ -45,6 +46,7 @@ public class OptionsActivity extends AbstractActivity implements OptionsView.Pre
 							activityMapper.getDecisionTreeAlgorithms(), 
 							activityMapper.getSimilarRulesAlgorithms(), 
 							activityMapper.getSuggestTermsAlgorithms());
+					UtilLoading.hide();
 				}
 			
 			}

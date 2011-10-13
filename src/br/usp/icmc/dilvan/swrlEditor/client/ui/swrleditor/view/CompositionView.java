@@ -37,6 +37,7 @@ public interface CompositionView extends IsWidget
 		void saveRule();
 		
 		void getSimilarRules();
+		void goToVisualization();
 	}
 
 	
