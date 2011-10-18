@@ -26,6 +26,7 @@ public interface SWRLService extends RemoteService {
 	RuleEvents getRuleEvents(String projectName, Long fromVersion);
 	
 	Rule getRule(String projectName, String ruleName);
+	String getRuleName(String projectName, String antecedent, String consequent);
 	Rule getStringToRule(String projectName, String rule);
 
 	Errors getErrorsList(String projectName, Rule rule, boolean isNew);

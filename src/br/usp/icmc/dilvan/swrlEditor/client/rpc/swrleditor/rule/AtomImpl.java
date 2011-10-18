@@ -112,4 +112,26 @@ public class AtomImpl implements Atom {
 		return a;
 	
 	}
+
+	@Override
+	public boolean equals(Object atom) {
+		Atom a = ((Atom)atom);
+		boolean result = this.predicateID.equals( a.getPredicateID()) || this.predicateLabel.equals(a.getPredicateID());
+		
+		if (result){
+			if (a.getCountVariables() != this.getCountVariables())
+				result = false;
+			else{
+				for (int i = 0; i < this.getCountVariables(); i++)
+					if (!a.getVariables().get(i).equals(this.getVariables().get(i))){
+						result = false;
+						break;
+					}
+						
+			}
+				
+		}
+		
+		return result;
+	}
 }

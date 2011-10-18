@@ -15,6 +15,8 @@ public interface OptionsView extends IsWidget
 	
 	public final String SWRLEditor = "SWRLEditor_";
 
+	public static String UsingIDorLabelStr = SWRLEditor + "UsingIDorLabelStr";
+
 	public static String EditorCompositionBool = SWRLEditor + "EditorComposition";
 	public static String SWRLCompositionBool = SWRLEditor + "SWRLComposition";
 	public static String AutismCompositionBool = SWRLEditor + "AutismComposition";
@@ -52,6 +54,10 @@ public interface OptionsView extends IsWidget
 	public static String tabCompositionEditor = "Editor";
 	public static String tabCompositionSWRL = "SWRL";
 	public static String tabCompositionAutism = "Autism";
+	
+	public static String viewUsingID = "rdf:ID";
+	public static String viewUsingLabel = "rdfs:Label";
+	
 	
 
 	void setPresenter(Presenter presenter);

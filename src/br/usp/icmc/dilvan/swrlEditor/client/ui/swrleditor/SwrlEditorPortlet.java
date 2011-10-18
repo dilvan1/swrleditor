@@ -179,8 +179,8 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 
 	@Override
 	public void onLogout(String userName) {
-		ProjectConfigurationServiceManager.getInstance().getProjectConfiguration(project.getProjectName(),
-				userName, new GetProjectConfigurationHandler(project));
+		//ProjectConfigurationServiceManager.getInstance().getProjectConfiguration(project.getProjectName(),
+		//		userName, new GetProjectConfigurationHandler(project));
 	}
 
 	class GetProjectConfigurationHandler extends AbstractAsyncHandler<ProjectConfiguration> {
@@ -200,17 +200,14 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 
 		@Override
 		public void handleSuccess(ProjectConfiguration config) {
-			project.setProjectConfiguration(config);
+			//project.setProjectConfiguration(config);
 			for (TabConfiguration tab: config.getTabs()){
 				if (tab.getName().equals(SwrlEditorTab.class.getName())){
-					//System.out.println(tab.getProperties());
-					//System.out.println(tab.getStringProperty(OptionsView.AlgorithmSimilarRulesStr, "putz"));
 
 					for(TabColumnConfiguration colTab : tab.getColumns()){
 						for(PortletConfiguration portletConfig : colTab.getPortlets()){
 							if(portletConfig.getName().equals(SwrlEditorPortlet.class.getName())){
-								//System.out.println(portletConfig.getProperties());
-								//System.out.println(portletConfig.getStringProperty(OptionsView.AlgorithmDecisionTreeStr_, "putz"));
+								clientFactory.setConfigOnLogin(portletConfig.getProperties());
 							}
 						}
 					}
@@ -219,13 +216,4 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 			}
 		}
 	}
-	
-	/*
-	 protected void getProjectConfiguration(Project project) {
-		UIUtil.showLoadProgessBar("Loading " + project.getProjectName() + " configuration", "Loading");
-		ProjectConfigurationServiceManager.getInstance().getProjectConfiguration(project.getProjectName(),
-				GlobalSettings.getGlobalSettings().getUserName(), new GetProjectConfigurationHandler(project));
-	 */
-
-
 }

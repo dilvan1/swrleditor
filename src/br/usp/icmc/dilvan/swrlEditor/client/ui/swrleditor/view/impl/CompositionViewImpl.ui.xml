@@ -41,8 +41,8 @@
 									<b>Rule Name: </b>
 								</g:InlineHTML>
 								<g:TextBox ui:field="txtRuleName" width="269px" />
-								<g:Button ui:field="btnSave" text="Save"/>
-								<g:Button ui:field="btnCancel" text="Cancel"/>
+								<g:Button ui:field="btnSave" text="Save" />
+								<g:Button ui:field="btnCancel" text="Cancel" />
 							</g:HorizontalPanel>
 						</g:north>
 						<g:center>
@@ -64,8 +64,10 @@
 											<g:SimplePanel ui:field="tabSWRL">
 											</g:SimplePanel>
 										</g:tab>
-										<!-- <g:tab> <g:header>Autism</g:header> <g:SimplePanel ui:field="tabAutism" 
-											/> </g:tab> -->
+										<g:tab>
+											<g:header>Autism</g:header>
+											<g:SimplePanel ui:field="tabAutism" />
+										</g:tab>
 									</g:TabLayoutPanel>
 								</g:center>
 

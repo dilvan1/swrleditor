@@ -24,4 +24,6 @@ public interface Variable extends Serializable, Cloneable {
 	public String getFormatedLabel();
 
 	public Variable cloneOnlyID();
+	
+	public boolean equals(Object variable);
 }

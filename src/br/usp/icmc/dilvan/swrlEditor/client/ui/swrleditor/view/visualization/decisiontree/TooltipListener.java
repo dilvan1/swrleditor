@@ -1,4 +1,4 @@
-package br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.visualization;
+package br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.visualization.decisiontree;
 
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;

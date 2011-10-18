@@ -43,6 +43,9 @@ public class AppActivityMapper implements ActivityMapper {
 	
 	private boolean waitEventServer = false;
 	
+	
+	private String tempAntecedent = "";
+	
 	/**
 	 * AppActivityMapper associates each Place with its corresponding
 	 * {@link Activity}
@@ -197,5 +200,13 @@ public class AppActivityMapper implements ActivityMapper {
 				}
 			});
 		}
+	}
+	
+	public void setNewAntecedent(String antecedent) {
+		this.tempAntecedent = antecedent;
+	}
+
+	public String getNewAntecedent() {
+		return this.tempAntecedent;
 	}
 }

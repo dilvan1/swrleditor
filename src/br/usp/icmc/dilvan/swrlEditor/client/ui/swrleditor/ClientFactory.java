@@ -50,4 +50,5 @@ public interface ClientFactory
 	
 	void setOption(String name, Object value);
 	void saveOptions(AbstractAsyncHandler<Void> saveHandler);
+	void setConfigOnLogin(Map<String, Object> properties);
 }

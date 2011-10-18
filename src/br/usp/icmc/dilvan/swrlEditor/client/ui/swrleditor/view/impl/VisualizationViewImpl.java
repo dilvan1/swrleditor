@@ -199,7 +199,21 @@ public class VisualizationViewImpl extends Composite implements
 
 	@Override
 	public void setTypeView(TYPE_VIEW typeView) {
+
 		this.typeView = typeView;
+		
+		if (simpleRulesList != null)
+			for (SimpleRuleView rw : simpleRulesList)
+				rw.setTypeView(typeView);
+		if (simpleRulesText != null)
+			for (SimpleRuleView rw : simpleRulesText)
+				rw.setTypeView(typeView);
+		if (simpleRulesSWRL != null)
+			for (SimpleRuleView rw : simpleRulesSWRL)
+				rw.setTypeView(typeView);
+		if (simpleRulesAutism != null)
+			for (SimpleRuleView rw : simpleRulesAutism)
+				rw.setTypeView(typeView);
 	}
 
 	@Override
@@ -683,6 +697,9 @@ public class VisualizationViewImpl extends Composite implements
 	public void setDecisionTreeAlgorithmList(List<String> algorithms, Map<String, Object> config) {
 		createViewDecisionTree();
 		viewDecisionTree.setListAlgorithm(algorithms, config);
+		if (tabVisualization.getSelectedIndex() == 5) {
+			viewDecisionTree.loadDecisionTree();
+		}
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view;
 
 import java.util.List;
+import java.util.Map;
 
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Rule;
@@ -30,6 +31,8 @@ public interface CompositionView extends IsWidget
 	void showSimilarTerms(List<Atom> listTerms);
 	
 	void addAtom(Atom atom, boolean isAntecedent);
+	void setConfiguration(Map<String, Object> config);
+
 	
 	public interface Presenter
 	{
@@ -39,9 +42,5 @@ public interface CompositionView extends IsWidget
 		void getSimilarRules();
 		void goToVisualization();
 	}
-
-	
-
-
 	
 }

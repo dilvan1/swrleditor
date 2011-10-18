@@ -54,5 +54,9 @@ public interface Rule extends Serializable{
 	public boolean removeAtom(Atom atom);
 	
 	public Rule cloneOnlyID();
+	
+	public boolean existsAtomAntecedent(Atom atom);
 
+	public boolean existsAtomConsequent(Atom atom);
+	
 }

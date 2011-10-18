@@ -12,6 +12,14 @@ import java.util.List;
  */
 public interface NodeDecisionTree extends Serializable {
 	
+	/* Default label to represent the root node */
+	public final static String ROOT_VALUE = "root";
+
+
+	/* Default label to represent the consequent node */
+	public final static String CONSEQUENT_VALUE = "Consequent";
+	
+	
 	/**
 	 * Enum listing all the possible types of the tree nodes.
 	 * All names are self explanatory. 

@@ -29,6 +29,9 @@ public class ErrorsAnalises {
 
 	public Errors getErrors(Rule rule, boolean newRule){
 
+		if (rule.getNameRule().trim().isEmpty())
+			err.addErrors("Was not informed a name for the rule");
+		
 		// Sintatic Errors
 		//Predicates and Atom Types
 		isPredicatesWrong(rule);
@@ -171,8 +174,13 @@ public class ErrorsAnalises {
 				l = l.substring(1, l.length()-1);
 			}
 
-			boolean aux = ontologyManager.hasOWLClass(l) || ontologyManager.hasOWLDatatype(l) || ontologyManager.hasOWLDatatypePropertie(l) || ontologyManager.hasOWLObjectPropertie(l) || swrlManager.hasBuiltin(l);
-
+			boolean aux = l.toLowerCase().equals("differentfrom")
+					|| l.toLowerCase().equals("sameas")
+					|| ontologyManager.hasOWLClass(l)
+					|| ontologyManager.hasOWLDatatype(l)
+					|| ontologyManager.hasOWLDatatypePropertie(l)
+					|| ontologyManager.hasOWLObjectPropertie(l)
+					|| swrlManager.hasBuiltin(l);
 			
 			if (!aux){
 				List<String> listIds = ontologyManager.getIDsForLabel(l, false);

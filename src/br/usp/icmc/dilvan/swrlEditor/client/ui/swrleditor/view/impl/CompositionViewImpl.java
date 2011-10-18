@@ -1,13 +1,16 @@
 package br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import br.usp.icmc.dilvan.swrlEditor.client.resources.Resources;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Rule;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom.TYPE_ATOM;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.util.Options;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.CompositionView;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.OntologyView;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.OptionsView;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.VisualizationView.TYPE_VIEW;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.composition.CompositionTabEditorView;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.composition.CompositionTabSWRLView;
@@ -49,6 +52,7 @@ public class CompositionViewImpl extends Composite implements CompositionView {
 	@UiField TabLayoutPanel tabsComposition;
 	@UiField SimplePanel tabList;
 	@UiField SimplePanel tabSWRL;
+	@UiField SimplePanel tabAutism;
 
 	@UiField TabLayoutPanel tabButton;
 	@UiField VerticalPanel pnlAddErrors;
@@ -106,6 +110,29 @@ public class CompositionViewImpl extends Composite implements CompositionView {
 		this.typeView = typeView;
 		editorList.setTypeView(typeView);
 		editorSWRL.setTypeView(typeView);
+	}
+	
+	@Override
+	public void setConfiguration(Map<String, Object> config) {
+		if (config != null){
+			tabsComposition.getTabWidget(0).getParent().setVisible(Options.getBooleanOption(config, OptionsView.EditorCompositionBool, true));
+			tabsComposition.getTabWidget(1).getParent().setVisible(Options.getBooleanOption(config, OptionsView.SWRLCompositionBool, true));
+			tabsComposition.getTabWidget(2).getParent().setVisible(Options.getBooleanOption(config, OptionsView.AutismCompositionBool, true));
+			
+			String tabselected = Options.getStringOption(config, OptionsView.DefaultTabCompositionStr, "");
+			if (tabselected.equals(OptionsView.tabCompositionEditor))
+				tabsComposition.selectTab(0);
+			else if (tabselected.equals(OptionsView.tabCompositionSWRL))
+				tabsComposition.selectTab(1);
+			else if (tabselected.equals(OptionsView.tabCompositionAutism))
+				tabsComposition.selectTab(2);
+			else
+				tabsComposition.selectTab(0);
+		}	
+		// TODO remover quando fizer a composição para o autismo
+		tabsComposition.getTabWidget(2).getParent().setVisible(false);
+
+		
 	}
 	
 	@Override
@@ -249,4 +276,5 @@ public class CompositionViewImpl extends Composite implements CompositionView {
 	void onTabsCompositionSelection(SelectionEvent<Integer> event) {
 		showRule();
 	}
+
 }

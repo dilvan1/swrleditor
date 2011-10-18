@@ -65,10 +65,13 @@ public interface VisualizationView extends IsWidget
 		void deleteRule(String nameRule);
 		
 		void goToNewRule();
+		void goToNewRule(String antecedent);
+		
 		void goToOptions();
 		void goToInfo();
 		void goToFilter();
 		void goToEditRule(String ruleName);
+		void goToEditRule(String antecedent, String consequent);
 		void goToDuplicateAndEditRule(String ruleName);
 
 		void runRules();

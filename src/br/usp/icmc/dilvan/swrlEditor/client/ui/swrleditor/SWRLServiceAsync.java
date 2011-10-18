@@ -23,6 +23,7 @@ public interface SWRLServiceAsync {
 	void getRuleEvents(String projectName, Long fromVersion, AsyncCallback<RuleEvents> callback);
 	
 	void getRule(String projectName, String ruleName, AsyncCallback<Rule> callback);
+	void getRuleName(String projectName, String antecedent, String consequent, AsyncCallback<String> callback);
 	void getStringToRule(String projectName, String rule, AsyncCallback<Rule> callback);
 
 	void getErrorsList(String projectName, Rule rule, boolean isNew, AsyncCallback<Errors> callback);

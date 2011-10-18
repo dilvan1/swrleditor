@@ -26,5 +26,7 @@ public interface Atom extends Serializable, Cloneable {
 	public int getCountVariables();
 	
 	public Atom cloneOnlyID();
+	
+	public boolean equals(Object atom);
 
 }

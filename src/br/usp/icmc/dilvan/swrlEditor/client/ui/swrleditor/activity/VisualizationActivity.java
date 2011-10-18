@@ -17,8 +17,10 @@ import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.FilterPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.OptionsPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.VisualizationPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.CompositionPlace.COMPOSITION_MODE;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.util.Options;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.util.UtilLoading;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.InfoView;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.OptionsView;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.VisualizationView;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.VisualizationView.TYPE_VIEW;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.impl.InfoViewImpl;
@@ -61,7 +63,13 @@ public class VisualizationActivity extends AbstractActivity implements Visualiza
 		
 		if (!ruleSelected.isEmpty())
 			visualizationView.setRuleSelected(ruleSelected);
-		visualizationView.setTypeView(TYPE_VIEW.ID);
+		
+		if (Options.getStringOption(clientFactory.getPortletConfiguration(), OptionsView.UsingIDorLabelStr, OptionsView.viewUsingLabel).equals(OptionsView.viewUsingID)){
+			visualizationView.setTypeView(TYPE_VIEW.ID);
+		}else{
+			visualizationView.setTypeView(TYPE_VIEW.LABEL);
+		}
+
 		visualizationView.refreshRulesView();
 		getRuleSet();
 
@@ -71,6 +79,14 @@ public class VisualizationActivity extends AbstractActivity implements Visualiza
 	
 	@Override
 	public void goToNewRule() {
+		activityMapper.setNewAntecedent("");
+		DefaultPlace newPlace = new CompositionPlace(CompositionPlace.ID_MODE+"="+COMPOSITION_MODE.NEW+"&"+clientFactory.getURLWebProtege());
+		clientFactory.getPlaceController().goTo(newPlace);
+	}
+	
+	@Override
+	public void goToNewRule(String antecedent) {
+		activityMapper.setNewAntecedent(antecedent);
 		DefaultPlace newPlace = new CompositionPlace(CompositionPlace.ID_MODE+"="+COMPOSITION_MODE.NEW+"&"+clientFactory.getURLWebProtege());
 		clientFactory.getPlaceController().goTo(newPlace);
 	}
@@ -102,6 +118,29 @@ public class VisualizationActivity extends AbstractActivity implements Visualiza
 				+clientFactory.getURLWebProtege());
 		clientFactory.getPlaceController().goTo(newPlace);
 	}
+	
+	@Override
+	public void goToEditRule(String antecedent, String consequent) {
+		clientFactory.getRpcService().getRuleName(clientFactory.getProjectName(), antecedent, consequent, new AsyncCallback<String>() {
+			public void onSuccess(String result) {
+				if (result.equals("")){
+					Window.alert("Could not find this rule!");
+				}else{
+	
+					DefaultPlace newPlace = new CompositionPlace(CompositionPlace.ID_MODE+"="+COMPOSITION_MODE.EDIT+"&"
+							+CompositionPlace.ID_RULE_NAME+"="+result+"&"
+							+clientFactory.getURLWebProtege());
+					clientFactory.getPlaceController().goTo(newPlace);
+				}
+
+			}
+
+			public void onFailure(Throwable caught) {
+				Window.alert("Could not find this rule!");
+			}
+		});
+	}
+	
 	
 	@Override
 	public void goToDuplicateAndEditRule(String ruleName) {
@@ -296,4 +335,5 @@ public class VisualizationActivity extends AbstractActivity implements Visualiza
 	public void goToVisualization() {
 		((InfoViewImpl) clientFactory.getInfoView()).hide();
 	}
+
 }

@@ -8,15 +8,6 @@ public class NodeDecisionTreeRanking implements NodeDecisionTree {
 
 	//private defaultNodeInRulesTreeLabel nodeLabel;
 
-
-	/* Default label to represent the root node */
-	public final static String ROOT_VALUE = "root";
-
-
-	/* Default label to represent the consequent node */
-	public final static String CONSEQUENT_VALUE = "Consequent";
-
-
 	private static final long serialVersionUID = 1L;
 
 	private String value;

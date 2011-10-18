@@ -6,6 +6,9 @@ import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.RuleEvent;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.RuleEvents;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.RuleSet;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.RuleEvent.TYPE_EVENT;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.CompositionPlace;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.OptionsPlace;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.VisualizationPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.CompositionView;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.FilterView;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.InfoView;
@@ -29,6 +32,7 @@ import com.google.gwt.place.shared.PlaceController;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectConfigurationServiceManager;
+import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 
@@ -196,17 +200,14 @@ public class ClientFactoryImpl implements ClientFactory{
 	public void setWritePermission(boolean hasWritePermission) {
 		this.hasWritePermission = hasWritePermission;
 
-		if (visualizationView != null){
+		if (visualizationView != null)
 			visualizationView.setWritePermission(this.hasWritePermission);
-		}
-		if (compositionView != null){
+		
+		if (compositionView != null)
 			compositionView.setWritePermission(this.hasWritePermission);
-		}
-		if (optionsView != null){
+		
+		if (optionsView != null)
 			optionsView.setWritePermission(this.hasWritePermission);
-			optionsView.setOptions(portlet.getPortletConfiguration().getProperties());
-		}
-
 
 	}
 
@@ -303,8 +304,26 @@ public class ClientFactoryImpl implements ClientFactory{
 
 	@Override
 	public void saveOptions(AbstractAsyncHandler<Void> saveHandler) {
+		ProjectConfiguration config = project.getProjectConfiguration();
+		config.setOntologyName(project.getProjectName());
+		
 		ProjectConfigurationServiceManager.getInstance().saveProjectConfiguration(
-				getProjectName(), getUserLogged(), getProject().getProjectConfiguration(), saveHandler);
+				getProjectName(), getUserLogged(), config, saveHandler);
+	}
+
+	@Override
+	public void setConfigOnLogin(Map<String, Object> properties) {
+		if (this.getPlaceController().getWhere().getClass().getName().equals(VisualizationPlace.class.getName()))
+			if (visualizationView != null)
+				visualizationView.setConfiguration(properties);
+
+		if (this.getPlaceController().getWhere().getClass().getName().equals(CompositionPlace.class.getName()))
+			if (compositionView != null)
+				compositionView.setConfiguration(properties);
+		
+		if (this.getPlaceController().getWhere().getClass().getName().equals(OptionsPlace.class.getName()))
+			if (optionsView != null)
+				optionsView.setOptions(properties);
 	}
 	
 }

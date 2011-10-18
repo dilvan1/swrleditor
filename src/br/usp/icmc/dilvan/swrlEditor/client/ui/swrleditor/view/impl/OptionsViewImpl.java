@@ -27,6 +27,8 @@ public class OptionsViewImpl extends Composite implements OptionsView {
 	private static OptionsViewImplUiBinder uiBinder = GWT
 			.create(OptionsViewImplUiBinder.class);
 
+	
+	@UiField ListBox lstIDorLabel;
 
 	@UiField CheckBox chkEditorComposition;
 	@UiField CheckBox chkSWRLComposition;
@@ -75,6 +77,9 @@ public class OptionsViewImpl extends Composite implements OptionsView {
 		lstTypeViewSimilarRules.addItem(tabVisualizationText);
 		lstTypeViewSimilarRules.addItem(tabVisualizationSWRL);
 		lstTypeViewSimilarRules.addItem(tabVisualizationAutism);
+		
+		lstIDorLabel.addItem(viewUsingLabel);
+		lstIDorLabel.addItem(viewUsingID);
 
 		lstCheckAlgorithmGroups = new ArrayList<CheckBox>();
 		lstCheckAlgorithmDecisionTree = new ArrayList<CheckBox>();
@@ -204,6 +209,10 @@ public class OptionsViewImpl extends Composite implements OptionsView {
 
 	@Override
 	public void setOptions(Map<String, Object> config) {
+
+		setSelectItem(lstIDorLabel, Options.getStringOption(config, UsingIDorLabelStr, ""));
+
+		
 		chkEditorComposition.setValue(Options.getBooleanOption(config, EditorCompositionBool, true));
 		chkSWRLComposition.setValue(Options.getBooleanOption(config, SWRLCompositionBool, true));
 		chkAutismComposition.setValue(Options.getBooleanOption(config, AutismCompositionBool, true));
@@ -274,6 +283,8 @@ public class OptionsViewImpl extends Composite implements OptionsView {
 	}
 	
 	private void saveOptions (){
+		presenter.setStringOption(UsingIDorLabelStr, getValueLstBox(lstIDorLabel));
+
 		presenter.setBooleanOption(EditorCompositionBool, chkEditorComposition.getValue());
 		presenter.setBooleanOption(SWRLCompositionBool, chkSWRLComposition.getValue());
 		presenter.setBooleanOption(AutismCompositionBool, chkAutismComposition.getValue());

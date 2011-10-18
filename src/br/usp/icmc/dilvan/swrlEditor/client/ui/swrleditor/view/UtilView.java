@@ -45,9 +45,9 @@ public class UtilView {
 			endAtom = "</div>";
 
 		if (typeView == TYPE_VIEW.ID)
-			return "<div class=\"swrl-rule\"><span class=\""+ UtilResource.getCssTypeAtom(atom.getAtomType()) +"\">"+ atom.getPredicateID() +"</span>("+params+")"+endAtom;
+			return "<div class=\""+Resources.INSTANCE.swrleditor().swrlRule()+"\"><span class=\""+ UtilResource.getCssTypeAtom(atom.getAtomType()) +"\">"+ atom.getPredicateID() +"</span>("+params+")"+endAtom;
 		else
-			return "<div class=\"swrl-rule\"><span class=\""+ UtilResource.getCssTypeAtom(atom.getAtomType()) +"\">"+ atom.getPredicateLabel() +"</span>("+params+")"+endAtom;
+			return "<div class=\""+Resources.INSTANCE.swrleditor().swrlRule()+"\"><span class=\""+ UtilResource.getCssTypeAtom(atom.getAtomType()) +"\">"+ atom.getPredicateLabel() +"</span>("+params+")"+endAtom;
 	}
 
 	public static String getAtomsHightlights(List<Atom> atoms, TYPE_VIEW typeView){
@@ -68,9 +68,9 @@ public class UtilView {
 
 			
 			if (typeView == TYPE_VIEW.ID)
-				strAtom += "<div class=\"swrl-rule\"><span class=\""+ UtilResource.getCssTypeAtom(at.getAtomType()) +"\">"+ at.getPredicateID() +"</span>("+params+")";
+				strAtom += "<div class=\""+Resources.INSTANCE.swrleditor().swrlRule()+"\"><span class=\""+ UtilResource.getCssTypeAtom(at.getAtomType()) +"\">"+ at.getPredicateID() +"</span>("+params+")";
 			else
-				strAtom += "<div class=\"swrl-rule\"><span class=\""+ UtilResource.getCssTypeAtom(at.getAtomType()) +"\">"+ at.getPredicateLabel() +"</span>("+params+")";
+				strAtom += "<div class=\""+Resources.INSTANCE.swrleditor().swrlRule()+"\"><span class=\""+ UtilResource.getCssTypeAtom(at.getAtomType()) +"\">"+ at.getPredicateLabel() +"</span>("+params+")";
 		}
 		strAtom += "</div>";
 		return strAtom;

@@ -98,6 +98,40 @@ public class SWRLEditorServiceImpl extends RemoteServiceServlet implements SWRLS
 	} 
 
 	@Override
+	public String getRuleName(String projectName, String antecedent, String consequent) {
+		List<Atom> antecedents = getAtoms(projectName, antecedent);
+		List<Atom> consequents = getAtoms(projectName, consequent);
+		
+		RuleSet rules = getRules(projectName);
+
+		for (Rule r : rules){
+			if (r.getAntecedent().size() != antecedents.size() || r.getConsequent().size() != consequents.size())
+				continue;
+			boolean findRule = true;
+			for (Atom a: antecedents){
+				if (!r.existsAtomAntecedent(a)){
+					findRule = false;
+					break;
+				}
+			}
+			
+			if (findRule)
+				for (Atom a: consequents){
+					if (!r.existsAtomConsequent(a)){
+						findRule = false;
+						break;
+					}
+				}
+			
+			if (findRule)
+				return r.getNameRule();
+				
+		}
+		
+		return "";
+	}
+	
+	@Override
 	public Rule getStringToRule(String projectName, String rule) {
 		String parts[] = rule.split("->");
 		Rule newRule = new RuleImpl();
@@ -220,6 +254,8 @@ public class SWRLEditorServiceImpl extends RemoteServiceServlet implements SWRLS
 
 	@Override
 	public ArrayList<Rule> getSimilarRules(String projectName, Rule base, float distance, boolean isNew) {
+		
+		
 		ArrayList<Rule> list = new ArrayList<Rule>();
 		MatrizPredicateCharacteristic mpc = new MatrizPredicateCharacteristic();
 		mpc.addRule(getRules(projectName));
@@ -236,10 +272,12 @@ public class SWRLEditorServiceImpl extends RemoteServiceServlet implements SWRLS
 				}
 			}
 		}
+		
 		if(rule != null){
 			for(Rule r : mpc.getIdenticalRules(rule, DISTANCE_MODE.MANHATHAN, distance))
 				list.add(r);
 		}
+		
 		return list;
 	}
 

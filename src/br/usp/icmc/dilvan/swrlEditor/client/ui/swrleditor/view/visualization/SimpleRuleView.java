@@ -77,6 +77,14 @@ public abstract class SimpleRuleView extends Composite {
 		btnDeleteRule.setEnabled(permission);
 	}
 	
+	public void setTypeView(TYPE_VIEW typeView){
+		if (this.typeView != typeView){
+			this.typeView = typeView;
+			show();
+		}else
+			this.typeView = typeView;
+	}
+	
 	/**
 	 * Define if the action buttons is visible or not 
 	 * @param visible True if visible and False when is not visible

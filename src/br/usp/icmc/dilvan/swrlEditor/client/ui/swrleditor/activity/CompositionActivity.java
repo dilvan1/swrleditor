@@ -13,9 +13,11 @@ import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.mvp.AppActivityMapper;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.CompositionPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.VisualizationPlace;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.place.CompositionPlace.COMPOSITION_MODE;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.util.Options;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.util.UtilLoading;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.CompositionView;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.OntologyView;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.OptionsView;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.VisualizationView.TYPE_VIEW;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.composition.CompositionTabView;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.composition.PopUpLocationView;
@@ -57,7 +59,13 @@ public class CompositionActivity extends AbstractActivity implements
 	@Override
 	public void start(AcceptsOneWidget containerWidget, EventBus eventBus) {
 		CompositionView compositionView = clientFactory.getCompositionView();
-		compositionView.setTypeView(TYPE_VIEW.ID);
+		compositionView.setConfiguration(clientFactory.getPortletConfiguration());
+		
+		if (Options.getStringOption(clientFactory.getPortletConfiguration(), OptionsView.UsingIDorLabelStr, OptionsView.viewUsingLabel).equals(OptionsView.viewUsingID))
+			compositionView.setTypeView(TYPE_VIEW.ID);
+		else
+			compositionView.setTypeView(TYPE_VIEW.LABEL);
+			
 		compositionView.setPresenter(this);
 		compositionView.setWritePermission(clientFactory.getProject().hasWritePermission());
 
@@ -65,31 +73,53 @@ public class CompositionActivity extends AbstractActivity implements
 	}
 
 	private void getRule(final String ruleName, final COMPOSITION_MODE mode) {
-		clientFactory.getRpcService().getRule(clientFactory.getProjectName(),
-				ruleName, new AsyncCallback<Rule>() {
+		if (mode == COMPOSITION_MODE.NEW) {
+			if (activityMapper.getNewAntecedent().equals("")){
+				originalNameRule = "";
+				rule = new RuleImpl();
+			}else{
+				clientFactory.getRpcService().getStringToRule(
+						clientFactory.getProjectName(), activityMapper.getNewAntecedent(),
+						new AsyncCallback<Rule>() {
+							@Override
+							public void onSuccess(Rule result) {
+								rule = result;
+								originalNameRule = "";
+								clientFactory.getCompositionView().setRule(rule);
+								UtilLoading.hide();
+							}
 
-					public void onSuccess(Rule result) {
-						if (mode == COMPOSITION_MODE.NEW) {
-							rule = new RuleImpl();
-						} else if (mode == COMPOSITION_MODE.EDIT) {
-							rule = result;
-						} else if (mode == COMPOSITION_MODE.DUPLICATE) {
-							rule = result.cloneOnlyID();
-							rule.setNameRule(rule.getNameRule() + "_1");
+							@Override
+							public void onFailure(Throwable caught) {
+								Window.alert("Error fetching rule");
+								UtilLoading.hide();
+							}
+						});
+			}
+			
+		}else {
+			clientFactory.getRpcService().getRule(clientFactory.getProjectName(),
+					ruleName, new AsyncCallback<Rule>() {
+
+						public void onSuccess(Rule result) {
+							if (mode == COMPOSITION_MODE.EDIT) {
+								rule = result;
+							} else if (mode == COMPOSITION_MODE.DUPLICATE) {
+								rule = result.cloneOnlyID();
+								rule.setNameRule(rule.getNameRule() + "_1");
+							}
+							
+							originalNameRule = rule.getNameRule();
+							clientFactory.getCompositionView().setRule(rule);
+							UtilLoading.hide();
 						}
-						
-						
-						
-						originalNameRule = rule.getNameRule();
-						clientFactory.getCompositionView().setRule(rule);
-						UtilLoading.hide();
-					}
 
-					public void onFailure(Throwable caught) {
-						Window.alert("Error fetching rule : " + ruleName);
-						UtilLoading.hide();
-					}
-				});
+						public void onFailure(Throwable caught) {
+							Window.alert("Error fetching rule : " + ruleName);
+							UtilLoading.hide();
+						}
+					});
+		} 
 	}
 
 	@Override

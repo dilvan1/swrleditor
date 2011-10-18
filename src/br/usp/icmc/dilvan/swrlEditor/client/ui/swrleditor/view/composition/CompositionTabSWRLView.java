@@ -2,6 +2,7 @@ package br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.composition;
 
 import java.util.List;
 
+import br.usp.icmc.dilvan.swrlEditor.client.resources.Resources;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.AtomImpl;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Rule;
@@ -19,7 +20,6 @@ import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.BlurEvent;
-
 
 public class CompositionTabSWRLView extends Composite implements
 		CompositionTabView {
@@ -69,41 +69,69 @@ public class CompositionTabSWRLView extends Composite implements
 	}
 
 	private void loadAndShowRule() {
-		if (swrlAntecedentFocused) {
-			String html = getHTMLFormat(rule.getAntecedent());
-			if (!html.trim().equals(swrlAntecedent.getHTML()))
-				swrlAntecedent.setHTML(html);
-		} else
-			swrlAntecedent.setHTML(getHTMLFormat(rule.getAntecedent()));
+		if (rule != null) {
+			if (swrlAntecedentFocused) {
+				String html = getHTMLFormat(rule.getAntecedent());
+				if (!html.trim().equals(swrlAntecedent.getHTML()))
+					swrlAntecedent.setHTML(html);
+			} else
+				swrlAntecedent.setHTML(getHTMLFormat(rule.getAntecedent()));
 
-		if (swrlConsequentFocused) {
-			String html = getHTMLFormat(rule.getConsequent());
-			if (!html.trim().equals(swrlConsequent.getHTML()))
-				swrlConsequent.setHTML(html);
-		} else
-			swrlConsequent.setHTML(getHTMLFormat(rule.getConsequent()));
+			if (swrlConsequentFocused) {
+				String html = getHTMLFormat(rule.getConsequent());
+				if (!html.trim().equals(swrlConsequent.getHTML()))
+					swrlConsequent.setHTML(html);
+			} else
+				swrlConsequent.setHTML(getHTMLFormat(rule.getConsequent()));
+		}
 	}
 
 	private String getHTMLFormat(List<Atom> atoms) {
-		String aux = UtilView.getAtomsHightlights(atoms, typeView);/*
-				.replace("class=\"swrl-rule\"", "style=\"" + STYLE_RULE + "\"")
-				.replace("class=\"atom_CLASS\"",
-						"style=\"" + STYLE_CLASS + "\"")
-				.replace("class=\"atom_INDIVIDUAL_PROPERTY\"",
+		String aux = UtilView
+				.getAtomsHightlights(atoms, typeView)
+				.replace(
+						"class=\"" + Resources.INSTANCE.swrleditor().swrlRule()
+								+ "\"", "style=\"" + STYLE_RULE + "\"")
+				.replace(
+						"class=\""
+								+ Resources.INSTANCE.swrleditor().atom_CLASS()
+								+ "\"", "style=\"" + STYLE_CLASS + "\"")
+				.replace(
+						"class=\""
+								+ Resources.INSTANCE.swrleditor()
+										.atom_INDIVIDUAL_PROPERTY() + "\"",
 						"style=\"" + STYLE_OBJECTPROPERTY + "\"")
-				.replace("class=\"atom_DATAVALUE_PROPERTY\"",
+				.replace(
+						"class=\""
+								+ Resources.INSTANCE.swrleditor()
+										.atom_DATAVALUE_PROPERTY() + "\"",
 						"style=\"" + STYLE_DATATYPEPROPERTY + "\"")
-				.replace("class=\"atom_BUILTIN\"",
+				.replace(
+						"class=\""
+								+ Resources.INSTANCE.swrleditor()
+										.atom_BUILTIN() + "\"",
 						"style=\"" + STYLE_BUILTIN + "\"")
-				.replace("class=\"param_IVARIABLE\"",
+				.replace(
+						"class=\""
+								+ Resources.INSTANCE.swrleditor()
+										.param_IVARIABLE() + "\"",
 						"style=\"" + STYLE_VARIABLE + "\"")
-				.replace("class=\"param_DVARIABLE\"",
+				.replace(
+						"class=\""
+								+ Resources.INSTANCE.swrleditor()
+										.param_DVARIABLE() + "\"",
 						"style=\"" + STYLE_VARIABLE + "\"")
-				.replace("class=\"param_DATALITERAL\"",
+				.replace(
+						"class=\""
+								+ Resources.INSTANCE.swrleditor()
+										.param_DATALITERAL() + "\"",
 						"style=\"" + STYLE_DATATYPE + "\"")
-				.replace("class=\"param_INDIVIDUALID\"",
+				.replace(
+						"class=\""
+								+ Resources.INSTANCE.swrleditor()
+										.param_INDIVIDUALID() + "\"",
 						"style=\"" + STYLE_DATATYPE + "\"");
-*/
+
 		return aux;
 	}
 

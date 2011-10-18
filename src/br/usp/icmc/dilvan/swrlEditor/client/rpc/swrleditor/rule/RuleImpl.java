@@ -219,4 +219,24 @@ public class RuleImpl implements Rule {
 		}
 		return false;
 	}
+
+	@Override
+	public boolean existsAtomAntecedent(Atom atom) {
+		boolean result = false;
+		for (Atom a: getAntecedent())
+			if (a.equals(atom)){
+				result = true;
+			}
+		return result;
+	}
+
+	@Override
+	public boolean existsAtomConsequent(Atom atom) {
+		boolean result = false;
+		for (Atom a: getConsequent())
+			if (a.equals(atom)){
+				result = true;
+			}
+		return result;
+	}
 }

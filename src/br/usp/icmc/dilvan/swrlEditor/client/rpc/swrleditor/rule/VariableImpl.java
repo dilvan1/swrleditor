@@ -126,5 +126,10 @@ public class VariableImpl implements Variable {
 		}
 
 	}
+
+	@Override
+	public boolean equals(Object variable) {
+		return this.simpleID.equals( ((Variable)variable).getSimpleID()) || this.simpleLabel.equals( ((Variable)variable).getSimpleID());
+	}
 	
 }
