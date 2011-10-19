@@ -100,6 +100,7 @@ public class VisualizationActivity extends AbstractActivity implements Visualiza
 	public void goToInfo() {
 		InfoView info = clientFactory.getInfoView();
 
+		
 		info.setPresenter(this);
 		info.setRuleInfo(new GeneratedRulesInfo(activityMapper.getRules()).getRulesInfo());
 		((InfoViewImpl)info).show();

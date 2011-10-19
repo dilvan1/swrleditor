@@ -1,3 +1,25 @@
+.panel_cbtn {
+	padding-bottom: 35px;
+}
+
+.panel_sbtn {
+	padding-bottom: 0;
+}
+
+.titleViews {
+	font-size: 15pt;
+	font-weight: bold;
+	font-family: sans-serif;
+}
+
+.panelBase_SimpleRuleView {
+	background-color: white;
+	border: 1px solid gray;
+	margin-bottom: 5px;
+	display: inline-block;
+	clear: both;
+}
+
 .panel_white {
 	background-color: white;
 }
@@ -21,10 +43,6 @@
 .properties {
 	width: 100%;
 	margin-right: 10px;
-}
-
-.panel {
-	width: 100%;
 }
 
 /** Add css rules here for your application. */
@@ -230,19 +248,15 @@ h2 {
 @sprite .noerror {
 	color: green;
 	gwt-image: 'ok';
-	/*background-image: url(../images/swrleditor/ok.png);*/
 }
 
 @sprite .error {
 	color: red;
 	gwt-image: 'error';
-
-	/*background-image: url(../images/swrleditor/error.png);*/
 }
 
 @sprite .warning {
 	gwt-image: 'warning';
-	/*background-image: url(../images/swrleditor/warning.png);*/
 }
 
 /*Filters*/
@@ -274,11 +288,4 @@ h2 {
 
 .popup-title .label-uppercase {
 	text-transform: uppercase;
-}
-
-.titleViews{
-	font-size: 15pt;
-	font-weight: bold;
-	font-family: sans-serif;
-	
 }

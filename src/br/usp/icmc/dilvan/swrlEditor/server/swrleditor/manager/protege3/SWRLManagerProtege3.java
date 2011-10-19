@@ -97,7 +97,6 @@ public class SWRLManagerProtege3 implements SWRLManager {
 				//count++;
 				
 				rule.getName();
-
 				rulesSet.add(createRule(rule));
 				//if (count == 5)
 				//	break;

@@ -27,8 +27,9 @@ public class InfoViewImpl extends DialogBox implements InfoView{
 
 	@UiField SimplePanel tabInformation;
 	@UiField(provided=true) CellTable<RuleInfo> cellTable = new CellTable<RuleInfo>();
-	@UiField Button btnOK;
-
+	@UiField Button btnOK1;
+	@UiField Button btnOK2;
+	
 	private Presenter presenter;
 	
 	
@@ -53,7 +54,6 @@ public class InfoViewImpl extends DialogBox implements InfoView{
 
 		// Push the data into the widget.
 		cellTable.setRowData(0, ruleInfo);
-		
 	}
 	
 	
@@ -101,7 +101,7 @@ public class InfoViewImpl extends DialogBox implements InfoView{
 		cellTable.addColumn(consequentColumn, "Consequent");
 	}
 	
-	@UiHandler("btnOK")
+	@UiHandler({"btnOK1", "btnOK2"})
 	void onBtnOKClick(ClickEvent event) {
 		presenter.goToVisualization();
 		

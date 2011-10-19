@@ -22,6 +22,7 @@ import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.decisiontree.GenerateNode
 import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.decisiontree.GenerateNodeRootDecisionTreeRanking;
 import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.decisiontree.GenerateNodeRootDecisionTreeRankingDependency;
 import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.decisiontree.GenerateNodeRootDecisionTreeRankingParaphrase;
+import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.groups.GroupAxiome;
 import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.groups.GroupRules;
 import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.groups.KmeansAtom;
 import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.groups.KmeansPredicate;
@@ -302,6 +303,9 @@ public class SWRLEditorServiceImpl extends RemoteServiceServlet implements SWRLS
 
 		GroupRules grpRules;
 
+		grpRules = new GroupAxiome();
+		ret.add(new NameGroupAlgorithm(grpRules.getAlgorithmName(), grpRules.canSetNumberOfGroups()));
+
 		grpRules = new KmeansAtom();
 		ret.add(new NameGroupAlgorithm(grpRules.getAlgorithmName(), grpRules.canSetNumberOfGroups()));
 
@@ -318,12 +322,15 @@ public class SWRLEditorServiceImpl extends RemoteServiceServlet implements SWRLS
 		
 		GroupRules algorithm = null;
 
-		if ((new KmeansAtom()).getAlgorithmName().equals(algorithmName))
+		if ((new GroupAxiome()).getAlgorithmName().equals(algorithmName))
+			algorithm = new GroupAxiome();
+		else if ((new KmeansAtom()).getAlgorithmName().equals(algorithmName))
 			algorithm = new KmeansAtom(getRules(projectName), numGroups);
 		else if ((new KmeansPredicate()).getAlgorithmName().equals(algorithmName))
 			algorithm = new KmeansPredicate(getRules(projectName), numGroups);
 
 		if (algorithm != null){
+			algorithm.setOWLModel(((OntologyManagerProtege3)getOntologyManager(projectName)).getOwlModel());
 			algorithm.run();
 			List<List<String>> original = algorithm.getGroups();
 			for (List<String> aux : original)

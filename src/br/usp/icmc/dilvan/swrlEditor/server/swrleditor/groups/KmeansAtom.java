@@ -6,6 +6,7 @@ import java.util.List;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.RuleSet;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Rule;
 
+import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.swrl.model.SWRLFactory;
 
 public class KmeansAtom implements GroupRules {
@@ -52,7 +53,7 @@ public class KmeansAtom implements GroupRules {
 		this.setCentersDefault();
 	}	
 	@Override
-	public void setSWRLFactory(SWRLFactory factory){}
+	public void setOWLModel(OWLModel model){}
 
 	/*@Override
 	public void setRuleSet(RuleSet rules) {

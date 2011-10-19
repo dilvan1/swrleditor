@@ -14,10 +14,12 @@ import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
@@ -75,7 +77,7 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 	}
 
 	private void loadSWRLEditor() {
-		
+
 		String urlWebProtege = createHashURL();
 
 
@@ -91,10 +93,10 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 		clientFactory.setWritePermission(project
 				.hasWritePermission(GlobalSettings.getGlobalSettings()
 						.getUserName()));
-		
+
 		clientFactory.setPortlet(this);
 		clientFactory.setURLWebProtege(urlWebProtege);
-		
+
 
 		EventBus eventBus = clientFactory.getEventBus();
 		PlaceController placeController = clientFactory.getPlaceController();
@@ -114,49 +116,42 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 
 		// Goes to place represented on URL or default place
 		historyHandler.handleCurrentHistory();
-	
+
 	}
 
 	private String createHashURL(){
 
-		String ontology = project.getProjectName().replace(" ", "+");
+		String ontology = project.getProjectName().replace(" ", "+").replace("%20", "+");
 		String tab = "SwrlEditorTab";
-		
+
 		String urlWebProtege = "ontology="
 				+ ontology
 				+ "&tab="+tab;
 
 		String newURL;
 
-		String href = Window.Location.getHref();
-
-		if (href.contains("?gwt.codesvr=127.0.0.1")){
-
-			href =  href.substring(href.indexOf("?gwt.codesvr=127.0.0.1"));
-
-			if (href.indexOf("#") >= 0)
-				href =  href.substring(0, href.indexOf("#"));
-
-			newURL = href+"#visualization:"
-					+ urlWebProtege;
-		}else
-			newURL = "#visualization:" + urlWebProtege;
+		
+		newURL = "#visualization:" + urlWebProtege;
 
 		String hash = Window.Location.getHash();
 
+		UrlBuilder builder = Location.createUrlBuilder();
+
 		if ((!hash.contains(ontology)) || (!hash.contains(tab))){
-			Window.Location.replace(newURL);
-			//System.out.println("replace1");
+			builder.setHash(newURL);
+			Window.Location.replace(builder.buildString());
+
 		}else if (hash.trim().contains("#"+CompositionPlace.getNamePlace()+":") ||
 				hash.trim().contains("#"+FilterPlace.getNamePlace()+":") ||
 				hash.trim().contains("#"+OptionsPlace.getNamePlace()+":")){
-			
+
 		}else if (!hash.trim().contains(newURL)){
-			Window.Location.replace(newURL);
-			//System.out.println("replace2");
+			builder.setHash(newURL);
+			Window.Location.replace(builder.buildString());
+
 		}else{
-			Window.Location.replace(newURL);
-			//System.out.println("replace3");
+			builder.setHash(newURL);
+			Window.Location.replace(builder.buildString());
 		}
 		return urlWebProtege;
 	}
@@ -178,10 +173,7 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 	}
 
 	@Override
-	public void onLogout(String userName) {
-		//ProjectConfigurationServiceManager.getInstance().getProjectConfiguration(project.getProjectName(),
-		//		userName, new GetProjectConfigurationHandler(project));
-	}
+	public void onLogout(String userName) {}
 
 	class GetProjectConfigurationHandler extends AbstractAsyncHandler<ProjectConfiguration> {
 		private final Project project;
@@ -200,7 +192,7 @@ public class SwrlEditorPortlet extends AbstractEntityPortlet {
 
 		@Override
 		public void handleSuccess(ProjectConfiguration config) {
-			//project.setProjectConfiguration(config);
+
 			for (TabConfiguration tab: config.getTabs()){
 				if (tab.getName().equals(SwrlEditorTab.class.getName())){
 

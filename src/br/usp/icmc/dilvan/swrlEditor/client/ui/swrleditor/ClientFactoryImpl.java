@@ -122,7 +122,10 @@ public class ClientFactoryImpl implements ClientFactory{
 			((InfoViewImpl)infoView).setAutoHideEnabled(true);
 			
 			VisualizationViewImpl visua = (VisualizationViewImpl) getVisualizationView();
+			
 			((InfoViewImpl)infoView).setPopupPosition((visua.getAbsoluteLeft()-700)+ (visua.getOffsetWidth()/2), visua.getAbsoluteTop());
+			
+			
 		}
 		return infoView;
 	}

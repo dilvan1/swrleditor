@@ -5,26 +5,31 @@
 	<ui:with field='res'
 		type='br.usp.icmc.dilvan.swrlEditor.client.resources.Resources' />
 
-	<g:SimplePanel>
-		<g:ScrollPanel height="100%">
-			<g:VerticalPanel height="100%">
-				<g:HorizontalPanel spacing="5" width=""	verticalAlignment="ALIGN_MIDDLE">
+	<g:SimplePanel >
+		<g:ScrollPanel height="300px" width="550px">
+			<g:VerticalPanel>
+			
+				<g:Cell horizontalAlignment="ALIGN_RIGHT">
+					<g:HorizontalPanel spacing="3">
+						<g:Button ui:field="btnOK1" text="OK" />
+					</g:HorizontalPanel>
+				</g:Cell>
+			
+				<g:HorizontalPanel spacing="5" verticalAlignment="ALIGN_MIDDLE">
 					<g:Label horizontalAlignment="ALIGN_CENTER" text="Informations"
 						styleName='{res.swrleditor.titleViews}' />
 				</g:HorizontalPanel>
 
-				<g:Cell width="100%" horizontalAlignment="ALIGN_LEFT">
-					<g:SimplePanel width="500px"  ui:field="tabInformation">
-						<g:ScrollPanel width="100%" alwaysShowScrollBars="true">
-							<p1:CellTable width="100%" ui:field="cellTable"
-								keyboardSelectionPolicy="DISABLED" keyboardPagingPolicy="CURRENT_PAGE" />
-						</g:ScrollPanel>
+				<g:Cell horizontalAlignment="ALIGN_LEFT">
+					<g:SimplePanel ui:field="tabInformation">
+						<p1:CellTable ui:field="cellTable"
+							keyboardSelectionPolicy="DISABLED" keyboardPagingPolicy="CURRENT_PAGE" />
 					</g:SimplePanel>
 				</g:Cell>
 
-				<g:Cell width="100%" horizontalAlignment="ALIGN_LEFT">
+				<g:Cell horizontalAlignment="ALIGN_RIGHT">
 					<g:HorizontalPanel spacing="3">
-						<g:Button ui:field="btnOK" text="OK" />
+						<g:Button ui:field="btnOK2" text="OK" />
 					</g:HorizontalPanel>
 				</g:Cell>
 

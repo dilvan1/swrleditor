@@ -91,6 +91,11 @@ public abstract class SimpleRuleView extends Composite {
 	 */
 	public void setPanelButtonVisible(boolean visible){
 		panelButtons.setVisible(visible);
+		
+		if (visible)
+			this.setStyleName(Resources.INSTANCE.swrleditor().panel_cbtn());
+		else
+			this.setStyleName(Resources.INSTANCE.swrleditor().panel_sbtn());
 	}
 	
 	/**
@@ -119,10 +124,11 @@ public abstract class SimpleRuleView extends Composite {
 	 */
 	@UiHandler("panelContent")
 	void onPanelContentOpen(OpenEvent<DisclosurePanel> event) {
-		if(panelButtons.isVisible())
-			this.setHeight(String.valueOf(panelContent.getOffsetHeight() + 35)+"px");
-		else
-			this.setHeight(String.valueOf(panelContent.getOffsetHeight())+"px");
+		//if(panelButtons.isVisible())
+			//this.setStyleName();
+			//this.setHeight(String.valueOf(panelContent.getOffsetHeight() + 35)+"px");
+		//else
+		//	this.setHeight(String.valueOf(panelContent.getOffsetHeight())+"px");
 	}
 	
 	/**
@@ -131,10 +137,10 @@ public abstract class SimpleRuleView extends Composite {
 	 */
 	@UiHandler("panelContent")
 	void onPanelContentClose(CloseEvent<DisclosurePanel> event) {
-		if(panelButtons.isVisible())
-			this.setHeight("65px");
-		else
-			this.setHeight("25px");
+		//if(panelButtons.isVisible())
+		//	this.setHeight("65px");
+		//else
+		//	this.setHeight("25px");
 	}
 	
 	/**

@@ -2,7 +2,7 @@ package br.usp.icmc.dilvan.swrlEditor.server.swrleditor.groups;
 
 import java.util.List;
 
-import edu.stanford.smi.protegex.owl.swrl.model.SWRLFactory;
+import edu.stanford.smi.protegex.owl.model.OWLModel;
 
 /**
  * Interface extends Runnable and uses the run method to call the clustering
@@ -34,12 +34,12 @@ public interface GroupRules extends Runnable {
 	public void setNumberOfGroups(int numGroups);
 
 	/**
-	 * Sets the SWRLFactory. From this factory, all SWRL rules are accessible. 
+	 * Sets the OWLModel. From this model, all ontology itens are accessible. 
 	 * This call is dependent on using Protege API 3.X.
 	 * For the OWL API, that should be changed.
-	 * @param factory the SWRL factory object for the set of rules
+	 * @param model the OWL model object
 	 */
-	public void setSWRLFactory(SWRLFactory factory);
+	public void setOWLModel(OWLModel model);
 	
 	/**
 	 * Returns the number of groups.
