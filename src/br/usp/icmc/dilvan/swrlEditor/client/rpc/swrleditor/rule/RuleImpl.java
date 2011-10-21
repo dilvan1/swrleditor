@@ -18,6 +18,7 @@ public class RuleImpl implements Rule {
 	private boolean enabled;
 
 	public RuleImpl(){
+		nameRule = "";
 		antecedent = new ArrayList<Atom>();
 		consequent = new ArrayList<Atom>();
 		antecedentParaphrase = new ArrayList<String>();

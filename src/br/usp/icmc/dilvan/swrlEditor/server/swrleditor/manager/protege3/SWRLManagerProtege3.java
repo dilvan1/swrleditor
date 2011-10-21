@@ -74,7 +74,7 @@ public class SWRLManagerProtege3 implements SWRLManager {
 	public RuleSet getRules() {
 		return createRuleSet();
 	}
-
+	
 	@Override
 	public RuleEvents getRuleEvents(long version) {
 		RuleEvents result = new RuleEvents();
@@ -87,6 +87,10 @@ public class SWRLManagerProtege3 implements SWRLManager {
 		return result;
 	}
 
+	public SWRLFactory getSWRLFactory(){
+		return factory;
+	}
+	
 	private RuleSet createRuleSet() {
 		
 		RuleSet rulesSet = new RuleSetImpl();
@@ -132,8 +136,7 @@ public class SWRLManagerProtege3 implements SWRLManager {
 		newRule.setNameRule(rule.getName().substring(rule.getName().indexOf("#") + 1).trim());
 
 		String paraphrase = paraphraseRule.createParaphrase(rule);
-		newRule.setParaphrase(ParaphraseRuleProtege3
-				.getFormatedParaphrase(paraphrase));
+		newRule.setParaphrase(ParaphraseRuleProtege3.getFormatedParaphrase(factory, paraphrase)); 
 		newRule.setAntecedentParaphrase(ParaphraseRuleProtege3
 				.getFormatedParaphraseAntecendent(paraphrase));
 		newRule.setConsequentParaphrase(ParaphraseRuleProtege3

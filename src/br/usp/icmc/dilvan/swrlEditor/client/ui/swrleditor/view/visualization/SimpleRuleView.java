@@ -8,8 +8,6 @@ import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.VisualizationView
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -24,8 +22,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 public abstract class SimpleRuleView extends Composite {
 
-	//TODO criar um presenter para esta classe
-	
 	protected TYPE_VIEW typeView;
 	protected Rule rule;
 	protected Presenter presenter;
@@ -110,38 +106,6 @@ public abstract class SimpleRuleView extends Composite {
 	 * Set the widget to show the rule in a format view 
 	 */
 	public abstract void show();
-
-	/**
-	 * Define the auto height to the widget 
-	 */
-	public void setHeight(){
-		onPanelContentOpen(null);
-	}
-	
-	/**
-	 * This method is called when the widget is maximized and calculate the height 
-	 * @param event The event passed to the event handler
-	 */
-	@UiHandler("panelContent")
-	void onPanelContentOpen(OpenEvent<DisclosurePanel> event) {
-		//if(panelButtons.isVisible())
-			//this.setStyleName();
-			//this.setHeight(String.valueOf(panelContent.getOffsetHeight() + 35)+"px");
-		//else
-		//	this.setHeight(String.valueOf(panelContent.getOffsetHeight())+"px");
-	}
-	
-	/**
-	 * This method is called when the widget is minimized and calculate the height 
-	 * @param event The event passed from the event handler
-	 */
-	@UiHandler("panelContent")
-	void onPanelContentClose(CloseEvent<DisclosurePanel> event) {
-		//if(panelButtons.isVisible())
-		//	this.setHeight("65px");
-		//else
-		//	this.setHeight("25px");
-	}
 	
 	/**
 	 * Called when the user click in the edit rule button

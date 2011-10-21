@@ -72,7 +72,7 @@ public interface OptionsView extends IsWidget
 		public void setStringOption(String name, String value);
 		public void setBooleanOption(String name, Boolean value);
 
-		public void saveOptions();
+		public void saveOptions(boolean writePermission);
 
 		
 		void goToVisualization();

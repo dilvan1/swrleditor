@@ -21,6 +21,9 @@
 	<inherits name="com.google.gwt.activity.Activity" />
 	<inherits name="com.google.gwt.place.Place" />
 	<inherits name="com.google.gwt.resources.Resources" />
+	<inherits name='edu.stanford.bmir.protege.web.WebProtege' />
+	
+	
 
 	<!-- <inherits name="edu.stanford.bmir.protege.web.WebProtege" />
  -->

@@ -29,7 +29,7 @@ public class ErrorsAnalises {
 
 	public Errors getErrors(Rule rule, boolean newRule){
 
-		if (rule.getNameRule().trim().isEmpty())
+		if (rule.getNameRule() == null || rule.getNameRule().trim().isEmpty())
 			err.addErrors("Was not informed a name for the rule");
 		
 		// Sintatic Errors
@@ -307,6 +307,7 @@ public class ErrorsAnalises {
 	}
 
 	private boolean isDuplicateRule(Rule rule) {
+
 		// Duplicated rule
 		MatrizAtomCharacteristic mpc = new MatrizAtomCharacteristic();
 		mpc.addRule(rules);

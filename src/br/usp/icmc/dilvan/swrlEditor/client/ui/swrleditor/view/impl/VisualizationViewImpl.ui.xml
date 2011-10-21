@@ -14,11 +14,11 @@
 
 		<g:HorizontalPanel spacing="5" width=""
 			verticalAlignment="ALIGN_MIDDLE">
-			<g:Button text="Options" ui:field="btnOptions" />
-			<g:Button text="Info" ui:field="btnInfo" />
-			<g:Button text="New Rule" ui:field="btnNewRule" />
+			<g:Button text="Options" ui:field="btnOptions" styleName='{res.swrleditor.allButton}'/>
+			<g:Button text="Info" ui:field="btnInfo" styleName='{res.swrleditor.allButton}'/>
+			<g:Button text="New Rule" ui:field="btnNewRule" styleName='{res.swrleditor.allButton}'/>
 
-			<g:Button text="Run Rules" ui:field="btnRun" />
+			<g:Button text="Run Rules" ui:field="btnRun" styleName='{res.swrleditor.allButton}'/>
 			<g:Image ui:field="imgWaiting" url='{res.loading.getURL}'
 				visible="false" />
 
@@ -35,7 +35,7 @@
 					</g:HorizontalPanel>
 
 					<g:HorizontalPanel width="60px" />
-					<g:Button ui:field="btnEditFilter" text="Edit" />
+					<g:Button ui:field="btnEditFilter" text="Edit" styleName='{res.swrleditor.allButton}'/>
 				</g:HorizontalPanel>
 			</g:HorizontalPanel>
 
@@ -106,7 +106,7 @@
 									</g:Cell>
 									<g:SimplePanel />
 									<g:Cell verticalAlignment="ALIGN_MIDDLE">
-										<g:Button ui:field="btnRefreshGroups">Refresh</g:Button>
+										<g:Button ui:field="btnRefreshGroups" styleName='{res.swrleditor.allButton}'>Refresh</g:Button>
 									</g:Cell>
 								</g:HorizontalPanel>
 								<g:ScrollPanel width="100%" height="420px"

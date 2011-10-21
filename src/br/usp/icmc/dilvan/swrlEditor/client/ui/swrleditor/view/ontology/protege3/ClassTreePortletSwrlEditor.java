@@ -25,7 +25,8 @@ public class ClassTreePortletSwrlEditor extends ClassTreePortlet {
 		nodeListener = new TreeNodeListenerAdapter() {
 			@Override
 			public void onClick(Node node, EventObject e) {
-				presenter.setSelectedPredicate(TYPE_ATOM.CLASS, ((TreeNode)node).getText());
+				int[] xy = e.getXY();
+				presenter.setSelectedPredicate(TYPE_ATOM.CLASS, ((TreeNode)node).getText(), xy[0], xy[1]);
 			}
 		};
 	}

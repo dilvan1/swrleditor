@@ -3,7 +3,9 @@ package br.usp.icmc.dilvan.swrlEditor.client.resources;
 import com.google.gwt.resources.client.CssResource;
 
 public interface Swrleditor extends CssResource {
-
+	
+	String allButton();
+	
 	String itemFilter();
 
 	String consequent();
@@ -112,5 +114,13 @@ public interface Swrleditor extends CssResource {
 	String warning();
 
 	String param_DATALITERAL();
+	
+	String headerAdvancedFilters();
+	
+	String operatorFilter();
+	
+	String menuItemDecisionTree();
+
+	String menuItemDecisionTreeDisable();
 
 }

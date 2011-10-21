@@ -6,7 +6,6 @@ import java.util.List;
 
 import br.usp.icmc.dilvan.swrlEditor.client.resources.Resources;
 import br.usp.icmc.dilvan.swrlEditor.client.resources.UtilResource;
-import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.Filter;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Variable;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.VisualizationView.TYPE_VIEW;
@@ -15,7 +14,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
 
 
 public class UtilView {
@@ -76,11 +74,51 @@ public class UtilView {
 		return strAtom;
 	}
 
-	public static String formatFilter(Filter f){
-		if(f.getFilterType().equalsIgnoreCase("rule name"))
-			return "rule name: <span class='"+Resources.INSTANCE.swrleditor().det()+"'>\""+f.getQryString()+"\"</span>";
-		else
-			return (f.getFilterType().equalsIgnoreCase("all")?"":f.getFilterType()+":")+" <span class='"+Resources.INSTANCE.swrleditor().det()+"'>\""+f.getQryString()+"\"</span>"+(f.getRulePart().equalsIgnoreCase("all parts")?"":" in "+f.getRulePart());
+	public static String formatFilter(List<String> lstAnd, List<String> lstOr, List<String> lstNot) {
+		
+		String filter = "";
+		
+		for (String s: lstAnd){
+			if (filter.isEmpty()){
+				filter =  formatStringFilter(s);
+			}else{
+				filter = filter + formatOperatorFilter(" AND ") + formatStringFilter(s);
+			}
+		}
+
+		boolean first = true;
+		for (String s: lstOr){
+			if (filter.isEmpty()){
+				filter =  " ("+ formatStringFilter(s);
+				first = false;
+			}else if (first){
+				filter = filter + formatOperatorFilter(" AND ")+"("+ formatStringFilter(s);
+				first = false;
+			}else{
+				filter = filter + formatOperatorFilter(" OR ") + formatStringFilter(s);
+			}
+		}
+		if (!first)
+			filter = filter + ") ";
+		
+
+		for (String s: lstNot){
+			if (filter.isEmpty()){
+				filter = filter + formatOperatorFilter(" NOT ")+"("+formatStringFilter(s)+")";
+			}else{
+				filter = filter + formatOperatorFilter(" AND NOT ")+"("+formatStringFilter(s)+")";
+			}
+		}
+		return filter;
+	}
+
+	private static String formatOperatorFilter(String s){
+		return "<span class='"+Resources.INSTANCE.swrleditor().operatorFilter()+"'>"+s+"</span>";
+	}
+
+	
+	private static String formatStringFilter(String s){
+		return "<span class='"+Resources.INSTANCE.swrleditor().det()+"'>\""+s+"\"</span>";
 	}
 
 

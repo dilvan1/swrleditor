@@ -2,6 +2,8 @@ package br.usp.icmc.dilvan.swrlEditor.server.swrleditor.groups;
 
 import java.util.List;
 
+import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.RuleSet;
+
 import edu.stanford.smi.protegex.owl.model.OWLModel;
 
 /**
@@ -40,6 +42,13 @@ public interface GroupRules extends Runnable {
 	 * @param model the OWL model object
 	 */
 	public void setOWLModel(OWLModel model);
+
+	/**
+	 * Sets the RuleSet. 
+	 * @param model the RuleSet object
+	 */
+	public void setRuleSet(RuleSet rules);
+
 	
 	/**
 	 * Returns the number of groups.

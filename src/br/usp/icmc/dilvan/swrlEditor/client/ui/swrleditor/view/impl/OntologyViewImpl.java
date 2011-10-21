@@ -64,15 +64,18 @@ public class OntologyViewImpl extends Composite implements OntologyView {
 	@UiHandler("treeBuiltins")
 	void onTreeBuiltinsSelection(SelectionEvent<TreeItem> event) {
 
-		presenter.setSelectedPredicate(TYPE_ATOM.BUILTIN, event.getSelectedItem().getText());
-	
+		
+		int left = event.getSelectedItem().getAbsoluteLeft() + 50;
+		int top = event.getSelectedItem().getAbsoluteTop() + 20;
+		
+		presenter.setSelectedPredicate(TYPE_ATOM.BUILTIN, event.getSelectedItem().getText(), left, top);
+				
 	}
 
 	@Override
 	public void setProjectProtege(Project project) {
 		classTree = new ClassTreePortletSwrlEditor(project);
 		//classTree.setSize("98%", "510px");
-		// TODO pedir para a Tania pq tem vida propria o tamanho do componente ClassTree
 		classTree.setSize("98%", "510px");
 		propertiesTree = new PropertiesTreePortletSwrlEditor(project);
 		//propertiesTree.setSize("98%", "510px");

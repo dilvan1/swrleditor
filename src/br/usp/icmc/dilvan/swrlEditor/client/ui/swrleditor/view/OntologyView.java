@@ -22,7 +22,7 @@ public interface OntologyView extends IsWidget
 	
 	public interface Presenter
 	{
-		void setSelectedPredicate(TYPE_ATOM typeAtom, String predicate);
+		void setSelectedPredicate(TYPE_ATOM typeAtom, String predicate, int left, int top);
 		void getBuiltins();
 	}
 }

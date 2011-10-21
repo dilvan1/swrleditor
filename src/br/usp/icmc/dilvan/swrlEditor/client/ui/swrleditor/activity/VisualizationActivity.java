@@ -1,7 +1,6 @@
 package br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.activity;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.Filter;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.RuleSet;
@@ -253,8 +252,8 @@ public class VisualizationActivity extends AbstractActivity implements Visualiza
 	}
 
 	@Override
-	public List<Filter> getFilters() {
-		return activityMapper.getFilters();
+	public Filter getFilter() {
+		return activityMapper.getFilter();
 	}
 
 	@Override

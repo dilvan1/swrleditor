@@ -9,4 +9,6 @@ public interface NodeLabelListener {
 
 	void onMouseMove(Widget sender, Event event);
 	void onMouseOut(Widget sender, Event event);
+
+	void onShowToolTip(Widget sender, Event event);
 }

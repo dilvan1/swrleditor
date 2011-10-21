@@ -11,7 +11,7 @@
 			
 				<g:Cell horizontalAlignment="ALIGN_RIGHT">
 					<g:HorizontalPanel spacing="3">
-						<g:Button ui:field="btnOK1" text="OK" />
+						<g:Button ui:field="btnOK1" text="OK" styleName='{res.swrleditor.allButton}'/>
 					</g:HorizontalPanel>
 				</g:Cell>
 			
@@ -29,7 +29,7 @@
 
 				<g:Cell horizontalAlignment="ALIGN_RIGHT">
 					<g:HorizontalPanel spacing="3">
-						<g:Button ui:field="btnOK2" text="OK" />
+						<g:Button ui:field="btnOK2" text="OK" styleName='{res.swrleditor.allButton}'/>
 					</g:HorizontalPanel>
 				</g:Cell>
 

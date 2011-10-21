@@ -195,6 +195,9 @@ public class VisualizationViewImpl extends Composite implements
 		if (simpleRulesAutism != null)
 			for (SimpleRuleView rw : simpleRulesAutism)
 				rw.setWritePermission(permission);
+					
+		if (viewDecisionTree != null)
+			viewDecisionTree.setWritePermission(writePermission);
 	}
 
 	@Override
@@ -533,12 +536,12 @@ public class VisualizationViewImpl extends Composite implements
 	}
 
 	private void filterRulesViews(List<SimpleRuleView> simpleRules) {
-		List<Filter> filters = presenter.getFilters();
+		Filter filter = presenter.getFilter();
 
 		int totalRules = rules.size();
 		
 		for (SimpleRuleView ruleView : simpleRules) {
-			if (filterRulesView(ruleView.getRule(), filters)) {
+			if (filterRulesView(ruleView.getRule(), filter)) {
 				ruleView.setVisible(true);
 			} else {
 				ruleView.setVisible(false);
@@ -546,41 +549,34 @@ public class VisualizationViewImpl extends Composite implements
 			}
 		}
 		setNumberRulesView(totalRules);
-		mountFilters(filters);
+		mountFilters(filter);
 	}
 
-	private boolean filterRulesView(Rule rule, List<Filter> filters) {
-		for (Filter filter : filters) {
-			if (!filter.contains(rule)) {
-				return false;
-			}
+	private boolean filterRulesView(Rule rule, Filter filter) {
+		if (!filter.contains(rule)) {
+			return false;
 		}
 		return true;
 	}
 
-	private void mountFilters(List<Filter> filters) {
+	private void mountFilters(Filter filter) {
 
 		listFilterPanel.clear();
 
-		if (filters.isEmpty()) {
+		if (filter.isEmpty()) {
 			filterDescription.setVisible(true);
 		} else {
 			filterDescription.setVisible(false);
 		}
-		int cont = 0;
-		for (final Filter f : filters) {
-			if (cont > 0)
-				listFilterPanel.add(new HTML("<b>AND</b>"));
-			HTML lbl = new HTML(UtilView.formatFilter(f));
-			lbl.addStyleName(Resources.INSTANCE.swrleditor().itemFilter());
 
-			listFilterPanel.add(lbl);
-			cont++;
-		}
+		HTML lbl = new HTML(UtilView.formatFilter(filter.getLstAnd(), filter.getLstOr(), filter.getLstNot()));
+		lbl.addStyleName(Resources.INSTANCE.swrleditor().itemFilter());
+		listFilterPanel.add(lbl);
 	}
 
 	private void mountTabDecisionTree() {
 		createViewDecisionTree();
+		viewDecisionTree.setWritePermission(writePermission);
 		presenter.getDecisionTree(viewDecisionTree.getAlgorithmName());
 	}
 
@@ -697,9 +693,6 @@ public class VisualizationViewImpl extends Composite implements
 	public void setDecisionTreeAlgorithmList(List<String> algorithms, Map<String, Object> config) {
 		createViewDecisionTree();
 		viewDecisionTree.setListAlgorithm(algorithms, config);
-		if (tabVisualization.getSelectedIndex() == 5) {
-			viewDecisionTree.loadDecisionTree();
-		}
 	}
 
 	@Override
@@ -879,8 +872,8 @@ public class VisualizationViewImpl extends Composite implements
 
 	@Override
 	public void addRuleEvent(int index, Rule rule) {
-		List<Filter> filters = presenter.getFilters();
-		boolean isVisible = filterRulesView(rule, filters);
+		Filter filter = presenter.getFilter();
+		boolean isVisible = filterRulesView(rule, filter);
 
 		if (simpleRulesList != null) {
 			SimpleRuleViewList rlView = new SimpleRuleViewList(rule, presenter,
@@ -926,8 +919,8 @@ public class VisualizationViewImpl extends Composite implements
 	@Override
 	public void deleteRuleEvent(int index, Rule rule) {
 
-		List<Filter> filters = presenter.getFilters();
-		boolean isVisible = filterRulesView(rule, filters);
+		Filter filter = presenter.getFilter();
+		boolean isVisible = filterRulesView(rule, filter);
 
 		if (simpleRulesList != null) {
 			simpleRulesList.remove(index);
@@ -953,7 +946,6 @@ public class VisualizationViewImpl extends Composite implements
 
 	private void ajustRuleView(SimpleRuleView ruleview) {
 		ruleview.show();
-		ruleview.setHeight();
 	}
 
 	@Override

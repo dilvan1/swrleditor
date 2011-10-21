@@ -12,86 +12,280 @@ import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom.TYPE_ATOM;
 
 @SuppressWarnings("serial")
 public class Filter implements Serializable {
-	private String filterType;
-	private String rulePart;
-	private String qryString;
+	
+	private List<String> lstAnd;
+	private List<String> lstOr;
+	private List<String> lstNot;
+	
+	private boolean queryRuleName;
+	private boolean queryClasses;
+	private boolean queryDatatypeProperties;
+	private boolean queryObjectProperties;
+	private boolean queryBuiltin;
+	private boolean queryComments;
+	private boolean querySameDiferent;
+	private boolean queryDataRange;
+
+	private boolean queryAntecedent;
+	private boolean queryConsequent;
 	
 	public Filter(){
-		// TODO Comments with javadoc this class
+		lstAnd = new ArrayList<String>();
+		lstOr = new ArrayList<String>();
+		lstNot = new ArrayList<String>();
+		
+		queryRuleName = false;
+		queryClasses = true;
+		queryDatatypeProperties = true;
+		queryObjectProperties = true;
+		queryBuiltin = true;
+		queryComments = false;
+		querySameDiferent = true;
+		queryDataRange = true;
+
+		queryAntecedent = true;
+		queryConsequent = true;
+	}
+
+	public List<String> getLstAnd() {
+		return lstAnd;
+	}
+
+	public void setLstAnd(List<String> lstAnd) {
+		this.lstAnd = lstAnd;
+	}
+
+	public List<String> getLstOr() {
+		return lstOr;
+	}
+
+	public void setLstOr(List<String> lstOr) {
+		this.lstOr = lstOr;
+	}
+
+	public List<String> getLstNot() {
+		return lstNot;
+	}
+
+	public void setLstNot(List<String> lstNot) {
+		this.lstNot = lstNot;
+	}
+
+	public boolean isQueryRuleName() {
+		return queryRuleName;
+	}
+
+	public void setQueryRuleName(boolean queryRuleName) {
+		this.queryRuleName = queryRuleName;
+	}
+
+	public boolean isQueryClasses() {
+		return queryClasses;
+	}
+
+	public void setQueryClasses(boolean queryClasses) {
+		this.queryClasses = queryClasses;
+	}
+
+	public boolean isQueryDatatypeProperties() {
+		return queryDatatypeProperties;
+	}
+
+	public void setQueryDatatypeProperties(boolean queryDatatypeProperties) {
+		this.queryDatatypeProperties = queryDatatypeProperties;
+	}
+
+	public boolean isQueryObjectProperties() {
+		return queryObjectProperties;
+	}
+
+	public void setQueryObjectProperties(boolean queryObjectProperties) {
+		this.queryObjectProperties = queryObjectProperties;
+	}
+
+	public boolean isQueryBuiltin() {
+		return queryBuiltin;
+	}
+
+	public void setQueryBuiltin(boolean queryBuiltin) {
+		this.queryBuiltin = queryBuiltin;
+	}
+
+	public boolean isQueryComments() {
+		return queryComments;
+	}
+
+	public void setQueryComments(boolean queryComments) {
+		this.queryComments = queryComments;
+	}
+
+	public boolean isQueryAntecedent() {
+		return queryAntecedent;
+	}
+
+	public void setQueryAntecedent(boolean queryAntecedent) {
+		this.queryAntecedent = queryAntecedent;
+	}
+
+	public boolean isQueryConsequent() {
+		return queryConsequent;
+	}
+
+	public void setQueryConsequent(boolean queryConsequent) {
+		this.queryConsequent = queryConsequent;
 	}
 	
-	public Filter(String filterType, String rulePart, String qryString){
-		this.setFilterType(filterType);
-		this.setRulePart(rulePart);
-		this.setQryString(qryString);
+	public boolean isQuerySameDiferent() {
+		return querySameDiferent;
 	}
 
-	public void setFilterType(String filterType) {
-		this.filterType = filterType;
+	public void setQuerySameDiferent(boolean querySameDiferent) {
+		this.querySameDiferent = querySameDiferent;
 	}
 
-	public String getFilterType() {
-		return filterType;
+	public boolean isQueryDataRange() {
+		return queryDataRange;
 	}
 
-	public void setRulePart(String rulePart) {
-		this.rulePart = rulePart;
-	}
-
-	public String getRulePart() {
-		return rulePart;
-	}
-
-	public void setQryString(String qryString) {
-		this.qryString = qryString;
-	}
-
-	public String getQryString() {
-		return qryString;
-	}
-	
-	public boolean equals(Object o){
-		if(o.getClass().equals(this.getClass())){
-			Filter f = (Filter) o;
-			return getFilterType().equals(f.getFilterType()) && getRulePart().equals(f.getRulePart()) && getQryString().equals(f.getQryString());
-		} else {
-			return false;
-		}
+	public void setQueryDataRange(boolean queryDataRange) {
+		this.queryDataRange = queryDataRange;
 	}
 
 	public boolean contains(Rule rule) {
-		boolean ret = false;
-		String qry = qryString.toLowerCase();
-		
-		boolean showAll     = filterType.equalsIgnoreCase("all");
-		boolean showClasses = filterType.equalsIgnoreCase("classes");
-		boolean showProp  = filterType.equalsIgnoreCase("Properties");
-		boolean showBuiltin = filterType.equalsIgnoreCase("builtin(s)");
-		
-		// Rule Name
-		if(filterType.equalsIgnoreCase("rule name") || showAll)
-			ret = (rule.getNameRule().toLowerCase().contains(qry)) || ret;
+		//.out.println("Nome regra:"+rule.getNameRule()+" --> Regra: "+rule.getFormatedRuleID());
+		for (String s : lstAnd){
+			//System.out.println("testou AND: "+s);
+			if (queryRuleName){
+				if (rule.getNameRule().toLowerCase().contains(s.toLowerCase())){
+					//System.out.println("Achou no nome da regra");
+					continue;
+				}
+			}
 
-		//Classes, Datatype properties, Object properties, builtins
-		List<Atom> list = new ArrayList<Atom>();
-		if(rulePart.equalsIgnoreCase("all parts"))
-			list = rule.getAtoms();
-		else if(rulePart.equalsIgnoreCase("antecedent"))
-			list = rule.getAntecedent();
-		else if(rulePart.equalsIgnoreCase("consequent"))
-			list = rule.getConsequent();
+			if (queryAntecedent && queryInListAtoms(rule.getAntecedent(), s)){
+				//System.out.println("Achou no antecedent");
+				continue;
+			}
+
+			if (queryConsequent && queryInListAtoms(rule.getConsequent(), s)){
+				//System.out.println("Achou no consequent");
+				continue;
+			}
+
+			return false;
+		}
 		
-		for(Atom a : list){
-			if(ret) break;
-			if( showAll ||
-				(a.getAtomType() == TYPE_ATOM.CLASS && showClasses) || 
-				(a.getAtomType() == TYPE_ATOM.DATAVALUE_PROPERTY && showProp) ||
-				(a.getAtomType() == TYPE_ATOM.INDIVIDUAL_PROPERTY && showProp) ||
-				(a.getAtomType() == TYPE_ATOM.BUILTIN && showBuiltin)){
-				ret = (a.getAtomID().toLowerCase().contains(qry)||a.getAtomLabel().toLowerCase().contains(qry));
+		boolean or = !(lstOr.size()>0);
+		for (String s : lstOr){
+			//System.out.println("testou OR: "+s);
+			if (queryRuleName){
+				if (rule.getNameRule().toLowerCase().contains(s.toLowerCase())){
+					//System.out.println("Achou no nome");
+					or = true;
+					break;
+				}
+			}
+
+			if (queryAntecedent && queryInListAtoms(rule.getAntecedent(), s)){
+				//System.out.println("Achou no antecedent");
+				or = true;
+				break;
+			}
+
+			if (queryConsequent && queryInListAtoms(rule.getConsequent(), s)){
+				//System.out.println("Achou no consequent");
+				or = true;
+				break;
+			}
+
+		}
+		if (!or)
+			return false;
+		
+		
+		for (String s : lstNot){
+			//System.out.println("testou NOT: "+s);
+			if (queryRuleName){
+				if (rule.getNameRule().toLowerCase().contains(s.toLowerCase())){
+					//System.out.println("Achou no nome da regra");
+					return false;
+				}
+			}
+
+			if (queryAntecedent && queryInListAtoms(rule.getAntecedent(), s)){
+				//System.out.println("Achou no antecedent");
+				return false;
+			}
+
+			if (queryConsequent && queryInListAtoms(rule.getConsequent(), s)){
+				//System.out.println("Achou no consequent");
+				return false;
 			}
 		}
 		
-		return ret;
+		//System.out.println("Chegou...");
+		return true;
+	}
+	
+	private boolean queryInListAtoms(List<Atom> atoms, String s){
+		boolean findCond = false;
+		
+		for (Atom a: atoms){
+			if (a.getAtomType() == TYPE_ATOM.CLASS && queryClasses && queryInAtom(a, s)){
+				//System.out.println("Achou em classes");
+				findCond = true;
+				break;
+			}
+			else if (a.getAtomType() == TYPE_ATOM.BUILTIN && queryBuiltin && queryInAtom(a, s)){
+				//System.out.println("Achou em builtins");
+				findCond = true;
+				break;
+			}
+			else if (a.getAtomType() == TYPE_ATOM.DATARANGE && queryDataRange && queryInAtom(a, s)){
+				//System.out.println("Achou em DataRange");
+				findCond = true;
+				break;
+			}
+			else if (a.getAtomType() == TYPE_ATOM.DATAVALUE_PROPERTY && queryDatatypeProperties && queryInAtom(a, s)){
+				//System.out.println("Achou em DataValue");
+				findCond = true;
+				break;
+			}
+			else if (a.getAtomType() == TYPE_ATOM.INDIVIDUAL_PROPERTY && queryObjectProperties && queryInAtom(a, s)){
+				//System.out.println("Achou em individual");
+				findCond = true;
+				break;
+			}
+			else if (a.getAtomType() == TYPE_ATOM.SAME_DIFERENT && querySameDiferent && queryInAtom(a, s)){
+				//System.out.println("Achou em same");
+				findCond = true;
+				break;
+			}
+		}
+		return findCond;
+	}
+	
+	private boolean queryInAtom(Atom a, String s){
+		if (a.getAtomID().toLowerCase().contains(s.toLowerCase()) || a.getAtomLabel().toLowerCase().contains(s.toLowerCase())){
+			//System.out.println("Achou em ID Label");
+			return true;
+		}
+
+		if (a.getAtomID().toLowerCase().contains(s.toLowerCase().replaceAll(" ", "")) || a.getAtomLabel().toLowerCase().contains(s.toLowerCase().replaceAll(" ", ""))){
+			//System.out.println("Achou em ID Label");
+			return true;
+		}
+		if (queryComments){
+			if (a.getPredicateComment().toLowerCase().contains(s.toLowerCase())){
+				//System.out.println("Achou em coment");
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean isEmpty(){
+		return lstAnd.isEmpty() && lstOr.isEmpty() && lstNot.isEmpty();
 	}
 }

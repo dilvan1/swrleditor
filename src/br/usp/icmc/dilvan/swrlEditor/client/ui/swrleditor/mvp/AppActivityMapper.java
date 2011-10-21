@@ -32,7 +32,7 @@ public class AppActivityMapper implements ActivityMapper {
 
 	//TODO separar dados do ActivityMapper, criar uma classe que contenha todos eles
 	private RuleSet rules = null;
-	private List<Filter> filters;
+	private Filter filter;
 	
 	private List<String> similarRulesAlgorithms;
 	private List<String> suggestTermsAlgorithms;
@@ -56,7 +56,7 @@ public class AppActivityMapper implements ActivityMapper {
 	public AppActivityMapper(ClientFactory clientFactory) {
 		super();
 		this.clientFactory = clientFactory;
-		filters = new ArrayList<Filter>();
+		filter = new Filter();
 		getGroupsAlgorithmsList();
 		getDecisionTreeAlgorithmsList();
 		getSuggestTermsAlgorithmsList();
@@ -72,12 +72,12 @@ public class AppActivityMapper implements ActivityMapper {
 		startGetSWRLEventsTimer();
 	}
 
-	public List<Filter> getFilters() {
-		return filters;
+	public Filter getFilter() {
+		return filter;
 	}
 
-	public void setFilters(List<Filter> filters) {
-		this.filters = filters;
+	public void setFilter(Filter filter) {
+		this.filter = filter;
 	}
 	
 	public void getSimilarRulesAlgorithmsList() {

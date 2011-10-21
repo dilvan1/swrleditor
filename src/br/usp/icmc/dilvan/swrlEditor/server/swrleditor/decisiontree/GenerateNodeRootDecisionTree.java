@@ -1,5 +1,6 @@
 package br.usp.icmc.dilvan.swrlEditor.server.swrleditor.decisiontree;
 
+import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.RuleSet;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.decisiontree.NodeDecisionTree;
 import edu.stanford.smi.protegex.owl.swrl.model.SWRLFactory;
 
@@ -24,6 +25,12 @@ public interface GenerateNodeRootDecisionTree extends Runnable {
 	 * @param factory the SWRL factory object for the set of rules
 	 */
 	public void setSWRLFactory(SWRLFactory factory);
+	
+	/**
+	 * Sets the RuleSet. 
+	 * @param rules the RuleSet object
+	 */
+	public void setRuleSet(RuleSet rules);
 
 	/**
 	 * Gets the Decision Tree root node. If there is no tree yet 

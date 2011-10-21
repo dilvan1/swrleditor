@@ -15,18 +15,20 @@ import com.google.gwt.user.client.ui.IsWidget;
 public interface FilterView extends IsWidget
 {
 	
+	public enum TYPE_FILTER {AND, OR, NOT};
+
+	
 	void setPresenter(Presenter presenter);
-	void setFilters(List<Filter> filters);
+	void setFilter(Filter filter);
 	void setBuiltins(List<String> builtins);
-	void populateFields(TYPE_ATOM typeAtom, String value);
+	
+	void setSelectItemOntology(TYPE_ATOM typeAtom, String value, TYPE_FILTER typeFilter);
 	
 	public interface Presenter
 	{
 		void goToVisualization();
 		
-		boolean addFilter(String filterType, String rulePart, String qryString);
-		void removeFilter(Filter filter);
-		
+		void search(Filter f);
 	}
 
 	

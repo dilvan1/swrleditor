@@ -58,7 +58,7 @@ public interface VisualizationView extends IsWidget
 
 		AutismModel getAutismModel(Rule rule, TYPE_VIEW typeView);
 		
-		List<Filter> getFilters();
+		Filter getFilter();
 		
 		void getSimilarRules(Rule rule, boolean isNew);
 		

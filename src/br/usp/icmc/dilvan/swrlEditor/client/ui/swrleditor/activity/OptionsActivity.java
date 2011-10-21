@@ -74,8 +74,11 @@ public class OptionsActivity extends AbstractActivity implements OptionsView.Pre
 	}
 
 	@Override
-	public void saveOptions() {
-		clientFactory.saveOptions(new SaveConfigHandler());
+	public void saveOptions(boolean writePermission) {
+		if (writePermission)
+			clientFactory.saveOptions(new SaveConfigHandler());
+		else
+			goToVisualization();
 	}
 
 	

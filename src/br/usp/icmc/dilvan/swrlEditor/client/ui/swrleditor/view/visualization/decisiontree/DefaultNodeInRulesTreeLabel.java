@@ -8,12 +8,16 @@ import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.decisiontree.NodeDeci
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultNodeInRulesTreeLabel extends Label implements NodeLabelNotifier{
 		private NodeDecisionTree node;
 		
 		private NodeLabelListener listener = null;
+		
+		private TimerToolTip waitToolTip = null;
 
 		public DefaultNodeInRulesTreeLabel(String label, NodeDecisionTree node) {
 			super(label);
@@ -56,16 +60,26 @@ public class DefaultNodeInRulesTreeLabel extends Label implements NodeLabelNotif
 		        	}
 		        	break;
 		        case Event.ONMOUSEMOVE:
-		          	if (listener != null)
+		          	if (listener != null){
 		          		listener.onMouseMove(this, event);
+		          		if (waitToolTip == null)
+		          			waitToolTip = new TimerToolTip(this, event);
+		          		
+		          	}
 		        	break;
 		        case Event.ONMOUSEOUT:
-		          	if (listener != null)
+		          	if (listener != null){
 		          		listener.onMouseMove(this, event);
+		          		if (waitToolTip != null){
+		          			waitToolTip.cancel();
+		          			waitToolTip = null;
+		          		}
+		          	}
 		        	break;
 		        	
 		        case Event.ONCONTEXTMENU:
 		            GWT.log("Event.ONCONTEXTMENU", null);
+
 		            break;
 		            
 		        default: 
@@ -73,13 +87,36 @@ public class DefaultNodeInRulesTreeLabel extends Label implements NodeLabelNotif
 		}
 		
 		@Override
-		public void addClickListener(NodeLabelListener listener) {
+		public void addMouseListener(NodeLabelListener listener) {
 			this.listener = listener;
 		}
 
 		@Override
-		public void removeClickListener(NodeLabelListener listener) {
+		public void removeMouseListener(NodeLabelListener listener) {
 			this.listener = null;
+		}
+		
+		private class TimerToolTip extends Timer{
+			
+			private Widget sender;
+			private Event event;
+
+			private TimerToolTip(Widget sender, Event event) {
+				super();
+				this.sender = sender;
+				this.event = event;
+				
+				this.schedule(600);
+				
+				
+			}
+
+			@Override
+			public void run() {
+				if (listener != null)
+					listener.onShowToolTip(sender, event);
+			}
+			
 		}
 		
 	}

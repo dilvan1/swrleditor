@@ -80,7 +80,6 @@ public class SimilarRulePanel extends Composite {
 			
 			pnlRule.setPanelButtonVisible(false);
 			pnlRule.show();
-			pnlRule.setHeight();
 			pnlRule.setClickHandlerAtom(null);
 
 			listRules.add(pnlRule);

@@ -123,12 +123,12 @@ public class CompositionActivity extends AbstractActivity implements
 	}
 
 	@Override
-	public void setSelectedPredicate(TYPE_ATOM typeAtom, String predicate) {
+	public void setSelectedPredicate(TYPE_ATOM typeAtom, String predicate, int left, int top) {
 		PopUpLocationView panel = new PopUpLocationView(clientFactory.getCompositionView());
 		panel.setItemName(predicate, typeAtom);
 		panel.setAutoHideEnabled(true);
+		panel.setPopupPosition(left, top);
 		panel.show();
-		panel.center();
 	}
 
 	@Override

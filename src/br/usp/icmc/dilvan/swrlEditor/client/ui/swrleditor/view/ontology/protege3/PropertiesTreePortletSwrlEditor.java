@@ -26,10 +26,12 @@ public class PropertiesTreePortletSwrlEditor extends PropertiesTreePortlet {
 		nodeListener = new TreeNodeListenerAdapter() {
 			@Override
 			public void onClick(Node node, EventObject e) {
+				int[] xy = e.getXY();
+
 				if ( ((TreeNode)node).getIconCls().equals("protege-datatype-property-icon"))
-					presenter.setSelectedPredicate(TYPE_ATOM.DATAVALUE_PROPERTY, ((TreeNode)node).getText());
+					presenter.setSelectedPredicate(TYPE_ATOM.DATAVALUE_PROPERTY, ((TreeNode)node).getText(), xy[0], xy[1]);
 				else
-					presenter.setSelectedPredicate(TYPE_ATOM.INDIVIDUAL_PROPERTY, ((TreeNode)node).getText());
+					presenter.setSelectedPredicate(TYPE_ATOM.INDIVIDUAL_PROPERTY, ((TreeNode)node).getText(), xy[0], xy[1]);
 			}
 		};
 	}

@@ -9,15 +9,12 @@
 		<g:north size="40.0">
 			<g:HorizontalPanel spacing="5" width=""
 				verticalAlignment="ALIGN_MIDDLE">
-				<g:Label horizontalAlignment="ALIGN_CENTER" text="Filters"
+				<g:Label horizontalAlignment="ALIGN_CENTER" text="Search"
 					styleName='{res.swrleditor.titleViews}' />
 			</g:HorizontalPanel>
-
-
 		</g:north>
 
 		<g:center>
-
 			<g:SplitLayoutPanel>
 				<g:west size="400.0">
 					<g:SimplePanel width="100%" height="100%" ui:field="pnlProperties">
@@ -25,66 +22,128 @@
 				</g:west>
 
 				<g:center>
+					<g:DockLayoutPanel width="100%" height="100%">
+						<g:north size="240.0">
+							<g:VerticalPanel spacing="2" verticalAlignment="ALIGN_TOP"
+								horizontalAlignment="ALIGN_LEFT" width="100%" height="">
+								<g:HorizontalPanel>
+									<g:Label text="Filter: " styleName='{res.swrleditor.bold}' />
+									<g:HorizontalPanel spacing="1">
+										<g:HTML text="" ui:field="htmlFilter" width="725px" styleName='{res.swrleditor.itemFilter}' height="20px"/>
+									</g:HorizontalPanel>
+								</g:HorizontalPanel>
 
-					<g:VerticalPanel width="100%" height="100%"
-						spacing="2">
-						<g:CaptionPanel captionText="Create a Filter">
-							<g:Grid>
-								<g:row>
-									<g:customCell>
-										<g:Label text="Type:" wordWrap="false"
-											horizontalAlignment="ALIGN_RIGHT" />
-									</g:customCell>
-									<g:customCell>
-										<g:ListBox ui:field="listTypes" />
-									</g:customCell>
-								</g:row>
-								<g:row>
-									<g:customCell>
-										<g:Label text="Rule Part:" wordWrap="false"
-											horizontalAlignment="ALIGN_RIGHT" />
-									</g:customCell>
-									<g:customCell>
-										<g:ListBox ui:field="listParts" />
-									</g:customCell>
-								</g:row>
-								<g:row>
-									<g:customCell>
-										<g:Label text="Query:" wordWrap="false"
-											horizontalAlignment="ALIGN_RIGHT" />
-									</g:customCell>
-									<g:customCell>
-										<g:SuggestBox ui:field="txtFilter" width="242px" />
-									</g:customCell>
-								</g:row>
-								<g:row>
-									<g:customCell>
-										<g:Label text=" " />
-									</g:customCell>
-									<g:customCell>
-										<g:Button text="Add Filter" ui:field="btnAddFilter">New Button</g:Button>
-									</g:customCell>
-								</g:row>
-							</g:Grid>
-						</g:CaptionPanel>
-						<g:Cell height="100%" width="100%" horizontalAlignment="ALIGN_RIGHT">
-							<g:CaptionPanel width="100%">
-								<g:VerticalPanel width="100%">
-									<g:CaptionPanel>
-										<g:HorizontalPanel>
-											<g:Button ui:field="btnFilterRun" text="Filter Run" />
-										</g:HorizontalPanel>
-									</g:CaptionPanel>
-									<g:ScrollPanel height="100%" width="100%">
-										<g:VerticalPanel ui:field="listFilters">
+								<g:HTML>
+									<br />
+								</g:HTML>
+
+								<g:VerticalPanel borderWidth="0">
+									<g:VerticalPanel>
+										<g:Label text="Find rules that have..." styleName='{res.swrleditor.bold}' />
+										<g:VerticalPanel horizontalAlignment="ALIGN_RIGHT"
+											width="800px">
+											<g:HorizontalPanel spacing="10">
+												<g:Label text="all these terms (AND):" />
+												<g:TextBox text="" ui:field="txtAnd" width="500px" />
+											</g:HorizontalPanel>
+
+											<g:HorizontalPanel spacing="10">
+												<g:Label text="one or more of these terms (OR):" />
+												<g:TextBox text="" ui:field="txtOr" width="500px" />
+											</g:HorizontalPanel>
 										</g:VerticalPanel>
-									</g:ScrollPanel>
-								</g:VerticalPanel>
-							</g:CaptionPanel>
-						</g:Cell>
-					</g:VerticalPanel>
 
+									</g:VerticalPanel>
+								</g:VerticalPanel>
+
+								<g:VerticalPanel borderWidth="0">
+									<g:VerticalPanel>
+
+										<g:Label text="But don't show rules that have..."
+											styleName='{res.swrleditor.bold}' />
+
+										<g:VerticalPanel horizontalAlignment="ALIGN_RIGHT"
+											width="800px">
+
+											<g:HorizontalPanel spacing="10">
+												<g:Label text="any of these unwanted terms (NOT):" />
+												<g:TextBox text="" ui:field="txtNot" width="500px" />
+											</g:HorizontalPanel>
+										</g:VerticalPanel>
+									</g:VerticalPanel>
+								</g:VerticalPanel>
+							</g:VerticalPanel>
+						</g:north>
+
+						<g:center>
+							<g:VerticalPanel width="100%" >
+								<g:Label styleName='{res.swrleditor.bold}' text="Advanced Filters"></g:Label>
+								<g:HorizontalPanel width="500px">
+									<g:CaptionPanel captionText="Filter in: " width="180px">
+
+										<g:VerticalPanel>
+											<g:HTML>
+												<br />
+											</g:HTML>
+											<g:HorizontalPanel horizontalAlignment="ALIGN_CENTER">
+
+												<g:CheckBox text="Select All" ui:field="chkSelectAll"
+													checked="false" styleName='{res.swrleditor.bold}' />
+												<g:CheckBox text="Deselect All" ui:field="chkDeselectAll"
+													checked="false" styleName='{res.swrleditor.bold}' />
+											</g:HorizontalPanel>
+											<g:HTML>
+												<hr />
+											</g:HTML>
+											<g:CheckBox text="Rule Name" ui:field="chkRuleName"
+												checked="true" />
+											<g:CheckBox text="Classes" ui:field="chkClasses"
+												checked="true" />
+											<g:CheckBox text="Datatype properties" ui:field="chkDatatype"
+												checked="true" />
+											<g:CheckBox text="Object properties" ui:field="chkObject"
+												checked="true" />
+											<g:CheckBox text="Builtin(s)" ui:field="chkBuiltin"
+												checked="true" />
+											<g:CheckBox text="SameAs/DiferentFrom" ui:field="chkSameDiferent"
+												checked="true" />
+											<g:CheckBox text="DataRange" ui:field="chkDataRange"
+												checked="true" />
+
+											<g:CheckBox text="Comments" ui:field="chkComments"
+												checked="false" />
+										</g:VerticalPanel>
+									</g:CaptionPanel>
+
+									<g:CaptionPanel captionText="Rule part: " width="180px">
+										<g:VerticalPanel>
+											<g:HTML>
+												<br />
+											</g:HTML>
+
+											<g:CheckBox text="Antecedent" ui:field="chkAntecedent"
+												checked="true" />
+											<g:CheckBox text="Consequent" ui:field="chkConsequent"
+												checked="true" />
+										</g:VerticalPanel>
+									</g:CaptionPanel>
+
+								</g:HorizontalPanel>
+							</g:VerticalPanel>
+
+
+
+						</g:center>
+						<g:south size="50">
+							<g:VerticalPanel  horizontalAlignment="ALIGN_CENTER" width="100%">
+								<g:Button text="Search" ui:field="btnSearch"  styleName='{res.swrleditor.allButton}'/>
+
+							</g:VerticalPanel>
+						</g:south>
+
+					</g:DockLayoutPanel>
 				</g:center>
+
 			</g:SplitLayoutPanel>
 		</g:center>
 

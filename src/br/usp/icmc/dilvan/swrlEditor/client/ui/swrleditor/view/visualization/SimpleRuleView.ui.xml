@@ -7,17 +7,16 @@
 		type='br.usp.icmc.dilvan.swrlEditor.client.resources.Resources' />
 
 	<g:FlowPanel styleName='{res.swrleditor.panelBase_SimpleRuleView}'  width="100%">
-		<g:DisclosurePanel ui:field="panelContent" width="100%"
-			open="true">
+		<g:DisclosurePanel ui:field="panelContent" width="100%" open="true">
 			<g:header></g:header>
 			<g:FlowPanel width="97%" ui:field="contentRule" />
 		</g:DisclosurePanel>
 		<g:HorizontalPanel spacing="5" ui:field="panelButtons">
 
-			<g:Button text="Edit Rule" ui:field="btnEditRule" />
-			<g:Button text="Duplicate and Edit" ui:field="btnDuplicateRule" />
-			<g:Button text="Delete" ui:field="btnDeleteRule" />
-			<g:Button text="Similar rules" ui:field="btnSimilarRule" />
+			<g:Button text="Edit Rule" ui:field="btnEditRule" styleName='{res.swrleditor.allButton}'/>
+			<g:Button text="Duplicate and Edit" ui:field="btnDuplicateRule" styleName='{res.swrleditor.allButton}'/>
+			<g:Button text="Delete" ui:field="btnDeleteRule" styleName='{res.swrleditor.allButton}'/>
+			<g:Button text="Similar rules" ui:field="btnSimilarRule" styleName='{res.swrleditor.allButton}'/>
 
 		</g:HorizontalPanel>
 	</g:FlowPanel>

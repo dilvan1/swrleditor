@@ -151,12 +151,10 @@ public class OptionsViewImpl extends Composite implements OptionsView {
 	
 	@UiHandler("btnSave")
 	void onBtnSaveClick(ClickEvent event) {
-		if (!this.writePermission){
+		if (!this.writePermission)
 			Window.alert("The options are valid only for that session. You must log in to save it for future sessions!");
-			presenter.goToVisualization();
-		}
-		if (this.writePermission)
-			saveOptions();
+		
+		saveOptions();
 	}
 	@UiHandler("btnCancel")
 	void onBtnCancelClick(ClickEvent event) {
@@ -312,8 +310,7 @@ public class OptionsViewImpl extends Composite implements OptionsView {
 		presenter.setStringOption(DefaultAlgorithmGroupsStr, getValueLstBox(lstDefaultAlgorithmGroups));
 		presenter.setStringOption(DefaultAlgorithmDecisionTreeStr, getValueLstBox(lstDefaultAlgorithmDecisionTree));
 
-		if (this.writePermission)
-			presenter.saveOptions();
+		presenter.saveOptions(writePermission);
 	}	
 	private String getValueLstBox(ListBox lstBox){
 		if (lstBox.getSelectedIndex() > -1)

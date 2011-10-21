@@ -14,7 +14,7 @@ import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.VisualizationView
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.visualization.decisiontree.NodeLabelListener;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.visualization.decisiontree.DefaultNodeInRulesTreeLabel;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.visualization.decisiontree.NodeTreeInt;
-import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.visualization.decisiontree.TooltipListener;
+import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.visualization.decisiontree.NodeToolTip;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -82,6 +82,10 @@ public class VisualizationViewDecisionTree extends Composite {
 	private Presenter presenter;
 
 	private final String SUSPENSION_POINTS = "...";
+	
+	private boolean writePermission;
+	
+	private NodeToolTip toolTipNodes =  new NodeToolTip();
 
 	interface VisualizationViewDecisionTreeUiBinder extends
 			UiBinder<Widget, VisualizationViewDecisionTree> {
@@ -116,6 +120,10 @@ public class VisualizationViewDecisionTree extends Composite {
 		panelTree.add(canvasTree, 0, 0);
 		panelTree.add(panelTreeLabels, 0, 0);
 
+	}
+	
+	public void setWritePermission(boolean permission) {
+		this.writePermission = permission;
 	}
 
 	public void setTree(NodeDecisionTree treeNode) {
@@ -354,17 +362,12 @@ public class VisualizationViewDecisionTree extends Composite {
 				Integer.toString(heightPanelTree) + "px");
 	}
 
-	@SuppressWarnings("deprecation")
 	private void addEventsLabel(DefaultNodeInRulesTreeLabel label) {
 		if (label == null)
 			return;
 
-		if (!label.getNode().getToolTip().trim().equals(""))
-			label.addMouseListener(new TooltipListener(label.getNode()
-					.getToolTip(), 5000, Resources.INSTANCE.swrleditor().hint()));
-
 		if (label.getText().equals(NodeDecisionTree.ROOT_VALUE)) {
-			label.addClickListener(new NodeLabelListener() {
+			label.addMouseListener(new NodeLabelListener() {
 
 				@Override
 				public void onClick(Widget sender, Event event) {
@@ -384,11 +387,15 @@ public class VisualizationViewDecisionTree extends Composite {
 				public void onMouseOut(Widget sender, Event event) {
 					exitMouseNodeTree((DefaultNodeInRulesTreeLabel) sender);
 				}
+
+				@Override
+				public void onShowToolTip(Widget sender, Event event){}
+
 
 			});
 
 		} else if (label.getText().equals(SUSPENSION_POINTS)) {
-			label.addClickListener(new NodeLabelListener() {
+			label.addMouseListener(new NodeLabelListener() {
 
 				@Override
 				public void onClick(Widget sender, Event event) {
@@ -409,11 +416,13 @@ public class VisualizationViewDecisionTree extends Composite {
 				public void onMouseOut(Widget sender, Event event) {
 					exitMouseNodeTree((DefaultNodeInRulesTreeLabel) sender);
 				}
+				
+				@Override
+				public void onShowToolTip(Widget sender, Event event){}
 
 			});
 		} else if (label.getText().equals(NodeDecisionTree.CONSEQUENT_VALUE)) {
-
-			label.addClickListener(new NodeLabelListener() {
+			label.addMouseListener(new NodeLabelListener() {
 
 				@Override
 				public void onClick(Widget sender, Event event) {
@@ -431,12 +440,22 @@ public class VisualizationViewDecisionTree extends Composite {
 
 				@Override
 				public void onMouseOut(Widget sender, Event event) {
+					toolTipNodes.hide();
 					exitMouseNodeTree((DefaultNodeInRulesTreeLabel) sender);
+				}
+				
+				@Override
+				public void onShowToolTip(Widget sender, Event event){
+					String textToolTip = ((DefaultNodeInRulesTreeLabel) sender).getNode().getToolTip();
+					String css = Resources.INSTANCE.swrleditor().hint();
+					int x = event.getClientX();
+					int y = event.getClientY();
+					toolTipNodes.show(textToolTip, 5000, css, x, y);
 				}
 
 			});
 		} else {
-			label.addClickListener(new NodeLabelListener() {
+			label.addMouseListener(new NodeLabelListener() {
 
 				@Override
 				public void onClick(Widget sender, Event event) {
@@ -457,6 +476,9 @@ public class VisualizationViewDecisionTree extends Composite {
 				public void onMouseOut(Widget sender, Event event) {
 					exitMouseNodeTree((DefaultNodeInRulesTreeLabel) sender);
 				}
+
+				@Override
+				public void onShowToolTip(Widget sender, Event event){}
 
 			});
 		}
@@ -494,9 +516,14 @@ public class VisualizationViewDecisionTree extends Composite {
 			};
 			
 			MenuBar popupMenuBarEdit = new MenuBar(true);
-			MenuItem insertEdit = new MenuItem("Edit Rule", true, editRule);
-			insertEdit.setStyleName("popup");
-			popupMenuBarEdit.addItem(insertEdit);
+			MenuItem EditItem = new MenuItem("Edit Rule", true, editRule);
+			EditItem.setEnabled(writePermission);
+			if (writePermission)
+				EditItem.setStyleName(Resources.INSTANCE.swrleditor().menuItemDecisionTree());
+			else
+				EditItem.setStyleName(Resources.INSTANCE.swrleditor().menuItemDecisionTreeDisable());
+			
+			popupMenuBarEdit.addItem(EditItem);
 			popupMenuBarEdit.setVisible(true);
 			
 			rightClickMenuEdit.clear();
@@ -529,7 +556,13 @@ public class VisualizationViewDecisionTree extends Composite {
 			
 			MenuBar popupMenuBarInsert = new MenuBar(true);
 			MenuItem insertItem = new MenuItem("Insert in New Rule", true, insertNewRule);
-			insertItem.setStyleName("popup");
+			
+			insertItem.setEnabled(writePermission);
+			if (writePermission)
+				insertItem.setStyleName(Resources.INSTANCE.swrleditor().menuItemDecisionTree());
+			else
+				insertItem.setStyleName(Resources.INSTANCE.swrleditor().menuItemDecisionTreeDisable());
+
 			popupMenuBarInsert.addItem(insertItem);
 			popupMenuBarInsert.setVisible(true);
 			rightClickMenuInsert.clear();

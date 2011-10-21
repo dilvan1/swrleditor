@@ -1,8 +1,8 @@
 package br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import br.usp.icmc.dilvan.swrlEditor.client.resources.Resources;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.Filter;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom.TYPE_ATOM;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.FilterView;
@@ -14,32 +14,43 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.SuggestBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 
 
 public class FilterViewImpl extends Composite implements FilterView{
 
 	@UiField SimplePanel pnlProperties;
-	@UiField ListBox listTypes;
-	@UiField ListBox listParts;
-	@UiField SuggestBox txtFilter;
-	@UiField Button btnAddFilter;
-	@UiField Button btnFilterRun;
-	@UiField VerticalPanel listFilters;
+	
+	@UiField HTML htmlFilter;
+	@UiField TextBox txtAnd;
+	@UiField TextBox txtOr;
+	@UiField TextBox txtNot;
+	@UiField CheckBox chkSelectAll;
+	@UiField CheckBox chkDeselectAll;
+	@UiField CheckBox chkRuleName;
+	@UiField CheckBox chkClasses;
+	@UiField CheckBox chkDatatype;
+	@UiField CheckBox chkObject;
+	@UiField CheckBox chkBuiltin;
+	@UiField CheckBox chkComments;
+	@UiField CheckBox chkSameDiferent;
+	@UiField CheckBox chkDataRange;
+	
+	@UiField CheckBox chkAntecedent;
+	@UiField CheckBox chkConsequent;
+	@UiField Button btnSearch;
 
 	private OntologyView ontologyView;
+	
+	private Filter filter;
 
 
 	private static FilterViewImplUiBinder uiBinder = GWT
@@ -52,7 +63,6 @@ public class FilterViewImpl extends Composite implements FilterView{
 
 	public FilterViewImpl(OntologyView ontologyView) {
 		initWidget(uiBinder.createAndBindUi(this));
-		fillFilterBox();
 
 		this.ontologyView = ontologyView;
 		pnlProperties.add(this.ontologyView);
@@ -65,51 +75,35 @@ public class FilterViewImpl extends Composite implements FilterView{
 	}
 
 	@Override
-	public void setFilters(List<Filter> filters){
-		listFilters.clear();
-		for (final Filter  filter : filters)
-			addFilter(filter);
+	public void setFilter(Filter filter){
+		this.filter = filter;
+		
+		txtAnd.setText(mountStringFilter(filter.getLstAnd()));
+		txtOr.setText(mountStringFilter(filter.getLstOr()));
+		txtNot.setText(mountStringFilter(filter.getLstNot()));
+		
+		
+		chkAntecedent.setValue(filter.isQueryAntecedent());
+		chkConsequent.setValue(filter.isQueryConsequent());
+		
+		chkBuiltin.setValue(filter.isQueryBuiltin());
+		chkClasses.setValue(filter.isQueryClasses());
+		chkComments.setValue(filter.isQueryComments());
+		chkDataRange.setValue(filter.isQueryDataRange());
+		chkDatatype.setValue(filter.isQueryDatatypeProperties());
+		chkObject.setValue(filter.isQueryObjectProperties());
+		chkRuleName.setValue(filter.isQueryRuleName());
 	}
 
-	private void addFilter(final Filter filter){
-		HorizontalPanel pnlFilter = new HorizontalPanel();
-
-		HTML btn = new HTML("<img src=\""+Resources.INSTANCE.fechar().getURL()+"\">");
-
-		btn.setStyleName(Resources.INSTANCE.swrleditor().linkRemove());
-		btn.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				removeFilter(filter);
-			}
-		});
-
-		HTML lbl = new HTML(UtilView.formatFilter(filter));
-		lbl.addStyleName(Resources.INSTANCE.swrleditor().itemFilter());
-
-		pnlFilter.add(btn);
-		pnlFilter.add(lbl);
-
-		listFilters.add(pnlFilter);
-
-	}
-
-	private void removeFilter(Filter f){
-		presenter.removeFilter(f);
-	}
-
-	/**
-	 * Fill the filter box showed in Visualization mode
-	 */
-	private void fillFilterBox() {
-		String listFilter[] = new String[] { "All", "Rule name", "Classes","Datatype properties", "Object properties", "Builtin(s)" };
-		String listRulePart[] = new String[] {"All parts", "Antecedent", "Consequent"};
-
-		for (String aux : listFilter)
-			listTypes.addItem(aux);
-
-		for (String aux : listRulePart)
-			listParts.addItem(aux);
+	private String mountStringFilter(List<String> list){
+		String txt = "";
+		for (String s :list){
+			if (s.contains(" "))
+				txt = txt + " \""+s+"\"";
+			else
+				txt = txt + " "+ s;
+		}
+		return txt.trim();
 	}
 
 	@Override
@@ -118,56 +112,176 @@ public class FilterViewImpl extends Composite implements FilterView{
 	}
 
 	@Override
-	public void populateFields(TYPE_ATOM typeAtom, String value) {
+	public void setSelectItemOntology(TYPE_ATOM typeAtom, String value, TYPE_FILTER typeFilter){
+		
 		if (typeAtom == TYPE_ATOM.CLASS)
-			listTypes.setSelectedIndex(2);
+			chkClasses.setValue(true);
 		else if (typeAtom == TYPE_ATOM.DATAVALUE_PROPERTY)
-			listTypes.setSelectedIndex(3);
+			chkDatatype.setValue(true);
 		else if (typeAtom == TYPE_ATOM.INDIVIDUAL_PROPERTY)
-			listTypes.setSelectedIndex(4);
+			chkObject.setValue(true);
 		else if (typeAtom == TYPE_ATOM.BUILTIN)
-			listTypes.setSelectedIndex(5);
-		txtFilter.setText(value);
+			chkBuiltin.setValue(true);
+		else if (typeAtom == TYPE_ATOM.DATARANGE)
+			chkDataRange.setValue(true);
+		else if (typeAtom == TYPE_ATOM.SAME_DIFERENT)
+			chkSameDiferent.setValue(true);
+		
+		if (value.contains(" "))
+			value = "\"" + value + "\"";
+		
+		
+		if (typeFilter == TYPE_FILTER.AND){
+			txtAnd.setText((txtAnd.getText()+" "+value).trim());
+		}else if (typeFilter == TYPE_FILTER.OR){
+			txtOr.setText((txtOr.getText()+" "+value).trim());
+		}else if (typeFilter == TYPE_FILTER.NOT){
+			txtNot.setText((txtNot.getText()+" "+value).trim());
+		}
+
+		mountHTMLFilter();
 	}
 
-	@UiHandler("btnAddFilter")
-	void onBtnAddFilterClick(ClickEvent event) {
-		if (txtFilter.getValue().equals("")){
-			Window.alert("Inform the Query");
-			txtFilter.setFocus(true);
-		}else{
+	
+	
+	@UiHandler({"txtAnd", "txtOr", "txtNot"})
+	void onTextBoxKeyUp(KeyUpEvent event) {
+		mountHTMLFilter();
+	}
+	
+	private void mountHTMLFilter(){
+		List<String> lstAnd = separa(txtAnd.getText());
+		List<String> lstOr = separa(txtOr.getText());
+		List<String> lstNot = separa(txtNot.getText());
+		
+		htmlFilter.setHTML(UtilView.formatFilter(lstAnd, lstOr, lstNot));
+	}
+	
+	private List<String> separa(String text){
+		List<String> result = new ArrayList<String>();
+		text = removeDoubleQuotes(text.trim());
+		
+		while (text.contains("\"")){
+			int pos1 = text.indexOf("\"");
+			int pos2 = text.substring(pos1+1).indexOf("\"");
 
-			if (presenter.addFilter(listTypes.getValue(listTypes.getSelectedIndex()), 
-					listParts.getValue(listParts.getSelectedIndex()), txtFilter.getText())){
-
-				listTypes.setSelectedIndex(0);
-				listParts.setSelectedIndex(0);
-				txtFilter.setValue("");
-				listTypes.setFocus(true);
+			if (pos2 <= 0)
+				pos2 = text.length()-1;
+			else
+				pos2 += pos1+1;
+			
+			String [] andSplit = text.substring(0, pos1).split(" ");
+			for (String s : andSplit){
+				if (!s.trim().isEmpty()){
+					result.add(s.trim());
+				}
 			}
 
+			if (!(pos1+1 > pos2))
+				result.add(text.substring(pos1+1, pos2).trim());
+			
+			text = text.substring(pos2+1, text.length()).trim();
 		}
-
-	}
-
-	@UiHandler("btnFilterRun")
-	void onBtnFilterRunClick(ClickEvent event) {
-		presenter.goToVisualization();	
-	}
-
-	@UiHandler("listTypes")
-	void onFilterTypeChange(ChangeEvent event) {
-		if("Rule name".equals(listTypes.getItemText(listTypes.getSelectedIndex()))){
-			listParts.setEnabled(false);
-		} else {
-			listParts.setEnabled(true);
+		
+		String [] andSplit = text.split(" ");
+		for (String s : andSplit){
+			if (!s.trim().isEmpty()){
+				result.add(s.trim());
+			}
 		}
+				
+		return result;
 	}
+	
+	private String removeDoubleQuotes(String s){
+		String result = "";
+		int count = 0;
+		for (int i = 0; i < s.length(); i++){
+			if (s.charAt(i) == '"') 
+				count++;
+			else
+				count = 0;
+			if (count <= 2)
+				result = result + s.charAt(i);
+		}
+		return result;
+	}
+	
+	@UiHandler("btnSearch")
+	void onBtnSearchClick(ClickEvent event) {
+		
+		if (!chkAntecedent.getValue() && !chkConsequent.getValue()){
+			Window.alert("Select one of the items in Rule Part!");
+			return;
+		}
+		if (!chkBuiltin.getValue() && !chkClasses.getValue() && !chkComments.getValue() && !chkDataRange.getValue() && !chkDatatype.getValue() && !chkObject.getValue() && !chkRuleName.getValue()){
+			Window.alert("Select one of the items in Filter In!");
+			return;
+		}
+		
+		
+		
+		filter.setLstAnd(separa(txtAnd.getText()));
+		filter.setLstOr(separa(txtOr.getText()));
+		filter.setLstNot(separa(txtNot.getText()));
+		
+		filter.setQueryAntecedent(chkAntecedent.getValue());
+		filter.setQueryConsequent(chkConsequent.getValue());
+		
+		filter.setQueryBuiltin(chkBuiltin.getValue());
+		filter.setQueryClasses(chkClasses.getValue());
+		filter.setQueryComments(chkComments.getValue());
+		filter.setQueryDataRange(chkDataRange.getValue());
+		filter.setQueryDatatypeProperties(chkDatatype.getValue());
+		filter.setQueryObjectProperties(chkObject.getValue());
+		filter.setQueryRuleName(chkRuleName.getValue());
+		
+		presenter.search(filter);
+	}
+	
+	@UiHandler("chkSelectAll")
+	void onChkSelectAllClick(ClickEvent event) {
+		chkDeselectAll.setValue(!chkSelectAll.getValue());
 
-	@UiHandler("txtFilter")
-	void onFilterStringKeyUp(KeyUpEvent event) {
-		if( event.getNativeKeyCode() == 13 && !txtFilter.getValue().isEmpty())
-			btnAddFilter.click();
+		chkRuleName.setValue(chkSelectAll.getValue());
+		chkClasses.setValue(chkSelectAll.getValue());
+		chkDatatype.setValue(chkSelectAll.getValue());
+		chkObject.setValue(chkSelectAll.getValue());
+		chkBuiltin.setValue(chkSelectAll.getValue());
+		chkComments.setValue(chkSelectAll.getValue());
+		chkSameDiferent.setValue(chkSelectAll.getValue());
+		chkDataRange.setValue(chkSelectAll.getValue());
+	}
+	
+	@UiHandler("chkDeselectAll")
+	void onChkDeselectAllClick(ClickEvent event) {
+		chkSelectAll.setValue(!chkDeselectAll.getValue());
+
+		chkRuleName.setValue(!chkDeselectAll.getValue());
+		chkClasses.setValue(!chkDeselectAll.getValue());
+		chkDatatype.setValue(!chkDeselectAll.getValue());
+		chkObject.setValue(!chkDeselectAll.getValue());
+		chkBuiltin.setValue(!chkDeselectAll.getValue());
+		chkComments.setValue(!chkDeselectAll.getValue());
+		chkSameDiferent.setValue(!chkDeselectAll.getValue());
+		chkDataRange.setValue(!chkDeselectAll.getValue());
+	}
+	
+	@UiHandler({"chkRuleName", "chkClasses", "chkDatatype", "chkObject", "chkBuiltin", "chkComments", "chkSameDiferent", "chkDataRange"})
+	void onChksFilterInClick(ClickEvent event) {
+		
+		chkSelectAll.setValue(chkRuleName.getValue() && chkClasses.getValue() && 
+				chkDatatype.getValue() && chkObject.getValue() && 
+				chkBuiltin.getValue() && chkComments.getValue() && 
+				chkSameDiferent.getValue() && chkDataRange.getValue());
+
+		chkDeselectAll.setValue(!chkRuleName.getValue() && !chkClasses.getValue() && 
+				!chkDatatype.getValue() && !chkObject.getValue() && 
+				!chkBuiltin.getValue() && !chkComments.getValue() && 
+				!chkSameDiferent.getValue() && !chkDataRange.getValue());
+
 		
 	}
+
+	
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.Errors;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.NameGroupAlgorithm;
@@ -19,20 +20,15 @@ import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.VariableImpl;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom.TYPE_ATOM;
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.SWRLService;
 import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.decisiontree.GenerateNodeRootDecisionTree;
-import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.decisiontree.GenerateNodeRootDecisionTreeRanking;
-import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.decisiontree.GenerateNodeRootDecisionTreeRankingDependency;
-import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.decisiontree.GenerateNodeRootDecisionTreeRankingParaphrase;
 import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.groups.GroupAxiome;
 import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.groups.GroupRules;
-import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.groups.KmeansAtom;
-import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.groups.KmeansPredicate;
-import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.groups.MatrizPredicateCharacteristic;
-import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.groups.MatrizPredicateCharacteristic.DISTANCE_MODE;
 import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.manager.OntologyManager;
 import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.manager.SWRLManager;
 import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.manager.protege3.OntologyManagerProtege3;
+import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.manager.protege3.SWRLManagerProtege3;
 import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.suggestterms.SuggestTerms;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 
@@ -45,6 +41,7 @@ public class SWRLEditorServiceImpl extends RemoteServiceServlet implements SWRLS
 	private Map<String,OntologyManager> ontologyManager = new HashMap<String,OntologyManager>();
 	private Map<String,SWRLManager> swrlManager = new HashMap<String,SWRLManager>();
 
+	
 	/**
 	 * Return the OntologyManager to manipulates the ontology
 	 */
@@ -65,6 +62,15 @@ public class SWRLEditorServiceImpl extends RemoteServiceServlet implements SWRLS
 		return swrlManager.get(projectName);
 	}
 
+	
+	protected ServiceLoader<GroupRules> loadGroupAlgorithms(){
+		return ServiceLoader.load(GroupRules.class);
+	}
+
+	protected ServiceLoader<GenerateNodeRootDecisionTree> loadDecisionTreeAlgorithms(){
+		return ServiceLoader.load(GenerateNodeRootDecisionTree.class);
+	}
+	
 	/**
 	 * Return the List of Entity presents in the ontology used in projectName
 	 * The Entity can be class, object and individual properties and builtins 
@@ -100,6 +106,7 @@ public class SWRLEditorServiceImpl extends RemoteServiceServlet implements SWRLS
 
 	@Override
 	public String getRuleName(String projectName, String antecedent, String consequent) {
+		
 		List<Atom> antecedents = getAtoms(projectName, antecedent);
 		List<Atom> consequents = getAtoms(projectName, consequent);
 		
@@ -126,8 +133,8 @@ public class SWRLEditorServiceImpl extends RemoteServiceServlet implements SWRLS
 			
 			if (findRule)
 				return r.getNameRule();
-				
 		}
+		
 		
 		return "";
 	}
@@ -255,31 +262,11 @@ public class SWRLEditorServiceImpl extends RemoteServiceServlet implements SWRLS
 
 	@Override
 	public ArrayList<Rule> getSimilarRules(String projectName, Rule base, float distance, boolean isNew) {
-		
-		
-		ArrayList<Rule> list = new ArrayList<Rule>();
-		MatrizPredicateCharacteristic mpc = new MatrizPredicateCharacteristic();
-		mpc.addRule(getRules(projectName));
+		GroupAxiome gpr =  new GroupAxiome();
+		gpr.setOWLModel(((OntologyManagerProtege3)getOntologyManager(projectName)).getOwlModel());
+		gpr.setRuleSet(getRules(projectName));
 
-		Rule rule = null;
-		if(isNew){
-			rule = base.cloneOnlyID();
-			mpc.addRule(rule);
-		} else {
-			for(Rule r : getRules(projectName)){
-				if(r.getNameRule().equals(base.getNameRule())){
-					rule = r;
-					break;
-				}
-			}
-		}
-		
-		if(rule != null){
-			for(Rule r : mpc.getIdenticalRules(rule, DISTANCE_MODE.MANHATHAN, distance))
-				list.add(r);
-		}
-		
-		return list;
+		return (ArrayList<Rule>) gpr.getGroupOfThis(base);
 	}
 
 	@Override
@@ -295,22 +282,11 @@ public class SWRLEditorServiceImpl extends RemoteServiceServlet implements SWRLS
 		return listAtom;
 	}
 	
-	//TODO fazer usando http://download.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html
 	@Override
 	public ArrayList<NameGroupAlgorithm> getGroupAlgorithmsList() {
-
 		ArrayList<NameGroupAlgorithm> ret = new ArrayList<NameGroupAlgorithm>();
-
-		GroupRules grpRules;
-
-		grpRules = new GroupAxiome();
-		ret.add(new NameGroupAlgorithm(grpRules.getAlgorithmName(), grpRules.canSetNumberOfGroups()));
-
-		grpRules = new KmeansAtom();
-		ret.add(new NameGroupAlgorithm(grpRules.getAlgorithmName(), grpRules.canSetNumberOfGroups()));
-
-		grpRules = new KmeansPredicate();
-		ret.add(new NameGroupAlgorithm(grpRules.getAlgorithmName(), grpRules.canSetNumberOfGroups()));
+		for (GroupRules alg : loadGroupAlgorithms()) 
+			ret.add(new NameGroupAlgorithm(alg.getAlgorithmName(), alg.canSetNumberOfGroups()));
 
 		return ret;
 	}
@@ -318,113 +294,59 @@ public class SWRLEditorServiceImpl extends RemoteServiceServlet implements SWRLS
 	@Override
 	public ArrayList<ArrayList<String>> getGroups(String projectName,
 			String algorithmName, int numGroups) {
-		ArrayList<ArrayList<String>> ret = new ArrayList<ArrayList<String>>();
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		
-		GroupRules algorithm = null;
+		for (GroupRules alg : loadGroupAlgorithms()){ 
+			if (alg.getAlgorithmName().equals(algorithmName)){
+				try {
+					alg.setNumberOfGroups(numGroups);
+					alg.setRuleSet(getRules(projectName));
+					alg.setOWLModel(((OntologyManagerProtege3)getOntologyManager(projectName)).getOwlModel());
+					alg.run();
+					List<List<String>> original = alg.getGroups();
 
-		if ((new GroupAxiome()).getAlgorithmName().equals(algorithmName))
-			algorithm = new GroupAxiome();
-		else if ((new KmeansAtom()).getAlgorithmName().equals(algorithmName))
-			algorithm = new KmeansAtom(getRules(projectName), numGroups);
-		else if ((new KmeansPredicate()).getAlgorithmName().equals(algorithmName))
-			algorithm = new KmeansPredicate(getRules(projectName), numGroups);
-
-		if (algorithm != null){
-			algorithm.setOWLModel(((OntologyManagerProtege3)getOntologyManager(projectName)).getOwlModel());
-			algorithm.run();
-			List<List<String>> original = algorithm.getGroups();
-			for (List<String> aux : original)
-				ret.add((ArrayList<String>) aux);
+					for (List<String> aux : original)
+						result.add((ArrayList<String>) aux);
+					
+				} catch (Exception e) {
+					GWT.log("Error: "+e.getMessage());
+					break;
+				}
+				break;
+			}
 		}
-			
-			
-		return ret;
+				
+		return result;
 	}
 
 	@Override
 	public ArrayList<String> getDecisionTreeAlgorithmsList() {
-		
-		ArrayList<String> ret = new ArrayList<String>();
+		ArrayList<String> result = new ArrayList<String>();
 
-		GenerateNodeRootDecisionTree dtRules;
+		for (GenerateNodeRootDecisionTree alg : loadDecisionTreeAlgorithms()) 
+			result.add(alg.getAlgorithmName());
 
-		dtRules = new GenerateNodeRootDecisionTreeRanking();
-		ret.add(dtRules.getAlgorithmName());
-
-		dtRules = new GenerateNodeRootDecisionTreeRankingDependency();
-		ret.add(dtRules.getAlgorithmName());
-		
-		dtRules = new GenerateNodeRootDecisionTreeRankingParaphrase();
-		ret.add(dtRules.getAlgorithmName());
-
-		return ret;
-
+		return result;
 	}
 
 	@Override
 	public NodeDecisionTree getDecisionTree(String projectName, String algorithmName) {
-		 
-		GenerateNodeRootDecisionTree algorithm = null;
-
-		if ((new GenerateNodeRootDecisionTreeRanking()).getAlgorithmName().equals(algorithmName))
-			algorithm = new GenerateNodeRootDecisionTreeRanking(getRules(projectName));
-		else if ((new GenerateNodeRootDecisionTreeRankingDependency()).getAlgorithmName().equals(algorithmName))
-			algorithm = new GenerateNodeRootDecisionTreeRankingDependency(getRules(projectName));
-		else if ((new GenerateNodeRootDecisionTreeRankingParaphrase()).getAlgorithmName().equals(algorithmName))
-			algorithm = new GenerateNodeRootDecisionTreeRankingParaphrase(getRules(projectName));
-
-		if (algorithm != null){
-			algorithm.run();
-			return algorithm.getRootNode();
-		}else
-			return null;
-	}
-
-	/*@Override
-	public Options getOptions(String User) {
-		if (User.isEmpty()){
-			Options opt = new Options();
-			
-			opt.setAlgorithmSimilarRules(getSimilarRulesAlgorithmsList().get(0));
-			opt.setAlgorithmSuggestTerms(getSuggestTermsAlgorithmsList().get(0));
-			
-			opt.setAllAlgorithmDecisionTree(getDecisionTreeAlgorithmsList());
-			
-			
-			ArrayList<String> GroupAlgorithm = new ArrayList<String>();
-			for (NameGroupAlgorithm nga : getGroupAlgorithmsList())
-				GroupAlgorithm.add(nga.getName());
-			opt.setAllAlgorithmGroups(GroupAlgorithm);
-			opt.setAllAlgorithmSimilarRules(getSimilarRulesAlgorithmsList());
-			opt.setAllAlgorithmSuggestTerms(getSuggestTermsAlgorithmsList());
-			
-			opt.setDefaultAlgorithmDecisionTree(getDecisionTreeAlgorithmsList().get(0));
-			opt.setDefaultAlgorithmGroups(getGroupAlgorithmsList().get(0).getName());
-			opt.setDefaultTabComp("List");
-			opt.setDefaultTabVisua("Editor");
-			opt.setTypeViewSimilarRulesComp("List");
-			opt.setVisibleAlgorithmDecisionTree(getDecisionTreeAlgorithmsList());
-			
-			
+		for (GenerateNodeRootDecisionTree alg : loadDecisionTreeAlgorithms()){ 
+			if (alg.getAlgorithmName().equals(algorithmName)){
+				try {
+					alg.setRuleSet(getRules(projectName));
+					alg.setSWRLFactory(((SWRLManagerProtege3)getSWRLManager(projectName)).getSWRLFactory());
+					alg.run();
+					return alg.getRootNode();
 					
-			opt.setVisibleAlgorithmGroups(GroupAlgorithm);
-			
-			opt.setVisibleAutismComp(true);
-			opt.setVisibleAutismVisua(true);
-			opt.setVisibleDecisionTreeVisua(true);
-
-			opt.setVisibleEditorComp(true);
-			opt.setVisibleGroupsVisua(true);
-			opt.setVisibleListVisua(true);
-			opt.setVisibleSWRLComp(true);
-			opt.setVisibleSWRLVisua(true);
-			opt.setVisibleTextVisua(true);
-
-			return opt;
-		}else{
-			return new Options();	
+				} catch (Exception e) {
+					GWT.log("Error: "+e.getMessage());
+					break;
+				}
+			}
 		}
-	}*/
+		return null;
+	}
 	
 	@Override
 	public boolean deleteRule(String projectName, String ruleName) {

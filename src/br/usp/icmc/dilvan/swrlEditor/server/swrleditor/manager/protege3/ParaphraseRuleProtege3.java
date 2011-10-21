@@ -7,13 +7,9 @@ import edu.stanford.smi.protegex.owl.swrl.model.*;
 public class ParaphraseRuleProtege3 {
 	
 	final String lineBreak = "\n";
-	//final String lineBreak = "<br>";
 
 	final String startTab = "\t";
 	final String endTab = "";
-	
-	//final String startTab = "<p>&nb.sp;&nb.sp;&nb.sp;";
-	//final String endTab = "</p>";
 
 	String sig = "";
 
@@ -22,18 +18,54 @@ public class ParaphraseRuleProtege3 {
 	@SuppressWarnings("rawtypes")
 	List oth;
 
-	RDFProperty bph;
-
-
+	private static RDFProperty bph;
+	
 	public ParaphraseRuleProtege3(OWLModel owlModel) {
 		super();
 
-		//SWRLFactory factory = new SWRLFactory(owlModel);
 		bph = owlModel.getRDFProperty("http://swrl.stanford.edu/ontologies/3.3/swrla.owl#hasBuiltInPhrase");
-
 	}
 
-	public static String getFormatedParaphrase(String paraphrase) {
+	public static String getFormatedParaphrase(SWRLFactory factory, String paraphrase) {
+
+		List<String> keyWords = new ArrayList<String>();
+		keyWords.add("IF");
+		keyWords.add("THEN");
+		keyWords.add("AND");
+		keyWords.add("SUCH THAT");
+		keyWords.add("WHERE");
+		keyWords.add("FOR EACH");
+		keyWords.add("THERE IS");
+		keyWords.add("HAS");
+		keyWords.add("VALUE");
+		keyWords.add("FOR");
+		keyWords.add("IS THE SAME AS");
+		keyWords.add("IS DIFFERENT FROM"); 
+		keyWords.add("RNAGE");
+		keyWords.add("IS AN ");
+		keyWords.add("IS A ");
+		keyWords.add(" A ");
+		keyWords.add(" AN ");
+		
+		for (SWRLBuiltin builtin: factory.getBuiltins())
+			if (builtin.getPropertyValue(bph) != null)
+				keyWords.add((String) builtin.getPropertyValue(bph));
+		
+		String copy;
+		for (String key :keyWords){
+			copy = paraphrase;
+			paraphrase = "";
+			while (copy.indexOf(key) >= 0){
+				int pos = copy.indexOf(key);
+				int tam = key.length();
+				
+				paraphrase = paraphrase + copy.substring(0, pos)+"<b>"+copy.substring(pos, pos+tam)+"</b>";
+				copy = copy.substring(pos+tam, copy.length());
+				
+			}
+			paraphrase = paraphrase + copy;
+		}
+		
 		return "<pre>"+paraphrase+"</pre>";
 	}
 
@@ -382,7 +414,7 @@ public class ParaphraseRuleProtege3 {
 	}
 
 	// Prune the variable/predicate name for parsing
-	private String stringPruning(String S) {
+	public static String stringPruningStatic(String S) {
 		if (S.startsWith("?"))
 			S = S.substring(1);
 
@@ -401,7 +433,13 @@ public class ParaphraseRuleProtege3 {
 		S = S.replace('_', ' ');
 
 		return S;
+	}
 
+	// Prune the variable/predicate name for parsing
+	public String stringPruning(String S) {
+		S =  stringPruningStatic(S);
+		
+		return S;
 	}
 
 	// Insert an entry in the hashmap
@@ -522,25 +560,18 @@ public class ParaphraseRuleProtege3 {
 				else
 					argName = o + "";
 
-				// argName = "";
-
-				// System.out.println( ((SWRLBuiltinAtom)
-				// atom).getBrowserText());
-				// System.out.println((((SWRLBuiltinAtom)
-				// atom).getBuiltin()).getBrowserText());
-				if ((((SWRLBuiltinAtom) atom).getBuiltin()) != null)
+				if ((((SWRLBuiltinAtom) atom).getBuiltin()) != null){
 					S = stringPruning((((SWRLBuiltinAtom) atom).getBuiltin())
 							.getBrowserText());
-				else
+				}else
 					S = "UnknownBuiltin";
 
 				if (S.equals("createOWLThing")) {
 					oth.add(atom);
 					p.add(argName);
 					argus = argus.getRest();
-					argName = stringPruning(((RDFResource) argus.getFirst())
-							.getBrowserText());
-					;
+					argName = stringPruning(((RDFResource) argus.getFirst()).getBrowserText());
+					
 					CREATEOWLTHING.add("FOR EACH \"" + argName + "\" THERE IS");
 				} else {
 					sequence.add(argName);
