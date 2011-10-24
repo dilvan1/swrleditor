@@ -17,6 +17,8 @@ public interface SWRLManager {
 	public RuleEvents getRuleEvents(long version);
 	
 	public List<String> getBuiltins();
+	public List<String> getBuiltins(String selfCompletion, int maxTerms);
+
 	public boolean hasBuiltin(String builtin);
 	
 	public boolean insertRule(String ruleName, Rule rule);

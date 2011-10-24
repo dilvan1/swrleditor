@@ -20,6 +20,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -29,6 +30,8 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
+import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -59,7 +62,14 @@ public class CompositionTabEditorView extends Composite implements CompositionTa
 
 	@UiField VerticalPanel pnlProperties;
 	@UiField ListBox lstAtomTypes;
-	@UiField TextBox txtPredicate;
+	
+	
+	private final MultiWordSuggestOracle predicateSuggestions = new MultiWordSuggestOracle();
+	@UiField(provided = true) 
+	SuggestBox sugPredicate;
+	private String lastFindSuggestions = "";
+
+
 	@UiField VerticalPanel pnlAddVariables;
 	@UiField Label lblAddParameter;
 	@UiField Label lblSave;
@@ -73,6 +83,7 @@ public class CompositionTabEditorView extends Composite implements CompositionTa
 	}
 
 	public CompositionTabEditorView() {
+		sugPredicate = new SuggestBox (predicateSuggestions);
 		initWidget(binder.createAndBindUi(this));
 
 		lstTxtVariables = new ArrayList<TextBox>();
@@ -119,8 +130,8 @@ public class CompositionTabEditorView extends Composite implements CompositionTa
 						|| p.getTypeVariable() == TYPE_VARIABLE.INDIVIDUALID)
 					continue;
 				String var;
-				
-				
+
+
 				if (typeView == TYPE_VIEW.ID)
 					var = "<span class=\""+ UtilResource.getCssTypeVariableEditor(p.getTypeVariable()) + "\">"
 							+ p.getFormatedID() + "</span>";
@@ -248,7 +259,7 @@ public class CompositionTabEditorView extends Composite implements CompositionTa
 			else if (modeEditAtom == MODE.NEW_CONSEQUENT)
 				rule.addConsequent(savedAtom);
 		}
-		savedAtom.setPredicateID(txtPredicate.getText());
+		savedAtom.setPredicateID(sugPredicate.getText());
 		savedAtom.setPredicateLabel(new ArrayList<String>());
 		savedAtom.setAtomType(TYPE_ATOM.valueOf(lstAtomTypes.getValue(lstAtomTypes.getSelectedIndex())));
 		savedAtom.getVariables().clear();
@@ -291,12 +302,6 @@ public class CompositionTabEditorView extends Composite implements CompositionTa
 		mountPnlProperties(false, lstTxtVariables.size()+1);
 	}
 
-	@UiHandler("txtPredicate")
-	void onTxtPredicateChange(ChangeEvent event) {
-		setStyleNameInSWRLComponents();
-	}
-
-
 	private void newAtom(boolean isAntecedent){
 		if (isAntecedent)
 			this.modeEditAtom = MODE.NEW_ANTECEDENT;
@@ -304,7 +309,7 @@ public class CompositionTabEditorView extends Composite implements CompositionTa
 			this.modeEditAtom = MODE.NEW_CONSEQUENT;
 
 		lstAtomTypes.setSelectedIndex(0);
-		txtPredicate.setText("Predicate");
+		sugPredicate.setText("Predicate");
 		pnlProperties.setVisible(true);	
 		clearVariables();
 
@@ -335,9 +340,9 @@ public class CompositionTabEditorView extends Composite implements CompositionTa
 		}
 
 		if (typeView == TYPE_VIEW.ID)
-			txtPredicate.setText(atomEdit.getPredicateID());
+			sugPredicate.setText(atomEdit.getPredicateID());
 		else
-			txtPredicate.setText(atomEdit.getPredicateLabel());
+			sugPredicate.setText(atomEdit.getPredicateLabel());
 
 		pnlProperties.setVisible(true);		
 	}
@@ -418,28 +423,28 @@ public class CompositionTabEditorView extends Composite implements CompositionTa
 	private void setStyleNameInSWRLComponents(){
 
 		if (lstAtomTypes.getSelectedIndex() > 0){
-			txtPredicate.setStyleName(Resources.INSTANCE.swrleditor().swrlRule());
+			sugPredicate.setStyleName(Resources.INSTANCE.swrleditor().swrlRule());
 			if (!styleNameTxtPredicate.equals(""))
-				txtPredicate.removeStyleName(styleNameTxtPredicate);
+				sugPredicate.removeStyleName(styleNameTxtPredicate);
 
 			//styleNameTxtPredicate = "atom_" + lstAtomTypes.getValue(lstAtomTypes.getSelectedIndex());
 
 			styleNameTxtPredicate = UtilResource.getCssTypeAtom(TYPE_ATOM.valueOf(lstAtomTypes.getValue(lstAtomTypes.getSelectedIndex())));
-			
-			 
-			txtPredicate.addStyleName(styleNameTxtPredicate);
+
+
+			sugPredicate.addStyleName(styleNameTxtPredicate);
 
 			int i = 1;
 			for (TextBox txtBox : lstTxtVariables){
-				
+
 				String aux = UtilResource.getCssTypeVariableEditor(VariableImpl.getTYPE_VARIABLE(TYPE_ATOM.valueOf(lstAtomTypes.getValue(lstAtomTypes.getSelectedIndex())), 
-						txtPredicate.getText(), txtBox.getText(), i++));
-						
+						sugPredicate.getText(), txtBox.getText(), i++));
+
 				txtBox.addStyleName(aux);
 			}
 		}else{
 			if (!styleNameTxtPredicate.equals(""))
-				txtPredicate.removeStyleName(styleNameTxtPredicate);
+				sugPredicate.removeStyleName(styleNameTxtPredicate);
 			styleNameTxtPredicate = "";
 		}
 
@@ -459,12 +464,12 @@ public class CompositionTabEditorView extends Composite implements CompositionTa
 		}
 
 		if (typeView == TYPE_VIEW.ID){
-			txtPredicate.setText(atom.getPredicateID());
+			sugPredicate.setText(atom.getPredicateID());
 			mountPnlProperties(true, atom.getCountVariables());
 			for (int i = 0; i < atom.getCountVariables(); i++)
 				lstTxtVariables.get(i).setText(atom.getVariables().get(i).getFormatedID());
 		}else{
-			txtPredicate.setText(atom.getPredicateID());
+			sugPredicate.setText(atom.getPredicateID());
 			mountPnlProperties(true, atom.getCountVariables());
 			for (int i = 0; i < atom.getCountVariables(); i++)
 				lstTxtVariables.get(i).setText(atom.getVariables().get(i).getFormatedLabel());
@@ -475,7 +480,7 @@ public class CompositionTabEditorView extends Composite implements CompositionTa
 
 	@Override
 	public void addPredicate(TYPE_ATOM type, String predicate, boolean isAntecedent) {
-		
+
 		newAtom(isAntecedent);
 
 		lstAtomTypes.setSelectedIndex(0);
@@ -485,10 +490,32 @@ public class CompositionTabEditorView extends Composite implements CompositionTa
 				break;
 			}
 		}
-		
-		txtPredicate.setText(predicate);
+
+		sugPredicate.setText(predicate);
 		mountPnlProperties(true, 0);
 
+	}
+
+	public void setSelfCompletion(List<String> suggest) {
+		predicateSuggestions.clear();
+		for (String s : suggest)
+			predicateSuggestions.add(s);
+				
+		sugPredicate.showSuggestionList();
+	}
+	
+	@UiHandler("sugPredicate")
+	void onSugPredicateKeyUp(KeyUpEvent event) {
+		//if ((event.getNativeKeyCode() >= 32) && (event.getNativeKeyCode() <= 126)){
+		if (event.getNativeKeyCode() != 13){
+			if (!sugPredicate.getText().isEmpty() && !lastFindSuggestions.equals(sugPredicate.getText())){
+				lastFindSuggestions = sugPredicate.getText();
+				presenter.getSelfCompletionInEditor(sugPredicate.getText(), sugPredicate.getText().length(), 
+						10, TYPE_ATOM.valueOf(lstAtomTypes.getValue(lstAtomTypes.getSelectedIndex())));
+	
+				setStyleNameInSWRLComponents();
+			}
+		}
 	}
 
 }

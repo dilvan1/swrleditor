@@ -497,21 +497,7 @@ public class VisualizationViewDecisionTree extends Composite {
 				@Override
 				public void execute() {
 					rightClickMenuEdit.hide();
-					
-					String antecedent = "";
-					String consequent = label.getNode().getToolTip();
-					NodeDecisionTree node = label.getNode().getParentNode();
-					while (node.getAtomType() !=  ATOM_TYPE.ROOT){
-						
-						if (antecedent.isEmpty())
-							antecedent = node.getValue();
-						else
-							antecedent = antecedent + " ^ " + node.getValue();
-						
-						node = node.getParentNode();
-					}
-					
-					presenter.goToEditRule(antecedent, consequent);
+					presenter.goToEditRule(label.getNode().getRuleName());
 				}
 			};
 			

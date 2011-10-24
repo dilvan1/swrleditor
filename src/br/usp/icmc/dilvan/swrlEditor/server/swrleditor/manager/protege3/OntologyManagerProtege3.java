@@ -12,13 +12,13 @@ import edu.stanford.bmir.protege.web.server.Protege3ProjectManager;
 import edu.stanford.bmir.protege.web.server.ServerProject;
 import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protegex.owl.jena.JenaOWLModel;
+import edu.stanford.smi.protegex.owl.model.NamespaceUtil;
 import edu.stanford.smi.protegex.owl.model.RDFProperty;
 import edu.stanford.smi.protegex.owl.model.RDFSClass;
 import edu.stanford.smi.protegex.owl.model.RDFSDatatype;
 import edu.stanford.smi.protegex.owl.model.impl.DefaultRDFSLiteral;
 
-
-public class OntologyManagerProtege3 implements OntologyManager{
+public class OntologyManagerProtege3 implements OntologyManager {
 
 	private JenaOWLModel owlModel;
 	private SWRLManager swrlManager;
@@ -26,31 +26,36 @@ public class OntologyManagerProtege3 implements OntologyManager{
 	private String projectName;
 
 	public OntologyManagerProtege3(String projectName) {
-		serverProject = Protege3ProjectManager.getProjectManager().getServerProject(projectName, false);
-		owlModel = (JenaOWLModel) this.serverProject.getProject().getKnowledgeBase();
+		serverProject = Protege3ProjectManager.getProjectManager()
+				.getServerProject(projectName, false);
+		owlModel = (JenaOWLModel) this.serverProject.getProject()
+				.getKnowledgeBase();
 		swrlManager = new SWRLManagerProtege3(this);
 		this.projectName = projectName;
-		
+
 	}
-	
-/*	@Override
-	public Long getVersion() {
-        if (serverProject == null) {
-            return null;
-        }
-        return Long.valueOf(serverProject.getServerVersion());
-	}*/
+
+	public String getUriToName(String uri, JenaOWLModel owlModel) {
+		if (uri.contains("#")) {
+			if (owlModel.getPrefixForResourceName(uri).isEmpty())
+				return NamespaceUtil.getLocalName(uri);
+			else
+				return owlModel.getPrefixForResourceName(uri) + ":"
+						+ NamespaceUtil.getLocalName(uri);
+		} else
+			return uri;
+	}
 
 	@Override
 	public SWRLManager getSWRLManager() {
 		return swrlManager;
 	}
 
-	public JenaOWLModel getOwlModel(){
+	public JenaOWLModel getOwlModel() {
 		return owlModel;
 	}
 
-	//TODO rever esses Exception
+	// TODO rever esses Exception
 	@Override
 	public boolean hasOWLClass(String resource) {
 		try {
@@ -59,6 +64,7 @@ public class OntologyManagerProtege3 implements OntologyManager{
 			return false;
 		}
 	}
+
 	@Override
 	public boolean hasOWLDatatypePropertie(String resource) {
 		try {
@@ -67,17 +73,19 @@ public class OntologyManagerProtege3 implements OntologyManager{
 			return false;
 		}
 	}
+
 	@Override
 	public boolean hasOWLDatatype(String resource) {
-		try{
+		try {
 			return (owlModel.getOWLIndividual(resource) != null);
 		} catch (Exception e) {
 			return false;
 		}
 	}
+
 	@Override
 	public boolean hasOWLObjectPropertie(String resource) {
-		try{
+		try {
 			return (owlModel.getOWLObjectProperty(resource) != null);
 		} catch (Exception e) {
 			return false;
@@ -86,14 +94,14 @@ public class OntologyManagerProtege3 implements OntologyManager{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<String> getIDsForLabel(String label, boolean returnFirst){
+	public List<String> getIDsForLabel(String label, boolean returnFirst) {
 
 		List<String> result = new ArrayList<String>();
-		
-		for (RDFSClass cls : (Collection<RDFSClass>) owlModel.getRDFSClasses()){
-			for (String lbl : (Collection<String>)cls.getLabels()){
+
+		for (RDFSClass cls : (Collection<RDFSClass>) owlModel.getRDFSClasses()) {
+			for (String lbl : (Collection<String>) cls.getLabels()) {
 				if (lbl.equals(label))
-					if (!result.contains(cls.getBrowserText())){
+					if (!result.contains(cls.getBrowserText())) {
 						result.add(cls.getBrowserText());
 						if (returnFirst)
 							return result;
@@ -101,20 +109,21 @@ public class OntologyManagerProtege3 implements OntologyManager{
 			}
 		}
 
-		for (RDFProperty property: (Collection<RDFProperty>) owlModel.getRDFProperties()){
-			
-			for (Object obj : (Collection<Object>)property.getLabels()){
+		for (RDFProperty property : (Collection<RDFProperty>) owlModel
+				.getRDFProperties()) {
+
+			for (Object obj : (Collection<Object>) property.getLabels()) {
 				String lbl = "";
-				if (obj instanceof String){
+				if (obj instanceof String) {
 					lbl = (String) obj;
-				}else if (obj instanceof DefaultRDFSLiteral){
+				} else if (obj instanceof DefaultRDFSLiteral) {
 					DefaultRDFSLiteral rdfsLiteral = (DefaultRDFSLiteral) obj;
 					lbl = rdfsLiteral.getBrowserText();
 				}
-				
-				if (!lbl.isEmpty()){
+
+				if (!lbl.isEmpty()) {
 					if (lbl.equals(label))
-						if (!result.contains(property.getBrowserText())){
+						if (!result.contains(property.getBrowserText())) {
 							result.add(property.getBrowserText());
 							if (returnFirst)
 								return result;
@@ -123,26 +132,177 @@ public class OntologyManagerProtege3 implements OntologyManager{
 			}
 		}
 
-		for (RDFSDatatype dataType: owlModel.getRDFSDatatypes()){
-			for (String lbl : (Collection<String>)dataType.getLabels()){
+		for (RDFSDatatype dataType : owlModel.getRDFSDatatypes()) {
+			for (String lbl : (Collection<String>) dataType.getLabels()) {
 				if (lbl.equals(label))
-					if (!result.contains(dataType.getBrowserText())){
+					if (!result.contains(dataType.getBrowserText())) {
 						result.add(dataType.getBrowserText());
 						if (returnFirst)
 							return result;
 					}
+			}
+
+		}
+
+		return result;
+	}
+
+	public List<OntologyEvent> getEvents(long fromVersion) {
+		if (serverProject == null) {
+			throw new RuntimeException("Could not get ontology: " + projectName
+					+ " from server.");
+		}
+		return serverProject.isLoaded() ? serverProject.getEvents(fromVersion)
+				: null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getOWLClass(String selfCompletion, int maxTerms) {
+		List<String> result = new ArrayList<String>();
+		int count = 0;
+		for (RDFSClass cls : (Collection<RDFSClass>) owlModel.getRDFSClasses()) {
+			// System.out.println("Local name: "+cls.getLocalName());
+			String name = getUriToName(cls.getURI(), owlModel);
+			if (name.startsWith(selfCompletion)) {
+				result.add(name);
+				count++;
+				if (count == maxTerms)
+					break;
+				else
+					continue;
+			}
+			for (String lbl : (Collection<String>) cls.getLabels()) {
+				if (lbl.startsWith(selfCompletion)) {
+					result.add(lbl);
+					count++;
+					break;
+				}
+			}
+			if (count == maxTerms)
+				break;
+		}
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getOWLDatatypePropertie(String selfCompletion,
+			int maxTerms) {
+		
+		List<String> result = new ArrayList<String>();
+		int count = 0;
+		for (RDFProperty property : (Collection<RDFProperty>) owlModel.getRDFProperties()) {
+
+			if( property.getClass().getSimpleName().indexOf("DatatypeProperty")>0){
+				String name = getUriToName(property.getURI(), owlModel);
+				if (name.startsWith(selfCompletion)) {
+					result.add(name);
+					count++;
+					if (count == maxTerms)
+						break;
+					else
+						continue;
+					
+					
+				}
+				for (String lbl : (Collection<String>) property.getLabels()) {
+					if (lbl.startsWith(selfCompletion)) {
+						result.add(lbl);
+						count++;
+						break;
+					}
+				}
+				if (count == maxTerms)
+					break;
 			}
 			
 		}
 
 		return result;
 	}
-	
-	
-    public List<OntologyEvent> getEvents(long fromVersion) {
-        if (serverProject == null) {
-            throw new RuntimeException("Could not get ontology: " + projectName + " from server.");
-        }
-        return serverProject.isLoaded() ? serverProject.getEvents(fromVersion) : null;
-    }
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getOWLDatatype(String selfCompletion, int maxTerms) {
+		
+		List<String> result = new ArrayList<String>();
+		int count = 0;
+		
+		for (RDFSDatatype dataType : owlModel.getRDFSDatatypes()) {
+			
+			String name = getUriToName(dataType.getURI(), owlModel);
+			if (name.startsWith(selfCompletion)) {
+				result.add(name);
+				count++;
+				if (count == maxTerms)
+					break;
+				else
+					continue;
+			}
+			for (String lbl : (Collection<String>) dataType.getLabels()) {
+				if (lbl.startsWith(selfCompletion)) {
+					result.add(lbl);
+					count++;
+					break;
+				}
+			}
+			if (count == maxTerms)
+				break;
+
+		}
+		
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getOWLObjectPropertie(String selfCompletion,
+			int maxTerms) {
+		
+		List<String> result = new ArrayList<String>();
+		int count = 0;
+		for (RDFProperty property : (Collection<RDFProperty>) owlModel.getRDFProperties()) {
+
+			if( property.getClass().getSimpleName().indexOf("ObjectProperty")>0){
+				String name = getUriToName(property.getURI(), owlModel);
+				if (name.startsWith(selfCompletion)) {
+					result.add(name);
+					count++;
+					if (count == maxTerms)
+						break;
+					else
+						continue;
+					
+					
+				}
+				for (String lbl : (Collection<String>) property.getLabels()) {
+					if (lbl.startsWith(selfCompletion)) {
+						result.add(lbl);
+						count++;
+						break;
+					}
+				}
+				if (count == maxTerms)
+					break;
+			}
+			
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<String> getOWLSameAsDiferentFrom(String selfCompletion,
+			int maxTerms) {
+		List<String> result = new ArrayList<String>();
+
+		if ("sameas".contains(selfCompletion))
+			result.add("sameas");
+		if ("differentfrom".contains(selfCompletion))
+			result.add("differentfrom");
+
+		return result;
+	}
 }

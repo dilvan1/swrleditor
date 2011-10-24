@@ -19,5 +19,9 @@ public interface CompositionTabView {
 		boolean isModifiedRule();
 		void setRuleString(String newRule);
 		boolean isBlockedAlterRule();
+		
+		void getSelfCompletionInEditor(String text, int cursor, int maxTerms, TYPE_ATOM typeAtom);
 	}
+
+	
 }

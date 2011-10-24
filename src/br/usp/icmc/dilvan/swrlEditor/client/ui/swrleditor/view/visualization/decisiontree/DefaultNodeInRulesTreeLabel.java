@@ -9,10 +9,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DefaultNodeInRulesTreeLabel extends Label implements NodeLabelNotifier{
+public class DefaultNodeInRulesTreeLabel extends HTML implements NodeLabelNotifier{
 		private NodeDecisionTree node;
 		
 		private NodeLabelListener listener = null;

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.Errors;
@@ -23,7 +22,6 @@ import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom.TYPE_ATOM;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Variable.TYPE_VARIABLE;
 import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.manager.SWRLManager;
 
-import edu.stanford.smi.protegex.owl.model.NamespaceUtil;
 import edu.stanford.smi.protegex.owl.model.impl.DefaultRDFSLiteral;
 import edu.stanford.smi.protegex.owl.swrl.SWRLRuleEngine;
 import edu.stanford.smi.protegex.owl.swrl.bridge.SWRLRuleEngineFactory;
@@ -136,11 +134,10 @@ public class SWRLManagerProtege3 implements SWRLManager {
 		newRule.setNameRule(rule.getName().substring(rule.getName().indexOf("#") + 1).trim());
 
 		String paraphrase = paraphraseRule.createParaphrase(rule);
-		newRule.setParaphrase(ParaphraseRuleProtege3.getFormatedParaphrase(factory, paraphrase)); 
-		newRule.setAntecedentParaphrase(ParaphraseRuleProtege3
-				.getFormatedParaphraseAntecendent(paraphrase));
-		newRule.setConsequentParaphrase(ParaphraseRuleProtege3
-				.getFormatedParaphraseConsequent(paraphrase));
+		newRule.setParaphrase(ParaphraseRuleProtege3.getFormatedViewParaphrase(factory, paraphrase)); 
+		
+		newRule.setAntecedentParaphrase(ParaphraseRuleProtege3.getFormatedParaphraseAntecendent(factory, paraphrase));
+		newRule.setConsequentParaphrase(ParaphraseRuleProtege3.getFormatedParaphraseConsequent(factory, paraphrase));
 		newRule.setEnabled(rule.isEnabled());
 
 		for (SWRLAtom swrlAtom : (Collection<SWRLAtom>) rule.getBody()
@@ -165,7 +162,10 @@ public class SWRLManagerProtege3 implements SWRLManager {
 			SWRLClassAtom atom = (SWRLClassAtom) swrlAtom;
 			
 			//newAtom.setPredicateID(atom.getClassPredicate().getBrowserText());
-			newAtom.setPredicateID(getUriToName(atom.getClassPredicate().getURI()));
+			
+			String name = ontologyManager.getUriToName(atom.getClassPredicate().getURI(), ontologyManager.getOwlModel());
+			
+			newAtom.setPredicateID(name);
 			
 			newAtom.setPredicateLabel(UtilProtege3
 					.parseCollectionArrayList(atom.getClassPredicate()
@@ -186,7 +186,10 @@ public class SWRLManagerProtege3 implements SWRLManager {
 			SWRLDatavaluedPropertyAtom atom = (SWRLDatavaluedPropertyAtom) swrlAtom;
 
 			//newAtom.setPredicateID(atom.getPropertyPredicate().getBrowserText());
-			newAtom.setPredicateID(getUriToName(atom.getPropertyPredicate().getURI()));
+			
+			String name = ontologyManager.getUriToName(atom.getPropertyPredicate().getURI(), ontologyManager.getOwlModel());
+
+			newAtom.setPredicateID(name);
 
 			newAtom.setPredicateLabel(UtilProtege3
 					.parseCollectionArrayList(atom.getPropertyPredicate()
@@ -211,7 +214,8 @@ public class SWRLManagerProtege3 implements SWRLManager {
 			SWRLIndividualPropertyAtom atom = (SWRLIndividualPropertyAtom) swrlAtom;
 
 			//newAtom.setPredicateID(atom.getPropertyPredicate().getBrowserText());
-			newAtom.setPredicateID(getUriToName(atom.getPropertyPredicate().getURI()));
+			String name = ontologyManager.getUriToName(atom.getPropertyPredicate().getURI(), ontologyManager.getOwlModel());
+			newAtom.setPredicateID(name);
 
 			newAtom.setPredicateLabel(UtilProtege3
 					.parseCollectionArrayList(atom.getPropertyPredicate()
@@ -276,7 +280,8 @@ public class SWRLManagerProtege3 implements SWRLManager {
 			SWRLDataRangeAtom atom = (SWRLDataRangeAtom) swrlAtom;
 
 			//newAtom.setPredicateID(atom.getDataRange().getBrowserText());
-			newAtom.setPredicateID(getUriToName(atom.getDataRange().getURI()));
+			String name = ontologyManager.getUriToName(atom.getDataRange().getURI(), ontologyManager.getOwlModel());
+			newAtom.setPredicateID(name);
 
 			newAtom.setPredicateLabel(UtilProtege3
 					.parseCollectionArrayList(atom.getDataRange().getLabels()));
@@ -294,7 +299,8 @@ public class SWRLManagerProtege3 implements SWRLManager {
 			SWRLBuiltinAtom atom = (SWRLBuiltinAtom) swrlAtom;
 
 			//newAtom.setPredicateID(atom.getBuiltin().getBrowserText());
-			newAtom.setPredicateID(getUriToName(atom.getBuiltin().getURI()));
+			String name = ontologyManager.getUriToName(atom.getBuiltin().getURI(), ontologyManager.getOwlModel());
+			newAtom.setPredicateID(name);
 			
 			newAtom.setPredicateLabel(UtilProtege3
 					.parseCollectionArrayList(atom.getBuiltin().getLabels()));
@@ -358,20 +364,32 @@ public class SWRLManagerProtege3 implements SWRLManager {
 
 	@Override
 	public List<String> getBuiltins() {
-
 		List<String> list = new ArrayList<String>();
-
-		SWRLBuiltin builtin;
-		Iterator<SWRLBuiltin> builtins = factory.getBuiltins().iterator();
-		while (builtins.hasNext()) {
-			builtin = builtins.next();
+		for (SWRLBuiltin builtin: factory.getBuiltins())
 			list.add(builtin.getBrowserText());
-		}
+
 		Collections.sort(list);
-
 		return list;
-
 	}
+	
+	@Override
+	public List<String> getBuiltins(String selfCompletion, int maxTerms) {
+		List<String> list = new ArrayList<String>();
+		int count = 0;
+		for (String builtin: getBuiltins()){
+			if (builtin.startsWith(selfCompletion)){
+				list.add(builtin);
+				count++;
+				if (count == maxTerms)
+					break;
+			}
+		}
+
+		Collections.sort(list);
+		return list;
+	}
+
+	
 
 	@Override
 	public boolean insertRule(String ruleName, Rule rule) {
@@ -496,16 +514,6 @@ public class SWRLManagerProtege3 implements SWRLManager {
 		events.add(re);
 	}
 	
-	private String getUriToName(String uri){
-		if (uri.contains("#")){
-			if (ontologyManager.getOwlModel().getPrefixForResourceName(uri).isEmpty())
-				return NamespaceUtil.getLocalName(uri);
-			else
-				return ontologyManager.getOwlModel().getPrefixForResourceName(uri) +":"+NamespaceUtil.getLocalName(uri);
-		}else
-			return uri;
-	}
-
 	@Override
 	public boolean runRules() {
 		try {
@@ -525,6 +533,5 @@ public class SWRLManagerProtege3 implements SWRLManager {
 		}
 		
 	}
-
 
 }

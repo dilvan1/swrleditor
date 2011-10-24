@@ -10,7 +10,6 @@ import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.VisualizationView
 
 import com.google.gwt.user.client.ui.IsWidget;
 
-
 /**
  *
  * @author Jo‹o Paulo Orlando
@@ -32,7 +31,8 @@ public interface CompositionView extends IsWidget
 	
 	void addAtom(Atom atom, boolean isAntecedent);
 	void setConfiguration(Map<String, Object> config);
-
+	
+	void setSelfCompletion(List<String> suggest);
 	
 	public interface Presenter
 	{
@@ -42,5 +42,8 @@ public interface CompositionView extends IsWidget
 		void getSimilarRules();
 		void goToVisualization();
 	}
+
+
+	
 	
 }

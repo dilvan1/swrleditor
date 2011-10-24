@@ -249,7 +249,7 @@ public class SWRLEditorServiceImpl extends RemoteServiceServlet implements SWRLS
 			return TYPE_ATOM.BUILTIN;
 		else if (getOntologyManager(projectName).hasOWLDatatype(predicate))
 			return TYPE_ATOM.DATARANGE;
-		else if( predicate.equalsIgnoreCase("sameas") || predicate.equalsIgnoreCase("differentfrom") )
+		else if( predicate.equals("sameas") || predicate.equals("differentfrom") )
 			return TYPE_ATOM.SAME_DIFERENT;
 		else
 			return TYPE_ATOM.NULL;
@@ -385,4 +385,26 @@ public class SWRLEditorServiceImpl extends RemoteServiceServlet implements SWRLS
 		return  getSWRLManager(projectName).runRules();
 	}
 
+	@Override
+	public ArrayList<String> getSelfCompletion(String projectName, String text,
+			int maxTerms, TYPE_ATOM typeAtom) {
+		List<String> result = new ArrayList<String>();
+		
+		if (typeAtom == TYPE_ATOM.BUILTIN){
+			return (ArrayList<String>) getSWRLManager(projectName).getBuiltins(text, maxTerms);
+		}else if (typeAtom == TYPE_ATOM.SAME_DIFERENT){
+			return (ArrayList<String>) getOntologyManager(projectName).getOWLSameAsDiferentFrom(text, maxTerms);
+		}else if (typeAtom == TYPE_ATOM.CLASS){
+			return (ArrayList<String>) getOntologyManager(projectName).getOWLClass(text, maxTerms);
+		}else if (typeAtom == TYPE_ATOM.DATARANGE){
+			return (ArrayList<String>) getOntologyManager(projectName).getOWLDatatype(text, maxTerms);
+		}else if (typeAtom == TYPE_ATOM.DATAVALUE_PROPERTY){
+			return (ArrayList<String>) getOntologyManager(projectName).getOWLDatatypePropertie(text, maxTerms);
+		}else if (typeAtom == TYPE_ATOM.INDIVIDUAL_PROPERTY){
+			return (ArrayList<String>) getOntologyManager(projectName).getOWLObjectPropertie(text, maxTerms);
+		}
+		
+		
+		return (ArrayList<String>) result;
+	}
 }

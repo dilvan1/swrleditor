@@ -20,7 +20,6 @@ import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.similarrules.Simi
 import br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.similarrules.SimilarRulePanel.TYPE_VIEW_SIMILAR;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -261,12 +260,6 @@ public class CompositionViewImpl extends Composite implements CompositionView {
 		presenter.getSimilarRules();
 	}
 	
-	//TODO melhor fazer quando perder o foco ou quando pressionar uma tecla, 
-	//se manter na tecla fazer o nome da regra separado da validação do resto no server
-	@UiHandler("txtRuleName")
-	void onRuleNameBlur(BlurEvent event) {
-		//presenter.setRuleName(txtRuleName.getText());
-	}
 	@UiHandler("txtRuleName")
 	void onTxtRuleNameKeyUp(KeyUpEvent event) {
 		presenter.setRuleName(txtRuleName.getText());
@@ -275,6 +268,11 @@ public class CompositionViewImpl extends Composite implements CompositionView {
 	@UiHandler("tabsComposition")
 	void onTabsCompositionSelection(SelectionEvent<Integer> event) {
 		showRule();
+	}
+
+	@Override
+	public void setSelfCompletion(List<String> suggest) {
+		editorList.setSelfCompletion(suggest);
 	}
 
 }

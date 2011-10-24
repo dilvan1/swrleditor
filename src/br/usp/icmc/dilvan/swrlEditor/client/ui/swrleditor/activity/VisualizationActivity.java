@@ -120,29 +120,6 @@ public class VisualizationActivity extends AbstractActivity implements Visualiza
 	}
 	
 	@Override
-	public void goToEditRule(String antecedent, String consequent) {
-		clientFactory.getRpcService().getRuleName(clientFactory.getProjectName(), antecedent, consequent, new AsyncCallback<String>() {
-			public void onSuccess(String result) {
-				if (result.equals("")){
-					Window.alert("Could not find this rule!");
-				}else{
-	
-					DefaultPlace newPlace = new CompositionPlace(CompositionPlace.ID_MODE+"="+COMPOSITION_MODE.EDIT+"&"
-							+CompositionPlace.ID_RULE_NAME+"="+result+"&"
-							+clientFactory.getURLWebProtege());
-					clientFactory.getPlaceController().goTo(newPlace);
-				}
-
-			}
-
-			public void onFailure(Throwable caught) {
-				Window.alert("Could not find this rule!");
-			}
-		});
-	}
-	
-	
-	@Override
 	public void goToDuplicateAndEditRule(String ruleName) {
 		DefaultPlace newPlace = new CompositionPlace(CompositionPlace.ID_MODE+"="+COMPOSITION_MODE.DUPLICATE+"&"
 				+CompositionPlace.ID_RULE_NAME+"="+ruleName+"&"

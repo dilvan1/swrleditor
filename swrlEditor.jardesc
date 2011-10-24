@@ -13,6 +13,5 @@
     <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
         <folder path="/swrleditor/war/WEB-INF/classes"/>
         <javaElement handleIdentifier="=swrleditor/src"/>
-        <file path="/swrleditor/war/WEB-INF/lib/groupTest.jar"/>
     </selectedElements>
 </jardesc>

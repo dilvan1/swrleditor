@@ -9,6 +9,7 @@ import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.RuleSet;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.decisiontree.NodeDecisionTree;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Rule;
+import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom.TYPE_ATOM;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -46,5 +47,6 @@ public interface SWRLServiceAsync {
 	void saveEditRule(String projectName, String ruleName, String oldRuleName, Rule rule, AsyncCallback<Boolean> callback);
 
 	void runRules(String projectName, AsyncCallback<Boolean> callback);
- 
+
+	void getSelfCompletion(String projectName, String text, int maxTerms, TYPE_ATOM typeAtom, AsyncCallback<ArrayList<String>> callback);
 }

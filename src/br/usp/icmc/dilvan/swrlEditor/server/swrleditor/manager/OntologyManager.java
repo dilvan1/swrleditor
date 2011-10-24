@@ -15,6 +15,13 @@ public interface OntologyManager {
 	public boolean hasOWLDatatype(String resource);
 
 	public boolean hasOWLObjectPropertie(String resource);
+	
+	
+	public List<String> getOWLClass(String selfCompletion, int maxTerms);
+	public List<String> getOWLDatatypePropertie(String selfCompletion, int maxTerms);
+	public List<String> getOWLDatatype(String selfCompletion, int maxTerms);
+	public List<String> getOWLObjectPropertie(String selfCompletion, int maxTerms);
+	public List<String> getOWLSameAsDiferentFrom(String selfCompletion, int maxTerms);
 
 	public List<String> getIDsForLabel(String label, boolean returnFirst);
 	

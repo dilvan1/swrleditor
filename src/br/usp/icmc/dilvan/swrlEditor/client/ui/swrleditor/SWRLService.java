@@ -9,6 +9,7 @@ import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.RuleSet;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.decisiontree.NodeDecisionTree;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Rule;
+import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom.TYPE_ATOM;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -48,6 +49,9 @@ public interface SWRLService extends RemoteService {
 	boolean saveEditRule(String projectName, String ruleName, String oldRuleName, Rule rule);
 
 	boolean runRules(String projectName);
+	
+	
+	ArrayList<String> getSelfCompletion(String projectName, String text, int maxTerms, TYPE_ATOM typeAtom);
 	
 
 }

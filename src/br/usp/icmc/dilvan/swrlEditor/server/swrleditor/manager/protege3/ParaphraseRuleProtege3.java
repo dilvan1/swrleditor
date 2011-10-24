@@ -25,8 +25,8 @@ public class ParaphraseRuleProtege3 {
 
 		bph = owlModel.getRDFProperty("http://swrl.stanford.edu/ontologies/3.3/swrla.owl#hasBuiltInPhrase");
 	}
-
-	public static String getFormatedParaphrase(SWRLFactory factory, String paraphrase) {
+	
+	private static String getFormated(SWRLFactory factory, String paraphrase, String beforeFormat, String afterFormat) {
 
 		List<String> keyWords = new ArrayList<String>();
 		keyWords.add("IF");
@@ -59,17 +59,30 @@ public class ParaphraseRuleProtege3 {
 				int pos = copy.indexOf(key);
 				int tam = key.length();
 				
-				paraphrase = paraphrase + copy.substring(0, pos)+"<b>"+copy.substring(pos, pos+tam)+"</b>";
+				paraphrase = paraphrase + copy.substring(0, pos)+beforeFormat+copy.substring(pos, pos+tam)+afterFormat;
 				copy = copy.substring(pos+tam, copy.length());
 				
 			}
 			paraphrase = paraphrase + copy;
 		}
 		
-		return "<pre>"+paraphrase+"</pre>";
+		return paraphrase;
+	}
+	
+
+	public static String getFormatedViewParaphrase(SWRLFactory factory, String paraphrase) {
+		return "<pre>"+getFormated(factory, paraphrase, "<b>", "</b>")+"</pre>";
 	}
 
-	public static List <String> getFormatedParaphraseAntecendent(String paraphrase) {
+	public static List <String> getFormatedParaphraseAntecendent(SWRLFactory factory, String paraphrase) {
+		
+		//String BOLD = "bold;";
+
+		
+		
+	//	String before = "<b>";//"<span style=\""+ BOLD +"\">";
+		//String after = "</b>";//"</span>";
+		
 		List <String> antecedentParaphrase = new ArrayList<String>();
 		
 		String tempParaphrase = paraphrase;
@@ -108,10 +121,13 @@ public class ParaphraseRuleProtege3 {
 		return antecedentParaphrase;
 	}
 
-	public static String getFormatedParaphraseConsequent(String paraphrase) {
-		return "<pre>"+paraphrase.substring(paraphrase.indexOf("THEN")+4).trim()+"</pre>";
+	public static String getFormatedParaphraseConsequent(SWRLFactory factory, String paraphrase) {
+		return "<pre>"+getFormated(factory, paraphrase.substring(paraphrase.indexOf("THEN")+4).trim(), "<b>", "</b>")+"</pre>";
+		
+		
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String createParaphrase(SWRLImp element) {
 		
 		String Result = "";
@@ -248,11 +264,12 @@ public class ParaphraseRuleProtege3 {
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private String DFSJoin(String root, HashMap<String, List> map, List bList,
 			String prefix, boolean OWLTH, boolean WR, List aliases) {
 		Argument arg;
 		SWRLAtom atom;
-		int Rtype, ARtype;
+		int Rtype;
 		String argName2, prefix2;
 		List list = map.remove(root);
 		boolean first = true;
@@ -348,6 +365,7 @@ public class ParaphraseRuleProtege3 {
 		return Result2;
 	}
 
+	@SuppressWarnings("rawtypes")
 	private String ChooseRoot(HashMap<String, List> cmap, List atomList,
 			String[] order, List sequence) {
 		List list;
@@ -381,6 +399,7 @@ public class ParaphraseRuleProtege3 {
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void collapse(List aliases, HashMap<String, List> map) {
 		Pair p;
 		List<Argument> l1, l2;
@@ -400,6 +419,7 @@ public class ParaphraseRuleProtege3 {
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void reorderAtoms(HashMap<String, List> cmap) {
 		List list;
 		String key;
@@ -443,6 +463,7 @@ public class ParaphraseRuleProtege3 {
 	}
 
 	// Insert an entry in the hashmap
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private HashMap insertMap(HashMap<String, List> map, String key, int value,
 			int ruleType) {
 		Argument newArg = new Argument(value, ruleType);
@@ -476,6 +497,7 @@ public class ParaphraseRuleProtege3 {
 	}
 
 	// Sort Variable in the Hashmap based on the number of repetition
+	@SuppressWarnings("rawtypes")
 	private String[] reorderVar(HashMap<String, List> map) {
 		int n = map.size();
 		int counter = 0;
@@ -511,6 +533,7 @@ public class ParaphraseRuleProtege3 {
 	}
 
 	// Scan the rules and generate the HashMap
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private ExtendedMap ScanRules(List list, List aliases, List CREATEOWLTHING,
 			List p, List<String> sequence) {
 		SWRLAtom atom;
@@ -609,6 +632,7 @@ public class ParaphraseRuleProtege3 {
 		return (new ExtendedMap(varMap, CREATEOWLTHING, p));
 	}
 
+	@SuppressWarnings("rawtypes")
 	private String uniqueArg(String arg2, List aliases) {
 		Pair t;
 		for (Iterator It = aliases.iterator(); It.hasNext();) {
@@ -620,12 +644,12 @@ public class ParaphraseRuleProtege3 {
 	}
 
 	// Parse an Atom
+	@SuppressWarnings("rawtypes")
 	private String parseAnAtom(SWRLAtom atom, List aliases) {
 
 		RDFList argus;
 		RDFSClass ruleType;
 		String S, ruleTypeName, argName, predicate;
-		RDFObject a2;
 		String Result1 = new String();
 
 		S = atom.getBrowserText();
@@ -693,7 +717,6 @@ public class ParaphraseRuleProtege3 {
 			predicate = stringPruning((((SWRLDatavaluedPropertyAtom) atom)
 					.getPropertyPredicate()).getBrowserText());
 
-			a2 = ((SWRLDatavaluedPropertyAtom) atom).getArgument2();
 			argName = stringPruning((((SWRLDatavaluedPropertyAtom) atom)
 					.getArgument2()).getBrowserText());
 			argName = uniqueArg(argName, aliases);
@@ -846,14 +869,7 @@ public class ParaphraseRuleProtege3 {
 	private class Argument {
 
 		public int ruleType;
-		public String var;
 		public int value;
-
-		Argument()
-		{
-			ruleType = 0;
-			value = -1;
-		}
 
 		public Argument(int value, int ruleType)
 		{
@@ -875,6 +891,7 @@ public class ParaphraseRuleProtege3 {
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	private class ArgComparator implements Comparator{ //ArgComparator
 		public int compare(Object o1, Object o2){
 
@@ -890,11 +907,13 @@ public class ParaphraseRuleProtege3 {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	private class ExtendedMap {
 		public List <String> CREATEOWLTHING;
 		public List <String> p;
 		public HashMap<String, List> map;
 
+		@SuppressWarnings("unchecked")
 		public ExtendedMap(HashMap<String, List> map, List CREATEOWLTHING, List p) 
 		{
 			this.CREATEOWLTHING = CREATEOWLTHING;
