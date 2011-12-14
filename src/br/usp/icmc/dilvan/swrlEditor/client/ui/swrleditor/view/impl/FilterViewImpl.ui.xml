@@ -127,6 +127,21 @@
 												checked="true" />
 										</g:VerticalPanel>
 									</g:CaptionPanel>
+									
+									<g:CaptionPanel captionText="Where to search: " width="180px">
+										<g:VerticalPanel>
+											<g:HTML>
+												<br />
+											</g:HTML>
+
+											<g:CheckBox text="Start of atoms" ui:field="chkStartAtoms"
+												checked="true" />
+											<g:CheckBox text="Middle of the atoms" ui:field="chkMiddleAtoms"
+												checked="true" />
+											<g:CheckBox text="End of Atoms" ui:field="chkEndAtoms"
+												checked="true" />
+										</g:VerticalPanel>
+									</g:CaptionPanel>
 
 								</g:HorizontalPanel>
 							</g:VerticalPanel>

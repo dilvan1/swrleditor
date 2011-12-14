@@ -46,12 +46,17 @@ public class FilterViewImpl extends Composite implements FilterView{
 	
 	@UiField CheckBox chkAntecedent;
 	@UiField CheckBox chkConsequent;
+	
+	@UiField CheckBox chkStartAtoms;
+	@UiField CheckBox chkMiddleAtoms;
+	@UiField CheckBox chkEndAtoms;
+
+	
 	@UiField Button btnSearch;
 
-	private OntologyView ontologyView;
 	
+	private OntologyView ontologyView;
 	private Filter filter;
-
 
 	private static FilterViewImplUiBinder uiBinder = GWT
 			.create(FilterViewImplUiBinder.class);
@@ -218,8 +223,10 @@ public class FilterViewImpl extends Composite implements FilterView{
 			Window.alert("Select one of the items in Filter In!");
 			return;
 		}
-		
-		
+		if (!chkStartAtoms.getValue() && !chkMiddleAtoms.getValue() && !chkEndAtoms.getValue()){
+			Window.alert("Select one of the items in Where to Search!");
+			return;
+		}
 		
 		filter.setLstAnd(separa(txtAnd.getText()));
 		filter.setLstOr(separa(txtOr.getText()));
@@ -236,6 +243,10 @@ public class FilterViewImpl extends Composite implements FilterView{
 		filter.setQueryObjectProperties(chkObject.getValue());
 		filter.setQueryRuleName(chkRuleName.getValue());
 		
+		filter.setQueryStartAtoms(chkStartAtoms.getValue());
+		filter.setQueryMiddleAtoms(chkMiddleAtoms.getValue());
+		filter.setQueryEndAtoms(chkEndAtoms.getValue());
+
 		presenter.search(filter);
 	}
 	

@@ -185,20 +185,25 @@ public class AppActivityMapper implements ActivityMapper {
 	private void getSWRLEventsFromServer(){
 		
 		if (!waitEventServer){
-			waitEventServer = true;
-			clientFactory.getRpcService().getRuleEvents(clientFactory.getProjectName(), rules.getVersionOntology(), new AsyncCallback<RuleEvents>() {
-				public void onSuccess(RuleEvents result) {
-					if (result.size() > 0)
-						clientFactory.addEventsViews(rules, result);
-					
-					waitEventServer = false;
-				}
+			if (rules != null){
+				waitEventServer = true;
 
-				public void onFailure(Throwable caught) {
-					Window.alert("Error fetching rule information details");
-					waitEventServer = false;
-				}
-			});
+				clientFactory.getRpcService().getRuleEvents(clientFactory.getProjectName(), rules.getVersionOntology(), new AsyncCallback<RuleEvents>() {
+					public void onSuccess(RuleEvents result) {
+
+						if (result.size() > 0)
+							clientFactory.addEventsViews(rules, result);
+						
+						waitEventServer = false;
+					}
+
+					public void onFailure(Throwable caught) {
+						Window.alert("Error fetching rule information details");
+						waitEventServer = false;
+					}
+				});
+				
+			}
 		}
 	}
 	

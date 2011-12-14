@@ -46,7 +46,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 
-
 import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 
@@ -104,7 +103,9 @@ public class VisualizationViewImpl extends Composite implements
 
 	// TODO fazer o pnlGroups autoHeigth
 	@UiField
-	ScrollPanel pnlGroups;
+	ScrollPanel scrGroups;
+	@UiField
+	VerticalPanel pnlGroups;
 	@UiField
 	ListBox cboAlgorithmsGroups;
 	@UiField
@@ -137,6 +138,8 @@ public class VisualizationViewImpl extends Composite implements
 	private int totalFilteredRules;
 
 	private String ruleSelected = "";
+	
+	private boolean firstSetConfigs = false;
 
 	private TYPE_VIEW typeView;
 	public static String[] nameTabs = { "List", "Text", "SWRL", "Autism", "Groups", "Decision Tree" };
@@ -229,21 +232,29 @@ public class VisualizationViewImpl extends Composite implements
 			tabVisualization.getTabWidget(4).getParent().setVisible(Options.getBooleanOption(config, OptionsView.GroupsVisualizationBool, true));
 			tabVisualization.getTabWidget(5).getParent().setVisible(Options.getBooleanOption(config, OptionsView.DecisionVisualizationBool, true));
 			
-			String tabselected = Options.getStringOption(config, OptionsView.DefaultTabVisualizationStr, "");
-			if (tabselected.equals(OptionsView.tabVisualizationList))
-				tabVisualization.selectTab(0);
-			else if (tabselected.equals(OptionsView.tabVisualizationText))
-				tabVisualization.selectTab(1);
-			else if (tabselected.equals(OptionsView.tabVisualizationSWRL))
-				tabVisualization.selectTab(2);
-			else if (tabselected.equals(OptionsView.tabVisualizationAutism))
-				tabVisualization.selectTab(3);
-			else if (tabselected.equals(OptionsView.tabVisualizationGroups))
-				tabVisualization.selectTab(4);
-			else if (tabselected.equals(OptionsView.tabVisualizationDecisionTree))
-				tabVisualization.selectTab(5);
-			else
-				tabVisualization.selectTab(0);
+			
+			if (!firstSetConfigs){
+				String tabselected = Options.getStringOption(config, OptionsView.DefaultTabVisualizationStr, "");
+				if (tabselected.equals(OptionsView.tabVisualizationList))
+					tabVisualization.selectTab(0);
+				else if (tabselected.equals(OptionsView.tabVisualizationText))
+					tabVisualization.selectTab(1);
+				else if (tabselected.equals(OptionsView.tabVisualizationSWRL))
+					tabVisualization.selectTab(2);
+				else if (tabselected.equals(OptionsView.tabVisualizationAutism))
+					tabVisualization.selectTab(3);
+				else if (tabselected.equals(OptionsView.tabVisualizationGroups))
+					tabVisualization.selectTab(4);
+				else if (tabselected.equals(OptionsView.tabVisualizationDecisionTree))
+					tabVisualization.selectTab(5);
+				else
+					tabVisualization.selectTab(0);
+				
+				if (writePermission)
+					firstSetConfigs = true;
+					
+			}
+			
 		}
 	}
 	
@@ -304,7 +315,6 @@ public class VisualizationViewImpl extends Composite implements
 
 			if (pnlBase != null && simpleRulesBase != null	&& scrollBase != null) {
 				for (SimpleRuleView panel : simpleRulesBase) {
-
 					if (panel.getRuleName().equals(nameRule)) {
 						panelSelect = panel;
 						break;
@@ -319,24 +329,22 @@ public class VisualizationViewImpl extends Composite implements
 	}
 
 	private void WaitingForSetPositionScrool(final SimpleRuleView panelSelect,	final ScrollPanel scrollBase) {
-		//if (panelSelect.isVisible()){
-			Timer timer = new Timer() {
-				@Override
-				public void run() {
-					if (((panelSelect.getOffsetHeight() > 0) || (panelSelect.getOffsetWidth() > 0))) {
-						
-						scrollBase.setVerticalScrollPosition(0);
-						
-						int position = panelSelect.getAbsoluteTop() - (scrollBase.getAbsoluteTop());
-						scrollBase.setVerticalScrollPosition(position);
-						
-						
-					} else
-						schedule(10);
-				}
-			};
-			timer.schedule(10);
-		//}
+		Timer timer = new Timer() {
+			@Override
+			public void run() {
+				if (((panelSelect.getOffsetHeight() > 0) || (panelSelect.getOffsetWidth() > 0))) {
+
+					scrollBase.setVerticalScrollPosition(0);
+
+					int position = panelSelect.getAbsoluteTop() - (scrollBase.getAbsoluteTop());
+					scrollBase.setVerticalScrollPosition(position);
+
+
+				} else
+					schedule(10);
+			}
+		};
+		timer.schedule(10);
 	}
 
 	@Override
@@ -458,13 +466,14 @@ public class VisualizationViewImpl extends Composite implements
 		if (number == 0)
 			number = Presenter.DEFAULT_NUMBER_GROUPS;
 
-		if (cboNumberGroups.isEnabled()) {
-			lastNumberGroupsSelected = number;
-			presenter.getGroups(algorithm, number);
-		} else {
-			lastNumberGroupsSelected = 0;
-			presenter.getGroups(algorithm, 0);
-		}
+		if (tabVisualization.getOffsetHeight() > 0)
+			if (cboNumberGroups.isEnabled()) {
+				lastNumberGroupsSelected = number;
+				presenter.getGroups(algorithm, number);
+			} else {
+				lastNumberGroupsSelected = 0;
+				presenter.getGroups(algorithm, 0);
+			}
 
 		lastGroupAlgorithmSelected = algorithm;
 
@@ -625,21 +634,33 @@ public class VisualizationViewImpl extends Composite implements
 			if (Options.getBooleanOption(config, Options.removeCharInvalidForNameOptions(OptionsView.AlgorithmGroupsStr_, alg.getName()), true)){
 				cboAlgorithmsGroups.addItem(alg.getName());
 				
-				if (defaultAlg.equals(alg.getName()))
+				if (defaultAlg.equals(alg.getName())){
 					cboAlgorithmsGroups.setSelectedIndex(count);
+					cboNumberGroups.setEnabled(alg.isCanSetNumberOfGroups());
+				}
 				
 				count++;
 			}
 		}
-		if (defaultAlg.equals(""))
+		if (defaultAlg.equals("")){
 			cboAlgorithmsGroups.setSelectedIndex(0);
+			cboNumberGroups.setEnabled(algorithms.get(0).isCanSetNumberOfGroups());
+		}
 		
-		if (tabVisualization.getSelectedIndex() == 4)
-			mountTabGroups();
+		if (tabVisualization.getSelectedIndex() == 4){
+			if (tabVisualization.getOffsetHeight() > 0){
+				mountTabGroups();
+			}
+		}
 	}
 
 	@Override
 	public void setGroups(ArrayList<ArrayList<String>> groups) {
+		
+		if (tabVisualization.getOffsetHeight() > 0)
+			scrGroups.setSize(Integer.toString(tabVisualization.getOffsetWidth()-15)+"px", Integer.toString(tabVisualization.getOffsetHeight()-70)+"px");
+
+		
 
 		if (groups == null)
 			return;
@@ -693,6 +714,10 @@ public class VisualizationViewImpl extends Composite implements
 	public void setDecisionTreeAlgorithmList(List<String> algorithms, Map<String, Object> config) {
 		createViewDecisionTree();
 		viewDecisionTree.setListAlgorithm(algorithms, config);
+		
+		if (tabVisualization.getSelectedIndex() == 5)
+			if (tabVisualization.getOffsetHeight() > 0)
+				viewDecisionTree.loadDecisionTree();
 	}
 
 	@Override
@@ -756,8 +781,9 @@ public class VisualizationViewImpl extends Composite implements
 				mountTabAutism();
 			break;
 		case 4:
-			if (groupAlgorithmListAlgorithms != null)
+			if (groupAlgorithmListAlgorithms != null){
 				mountTabGroups();
+			}
 
 			break;
 		case 5:

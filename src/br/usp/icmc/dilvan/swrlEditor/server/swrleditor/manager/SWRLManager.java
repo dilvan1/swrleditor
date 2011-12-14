@@ -29,6 +29,6 @@ public interface SWRLManager {
 	
 	public Errors getErrorsList(Rule rule, boolean isNew);
 
-	public boolean runRules();
+	public List<String> runRules();
 	
 }

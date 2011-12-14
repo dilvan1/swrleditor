@@ -22,6 +22,9 @@ import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom.TYPE_ATOM;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Variable.TYPE_VARIABLE;
 import br.usp.icmc.dilvan.swrlEditor.server.swrleditor.manager.SWRLManager;
 
+import edu.stanford.smi.protege.exception.OntologyLoadException;
+import edu.stanford.smi.protegex.owl.model.RDFProperty;
+import edu.stanford.smi.protegex.owl.model.impl.DefaultOWLNamedClass;
 import edu.stanford.smi.protegex.owl.model.impl.DefaultRDFSLiteral;
 import edu.stanford.smi.protegex.owl.swrl.SWRLRuleEngine;
 import edu.stanford.smi.protegex.owl.swrl.bridge.SWRLRuleEngineFactory;
@@ -90,10 +93,14 @@ public class SWRLManagerProtege3 implements SWRLManager {
 	}
 	
 	private RuleSet createRuleSet() {
-		
+		RDFProperty hrg = ontologyManager.getOwlModel().getRDFProperty("http://swrl.stanford.edu/ontologies/3.3/swrla.owl#hasRuleCategory");
 		RuleSet rulesSet = new RuleSetImpl();
 		//int count = 0;
-		for (SWRLImp rule : factory.getImps())
+		for (SWRLImp rule : factory.getImps()){
+			
+			if (rule.getPropertyValue(hrg) == null)
+				setSignatureInRule(rule);
+			
 			if (!rule.getBrowserText().trim().equals("<EMPTY_RULE>")) {
 				
 				//count++;
@@ -103,6 +110,7 @@ public class SWRLManagerProtege3 implements SWRLManager {
 				//if (count == 5)
 				//	break;
 			}
+		}
 		rulesSet.setVersionOntology(getVersion());
 		
 		
@@ -332,7 +340,13 @@ public class SWRLManagerProtege3 implements SWRLManager {
 					newAtom.addVariable(createVariable(newAtom.getAtomType(),
 							newAtom.getPredicateID(),
 							Float.toString((Float) arg), count++, null, null));
-				} else
+				} else if (arg instanceof DefaultOWLNamedClass){
+					String var = ontologyManager.getUriToName(((DefaultOWLNamedClass) arg).getURI(), ontologyManager.getOwlModel());
+					Variable variable = createVariable(newAtom.getAtomType(), newAtom.getPredicateID(), var, count++, ((DefaultOWLNamedClass) arg).getLabels(), ((DefaultOWLNamedClass) arg).getComments());
+					variable.setTypeVariable(TYPE_VARIABLE.INDIVIDUALID);
+					newAtom.addVariable(variable);
+					
+				}else					
 					System.out.println("FALTOU:" + arg.getClass());
 			}
 		} else {
@@ -403,6 +417,7 @@ public class SWRLManagerProtege3 implements SWRLManager {
 					ruleName = prefix + ruleName;
 				
 				ruleProtege = factory.createImp(ruleName, swrlRule);
+				setSignatureInRule(ruleProtege);
 				addEvent(new RuleEvent("", createRule(ruleProtege), TYPE_EVENT.INSERT, getVersion()+1));
 			} catch (SWRLParseException e) {
 				e.printStackTrace();
@@ -429,7 +444,8 @@ public class SWRLManagerProtege3 implements SWRLManager {
 				
 				ruleProtege.deleteImp();
 				ruleProtege = factory.createImp(ruleName, swrlRule);
-				
+				setSignatureInRule(ruleProtege);
+	
 				addEvent(new RuleEvent(oldRuleName, createRule(ruleProtege), TYPE_EVENT.EDIT, getVersion()+1));
 			} catch (SWRLParseException e) {
 				e.printStackTrace();
@@ -473,7 +489,6 @@ public class SWRLManagerProtege3 implements SWRLManager {
 			if (!aux){
 				Ids = ontologyManager.getIDsForLabel(a.getPredicateID(), false);
 				if (Ids.size() != 1){
-					System.out.println("O Label: "+a.getPredicateID()+" possui mais de um ID.");
 					if(Ids.size() > 1)
 						a.setPredicateID(Ids.get(0));
 				}else{
@@ -484,7 +499,6 @@ public class SWRLManagerProtege3 implements SWRLManager {
 					if (v.getTypeVariable() == TYPE_VARIABLE.INDIVIDUALID){
 						IdsVar = ontologyManager.getIDsForLabel(a.getPredicateID(), false);
 						if (IdsVar.size() != 1){
-							System.out.println("O Label da variavel: "+v.getSimpleID()+" possui mais de um ID.");
 							if(IdsVar.size() > 1)
 								v.setSimpleID(IdsVar.get(0));
 						}else{
@@ -515,23 +529,53 @@ public class SWRLManagerProtege3 implements SWRLManager {
 	}
 	
 	@Override
-	public boolean runRules() {
+	public List<String> runRules() {
 		try {
+			
+			List<String> result =  new ArrayList<String>();
+			
 			SWRLRuleEngine ruleEngine = SWRLRuleEngineFactory.create(ontologyManager.getOwlModel());
-			/*ruleEngine.reset();
+			ruleEngine.reset();
 			ruleEngine.importSWRLRulesAndOWLKnowledge();
 			ruleEngine.run();
 			ruleEngine.writeInferredKnowledge2OWL();
-			*/
-			ruleEngine.infer();
 			
-			return true;
+			result.add("Number Of Imported OWLAxioms: "+ruleEngine.getNumberOfImportedOWLAxioms());
+			result.add("Number Of Imported OWLClasses: "+ruleEngine.getNumberOfImportedOWLClasses());
+			result.add("Number Of Imported OWLIndividuals: "+ruleEngine.getNumberOfImportedOWLIndividuals());
+			result.add("Number Of Imported SWRLRules: "+ruleEngine.getNumberOfImportedSWRLRules());
+			
+			result.add("Number Of Inferred OWLAxioms: "+ruleEngine.getNumberOfInferredOWLAxioms());
+			result.add("Number Of Inferred OWLIndividuals: "+ruleEngine.getNumberOfInferredOWLIndividuals());
+			result.add("Number Of Injected OWLAxioms: "+ruleEngine.getNumberOfInjectedOWLAxioms());
+			result.add("Number Of Injected OWLClasses: "+ruleEngine.getNumberOfInjectedOWLClasses());
+			result.add("Number Of Injected OWLIndividuals: "+ruleEngine.getNumberOfInjectedOWLIndividuals());
+			
+			/*ruleEngine.infer();*/
+			
+			return result;
 		} catch (SWRLRuleEngineException e) {
-			System.out.println("Error:"+e.getMessage());
+			List<String> result =  new ArrayList<String>();
+			result.add("Error:"+e.getMessage());
 			e.printStackTrace();
-			return false;
+			return result;
 		}
 		
 	}
+	
+	private void setSignatureInRule(SWRLImp rule){
+		CreateSignature cs = new CreateSignature();
+		try {
+			String signature = cs.createSignature(this.ontologyManager.getOwlModel(), rule);
+			RDFProperty hrg = this.ontologyManager.getOwlModel().getRDFProperty("http://swrl.stanford.edu/ontologies/3.3/swrla.owl#hasRuleCategory");
+
+			rule.setPropertyValue(hrg, signature);
+		} catch (OntologyLoadException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+			
 
 }

@@ -28,7 +28,11 @@ public class Filter implements Serializable {
 
 	private boolean queryAntecedent;
 	private boolean queryConsequent;
-	
+
+	private boolean queryStartAtoms;
+	private boolean queryMiddleAtoms;
+	private boolean queryEndAtoms;
+
 	public Filter(){
 		lstAnd = new ArrayList<String>();
 		lstOr = new ArrayList<String>();
@@ -151,6 +155,30 @@ public class Filter implements Serializable {
 		this.queryDataRange = queryDataRange;
 	}
 
+	public boolean isQueryStartAtoms() {
+		return queryStartAtoms;
+	}
+
+	public void setQueryStartAtoms(boolean queryStartAtoms) {
+		this.queryStartAtoms = queryStartAtoms;
+	}
+
+	public boolean isQueryMiddleAtoms() {
+		return queryMiddleAtoms;
+	}
+
+	public void setQueryMiddleAtoms(boolean queryMiddleAtoms) {
+		this.queryMiddleAtoms = queryMiddleAtoms;
+	}
+
+	public boolean isQueryEndAtoms() {
+		return queryEndAtoms;
+	}
+
+	public void setQueryEndAtoms(boolean queryEndAtoms) {
+		this.queryEndAtoms = queryEndAtoms;
+	}
+	
 	public boolean contains(Rule rule) {
 		//.out.println("Nome regra:"+rule.getNameRule()+" --> Regra: "+rule.getFormatedRuleID());
 		for (String s : lstAnd){
@@ -266,19 +294,56 @@ public class Filter implements Serializable {
 	}
 	
 	private boolean queryInAtom(Atom a, String s){
-		if (a.getAtomID().toLowerCase().contains(s.toLowerCase()) || a.getAtomLabel().toLowerCase().contains(s.toLowerCase())){
-			//System.out.println("Achou em ID Label");
-			return true;
-		}
-
-		if (a.getAtomID().toLowerCase().contains(s.toLowerCase().replaceAll(" ", "")) || a.getAtomLabel().toLowerCase().contains(s.toLowerCase().replaceAll(" ", ""))){
-			//System.out.println("Achou em ID Label");
-			return true;
-		}
-		if (queryComments){
-			if (a.getPredicateComment().toLowerCase().contains(s.toLowerCase())){
-				//System.out.println("Achou em coment");
+		
+		if (isQueryStartAtoms()){
+			if (a.getAtomID().toLowerCase().startsWith(s.toLowerCase()) || a.getAtomLabel().toLowerCase().startsWith(s.toLowerCase())){
+				//System.out.println("Achou em ID Label");
 				return true;
+			}
+
+			if (a.getAtomID().toLowerCase().startsWith(s.toLowerCase().replaceAll(" ", "")) || a.getAtomLabel().toLowerCase().startsWith(s.toLowerCase().replaceAll(" ", ""))){
+				//System.out.println("Achou em ID Label");
+				return true;
+			}
+			if (queryComments){
+				if (a.getPredicateComment().toLowerCase().startsWith(s.toLowerCase())){
+					//System.out.println("Achou em coment");
+					return true;
+				}
+			}
+		}
+		if (isQueryMiddleAtoms()){
+			if (a.getAtomID().toLowerCase().contains(s.toLowerCase()) || a.getAtomLabel().toLowerCase().contains(s.toLowerCase())){
+				//System.out.println("Achou em ID Label");
+				return true;
+			}
+
+			if (a.getAtomID().toLowerCase().contains(s.toLowerCase().replaceAll(" ", "")) || a.getAtomLabel().toLowerCase().contains(s.toLowerCase().replaceAll(" ", ""))){
+				//System.out.println("Achou em ID Label");
+				return true;
+			}
+			if (queryComments){
+				if (a.getPredicateComment().toLowerCase().contains(s.toLowerCase())){
+					//System.out.println("Achou em coment");
+					return true;
+				}
+			}
+		}
+		if (isQueryEndAtoms()){
+			if (a.getAtomID().toLowerCase().endsWith(s.toLowerCase()) || a.getAtomLabel().toLowerCase().endsWith(s.toLowerCase())){
+				//System.out.println("Achou em ID Label");
+				return true;
+			}
+
+			if (a.getAtomID().toLowerCase().endsWith(s.toLowerCase().replaceAll(" ", "")) || a.getAtomLabel().toLowerCase().endsWith(s.toLowerCase().replaceAll(" ", ""))){
+				//System.out.println("Achou em ID Label");
+				return true;
+			}
+			if (queryComments){
+				if (a.getPredicateComment().toLowerCase().endsWith(s.toLowerCase())){
+					//System.out.println("Achou em coment");
+					return true;
+				}
 			}
 		}
 		
@@ -288,4 +353,5 @@ public class Filter implements Serializable {
 	public boolean isEmpty(){
 		return lstAnd.isEmpty() && lstOr.isEmpty() && lstNot.isEmpty();
 	}
+	
 }

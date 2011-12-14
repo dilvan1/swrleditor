@@ -6,28 +6,28 @@
 		type='br.usp.icmc.dilvan.swrlEditor.client.resources.Resources' />
 
 	<g:SimplePanel >
-		<g:ScrollPanel height="300px" width="550px">
+		<g:ScrollPanel height="400px" width="550px">
 			<g:VerticalPanel>
 			
-				<g:Cell horizontalAlignment="ALIGN_RIGHT">
+				<g:Cell horizontalAlignment="ALIGN_RIGHT" width="530px">
 					<g:HorizontalPanel spacing="3">
 						<g:Button ui:field="btnOK1" text="OK" styleName='{res.swrleditor.allButton}'/>
 					</g:HorizontalPanel>
 				</g:Cell>
 			
-				<g:HorizontalPanel spacing="5" verticalAlignment="ALIGN_MIDDLE">
+				<g:HorizontalPanel spacing="5" verticalAlignment="ALIGN_MIDDLE" width="530px">
 					<g:Label horizontalAlignment="ALIGN_CENTER" text="Informations"
 						styleName='{res.swrleditor.titleViews}' />
 				</g:HorizontalPanel>
 
-				<g:Cell horizontalAlignment="ALIGN_LEFT">
+				<g:Cell horizontalAlignment="ALIGN_LEFT" width="530px">
 					<g:SimplePanel ui:field="tabInformation">
 						<p1:CellTable ui:field="cellTable"
 							keyboardSelectionPolicy="DISABLED" keyboardPagingPolicy="CURRENT_PAGE" />
 					</g:SimplePanel>
 				</g:Cell>
 
-				<g:Cell horizontalAlignment="ALIGN_RIGHT">
+				<g:Cell horizontalAlignment="ALIGN_RIGHT" width="530px">
 					<g:HorizontalPanel spacing="3">
 						<g:Button ui:field="btnOK2" text="OK" styleName='{res.swrleditor.allButton}'/>
 					</g:HorizontalPanel>

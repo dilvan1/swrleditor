@@ -48,7 +48,7 @@ public interface SWRLService extends RemoteService {
 	boolean saveNewRule(String projectName, String ruleName, Rule rule);
 	boolean saveEditRule(String projectName, String ruleName, String oldRuleName, Rule rule);
 
-	boolean runRules(String projectName);
+	ArrayList<String> runRules(String projectName);
 	
 	
 	ArrayList<String> getSelfCompletion(String projectName, String text, int maxTerms, TYPE_ATOM typeAtom);

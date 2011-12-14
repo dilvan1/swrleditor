@@ -46,7 +46,7 @@ public interface SWRLServiceAsync {
 	void saveNewRule(String projectName, String ruleName, Rule rule, AsyncCallback<Boolean> callback);
 	void saveEditRule(String projectName, String ruleName, String oldRuleName, Rule rule, AsyncCallback<Boolean> callback);
 
-	void runRules(String projectName, AsyncCallback<Boolean> callback);
+	void runRules(String projectName, AsyncCallback<ArrayList<String>> callback);
 
 	void getSelfCompletion(String projectName, String text, int maxTerms, TYPE_ATOM typeAtom, AsyncCallback<ArrayList<String>> callback);
 }

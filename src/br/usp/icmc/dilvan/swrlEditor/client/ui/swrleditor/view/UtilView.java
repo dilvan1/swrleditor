@@ -349,7 +349,7 @@ public class UtilView {
 		} else {
 			String ret = atom+"("+getHTMLParameter(a.getVariables().get(0), typeView);
 			for(int i = 1; i < a.getCountVariables(); i++)
-				ret += ", "+getHTMLParameter(a.getVariables().get(1), typeView);
+				ret += ", "+getHTMLParameter(a.getVariables().get(i), typeView);
 			return ret+")";
 		}
 

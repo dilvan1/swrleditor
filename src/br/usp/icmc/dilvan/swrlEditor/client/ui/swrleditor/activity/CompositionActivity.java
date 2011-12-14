@@ -1,5 +1,6 @@
 package br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.activity;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +64,11 @@ public class CompositionActivity extends AbstractActivity implements
 	 */
 	@Override
 	public void start(AcceptsOneWidget containerWidget, EventBus eventBus) {
+		System.out.println("ola");
+		GWT.log("Ola");
+		
+		//System.console().("Ola 123");
+		
 		CompositionView compositionView = clientFactory.getCompositionView();
 		compositionView.setConfiguration(clientFactory
 				.getPortletConfiguration());

@@ -60,9 +60,6 @@ public class VisualizationActivity extends AbstractActivity implements Visualiza
 		visualizationView.setWritePermission(clientFactory.getProject().hasWritePermission());
 		visualizationView.setConfiguration(clientFactory.getPortletConfiguration());
 		
-		if (!ruleSelected.isEmpty())
-			visualizationView.setRuleSelected(ruleSelected);
-		
 		if (Options.getStringOption(clientFactory.getPortletConfiguration(), OptionsView.UsingIDorLabelStr, OptionsView.viewUsingLabel).equals(OptionsView.viewUsingID)){
 			visualizationView.setTypeView(TYPE_VIEW.ID);
 		}else{
@@ -70,7 +67,11 @@ public class VisualizationActivity extends AbstractActivity implements Visualiza
 		}
 
 		visualizationView.refreshRulesView();
+
 		getRuleSet();
+
+		if (!ruleSelected.isEmpty())
+			visualizationView.setRuleSelected(ruleSelected);
 
 		containerWidget.setWidget(visualizationView.asWidget());
 	}
@@ -291,11 +292,20 @@ public class VisualizationActivity extends AbstractActivity implements Visualiza
 	public void runRules() {
 		Window.alert("The rules will be executed in the background.");
 
-		clientFactory.getRpcService().runRules(clientFactory.getProjectName(), new AsyncCallback<Boolean>() {
+		clientFactory.getRpcService().runRules(clientFactory.getProjectName(), new AsyncCallback<ArrayList<String>>() {
 			@Override
-			public void onSuccess(Boolean result) {
+			public void onSuccess(ArrayList<String> result) {
+
 				clientFactory.getVisualizationView().finishedRun();
-				Window.alert("Rules execute successfully");
+				if (result.size() == 1){
+					Window.alert(result.get(0));
+				}else{
+					String message = "Rules execute successfully:" + "\n";
+					for (String s : result)
+						message = message + "\n" + s;
+					Window.alert(message);
+				}
+				
 			}
 			@Override
 			public void onFailure(Throwable caught) {

@@ -249,7 +249,7 @@ public class SWRLEditorServiceImpl extends RemoteServiceServlet implements SWRLS
 			return TYPE_ATOM.BUILTIN;
 		else if (getOntologyManager(projectName).hasOWLDatatype(predicate))
 			return TYPE_ATOM.DATARANGE;
-		else if( predicate.equals("sameas") || predicate.equals("differentfrom") )
+		else if( predicate.toLowerCase().equals("sameas") || predicate.toLowerCase().equals("differentfrom") )
 			return TYPE_ATOM.SAME_DIFERENT;
 		else
 			return TYPE_ATOM.NULL;
@@ -381,8 +381,8 @@ public class SWRLEditorServiceImpl extends RemoteServiceServlet implements SWRLS
 	}
 
 	@Override
-	public boolean runRules(String projectName) {
-		return  getSWRLManager(projectName).runRules();
+	public ArrayList<String> runRules(String projectName) {
+		return (ArrayList<String>) getSWRLManager(projectName).runRules();
 	}
 
 	@Override
