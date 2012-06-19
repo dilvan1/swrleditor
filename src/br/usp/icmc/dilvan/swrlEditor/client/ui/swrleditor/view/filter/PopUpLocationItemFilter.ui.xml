@@ -5,7 +5,7 @@
 	<ui:with field='resources' type='br.usp.icmc.dilvan.swrlEditor.client.resources.Resources' />
 
 	<g:FlowPanel styleName='{resources.swrleditor.panel_white}' height="85" width="">
-		<g:InlineLabel text="You want add " width="100px"/>
+		<g:InlineLabel text="Do you want to add " width="100px"/>
 		<g:InlineLabel text="[nome]" ui:field="lblItemName" styleName='{resources.swrleditor.bold}'/>
 		<g:InlineLabel text=" in:"/>
 		<g:HorizontalPanel spacing="10">

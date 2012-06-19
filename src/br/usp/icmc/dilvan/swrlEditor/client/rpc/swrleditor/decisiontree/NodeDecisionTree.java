@@ -72,18 +72,8 @@ public interface NodeDecisionTree extends Serializable {
 	 * @return String containing of the name rule for this consequent
 	 */
 	public String getRuleName();
+
 	
-//		Do you think that these two methods would also be useful?
-//	
-//	/**
-//	 * Gets a child node.
-//	 * @param i index of the child node.
-//	 * @return The child node with index i.
-//	 */
-//	public NodeDecisionTree getChild(int i);
-//	/**
-//	 * Gets the number of children nodes.
-//	 * @return number of children nodes.
-//	 */
-//	public int getNumberOfChildren();
+	public List<String> getRulesRelated();
+
 }

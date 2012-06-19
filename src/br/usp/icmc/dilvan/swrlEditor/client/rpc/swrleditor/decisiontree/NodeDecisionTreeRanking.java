@@ -18,7 +18,10 @@ public class NodeDecisionTreeRanking implements NodeDecisionTree {
 
 	private NodeDecisionTree parentNode;
 	
-	private String nameRule;
+	private String nameRule = "";
+	
+	private List<String> rulesRelated;
+
 
 	/* Nodos filhos */
 	private List<NodeDecisionTree> childNodes = new ArrayList<NodeDecisionTree>();
@@ -26,10 +29,13 @@ public class NodeDecisionTreeRanking implements NodeDecisionTree {
 
 	public NodeDecisionTreeRanking() {
 		super();
+		this.rulesRelated = new ArrayList<String>();
+		this.nameRule = "";
+
 	}
 
 	public NodeDecisionTreeRanking(NodeDecisionTree parentNode, String toolTip) {
-		super();
+		this();
 		this.value = "";
 		this.toolTip = toolTip;
 		//this.nodeLabel = new defaultNodeInRulesTreeLabel(this);
@@ -99,5 +105,14 @@ public class NodeDecisionTreeRanking implements NodeDecisionTree {
 	}
 	public void setRuleName(String nameRule) {
 		this.nameRule = nameRule;
+	}
+
+	@Override
+	public List<String> getRulesRelated() {
+		return rulesRelated;
+	}
+	
+	public void setRulesRelated(List<String> rulesRelated) {
+		this.rulesRelated = rulesRelated;
 	}
 }

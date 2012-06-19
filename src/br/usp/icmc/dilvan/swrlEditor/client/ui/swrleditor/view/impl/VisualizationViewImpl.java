@@ -100,6 +100,7 @@ public class VisualizationViewImpl extends Composite implements
 	VerticalPanel pnlSWRL;
 	@UiField
 	VerticalPanel pnlAutism;
+	
 
 	// TODO fazer o pnlGroups autoHeigth
 	@UiField
@@ -117,7 +118,7 @@ public class VisualizationViewImpl extends Composite implements
 	@UiField
 	SimplePanel pnlDecisionTree;
 	private VisualizationViewDecisionTree viewDecisionTree;
-
+	
 	private List<SimpleRuleView> simpleRulesList = null;
 	private List<SimpleRuleView> simpleRulesText = null;
 	private List<SimpleRuleView> simpleRulesSWRL = null;
@@ -595,7 +596,7 @@ public class VisualizationViewImpl extends Composite implements
 			pnlDecisionTree.add(viewDecisionTree);
 		}
 	}
-
+	
 	private void waitingShowRules(final List<SimpleRuleView> painelRules,
 			final VerticalPanel pnlBase) {
 
@@ -793,7 +794,6 @@ public class VisualizationViewImpl extends Composite implements
 				viewDecisionTree.loadDecisionTree();
 			}
 			break;
-
 		}
 	}
 

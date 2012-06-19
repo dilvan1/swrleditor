@@ -1,5 +1,6 @@
 package br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.view.visualization;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -82,17 +83,31 @@ public class VisualizationViewDecisionTree extends Composite {
 	private Presenter presenter;
 
 	private final String SUSPENSION_POINTS = "...";
-	
+
 	private boolean writePermission;
-	
+
 	private NodeToolTip toolTipNodes =  new NodeToolTip();
 
+	private DefaultNodeInRulesTreeLabel rootLabel;
+
+	private List<GraphAttributes> graphAttributes;
+	private int graphAttributesNumber;
+
+
 	interface VisualizationViewDecisionTreeUiBinder extends
-			UiBinder<Widget, VisualizationViewDecisionTree> {
+	UiBinder<Widget, VisualizationViewDecisionTree> {
 	}
 
 	public VisualizationViewDecisionTree() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		graphAttributes = new ArrayList<GraphAttributes>();
+		graphAttributes.add(new GraphAttributes(new Color(255, 0, 0), 4, 2));
+		graphAttributes.add(new GraphAttributes(new Color(0, 255, 0), 8, 5));
+		graphAttributes.add(new GraphAttributes(new Color(0, 0, 255), 12, 8));
+
+		graphAttributes.add(new GraphAttributes(new Color(255, 255, 0), 16, 11));
+		graphAttributes.add(new GraphAttributes(new Color(0, 255, 255), 20, 14));
 	}
 
 	public VisualizationViewDecisionTree(Presenter presenter) {
@@ -121,7 +136,7 @@ public class VisualizationViewDecisionTree extends Composite {
 		panelTree.add(panelTreeLabels, 0, 0);
 
 	}
-	
+
 	public void setWritePermission(boolean permission) {
 		this.writePermission = permission;
 	}
@@ -148,18 +163,21 @@ public class VisualizationViewDecisionTree extends Composite {
 	}
 
 	private void drawTree(NodeDecisionTree node, int left, int viewLevel) {
+
+		graphAttributesNumber = 0; 
+
 		scroolPath.setWidth(Integer.toString(this.getOffsetWidth()) + "px");
 		scroolTree.setWidth(Integer.toString(this.getOffsetWidth()) + "px");
 		scroolTree
-				.setHeight(Integer.toString(pnlBase.getOffsetHeight()
-						- (scroolPath.getOffsetHeight() + pnlOptions
-								.getOffsetHeight()))
+		.setHeight(Integer.toString(pnlBase.getOffsetHeight()
+				- (scroolPath.getOffsetHeight() + pnlOptions
+						.getOffsetHeight()))
 						+ "px");
 
 		scroolTree
-				.setHeight(Integer.toString(pnlBase.getOffsetHeight()
-						- (scroolPath.getOffsetHeight() + pnlOptions
-								.getOffsetHeight()))
+		.setHeight(Integer.toString(pnlBase.getOffsetHeight()
+				- (scroolPath.getOffsetHeight() + pnlOptions
+						.getOffsetHeight()))
 						+ "px");
 
 		panelPathLabels.clear();
@@ -183,11 +201,12 @@ public class VisualizationViewDecisionTree extends Composite {
 		for (int i = 0; i < majorWidth.length; i++)
 			sumWidth = (int) (sumWidth + (majorWidth[i] * widthChar) + SPACE_BETWEEN_NODES);
 
-		sumWidth += 200;
+		sumWidth += 600;
 
 		setSizePanelTree(sumWidth, NODE_HEIGHT * (sheetNumber.getValue() + 2)
 				+ PANELTREE_HEIGHT_INITIAL);
 
+		rootLabel = null;
 		int scroolTop = drawNode(-1, -1, node, sheetNumber, left,
 				PANELTREE_HEIGHT_INITIAL, viewLevel, majorWidth);
 
@@ -217,7 +236,7 @@ public class VisualizationViewDecisionTree extends Composite {
 			if (majorWidth[NUMBER_LEVELS_DISPLAYED - viewLevel] < node
 					.getChildren().get(i).getValue().length())
 				majorWidth[NUMBER_LEVELS_DISPLAYED - viewLevel] = node
-						.getChildren().get(i).getValue().length();
+				.getChildren().get(i).getValue().length();
 
 		}
 		if (sum == 0) {
@@ -264,8 +283,7 @@ public class VisualizationViewDecisionTree extends Composite {
 
 		if (viewLevel == 0) {
 
-			if ((node.getChildren().size() == 1)
-					&& node.getChildren().get(0).getAtomType() == ATOM_TYPE.CONSEQUENT) {
+			if ((node.getChildren().size() == 1) && node.getChildren().get(0).getAtomType() == ATOM_TYPE.CONSEQUENT) {
 
 				DefaultNodeInRulesTreeLabel label = new DefaultNodeInRulesTreeLabel(
 						node.getChildren().get(0));
@@ -274,12 +292,15 @@ public class VisualizationViewDecisionTree extends Composite {
 				canvasTree.beginPath();
 				canvasTree.moveTo(
 						leftParent
-								+ (widthChar
-										* node.getChildren().get(0).getValue()
-												.length() + 5), topParent + 8);
+						+ (widthChar
+								* node.getChildren().get(0).getValue()
+								.length() + 5), topParent + 8);
 				canvasTree.lineTo(left - 5, topParent + 8);
 				canvasTree.closePath();
 				canvasTree.stroke();
+
+				if (rootLabel== null)
+					rootLabel = label;
 
 			} else {
 
@@ -301,6 +322,9 @@ public class VisualizationViewDecisionTree extends Composite {
 				canvasTree.lineTo(left - 5, topParent + 8);
 				canvasTree.closePath();
 				canvasTree.stroke();
+
+				if (rootLabel== null)
+					rootLabel = labelAux;
 
 			}
 			return 0;
@@ -335,9 +359,9 @@ public class VisualizationViewDecisionTree extends Composite {
 			drawNode(left, top, node.getChildren().get(i),
 					sheetNumber.getChildNodes(i),
 					(int) (left + (majorWidthLevel[NUMBER_LEVELS_DISPLAYED
-							- viewLevel] * widthChar))
-							+ SPACE_BETWEEN_NODES, topForChild, viewLevel - 1,
-					majorWidthLevel);
+					                               - viewLevel] * widthChar))
+					                               + SPACE_BETWEEN_NODES, topForChild, viewLevel - 1,
+					                               majorWidthLevel);
 
 		}
 		return beginTop + (NODE_HEIGHT * sumChilds / 2);
@@ -416,7 +440,7 @@ public class VisualizationViewDecisionTree extends Composite {
 				public void onMouseOut(Widget sender, Event event) {
 					exitMouseNodeTree((DefaultNodeInRulesTreeLabel) sender);
 				}
-				
+
 				@Override
 				public void onShowToolTip(Widget sender, Event event){}
 
@@ -443,7 +467,7 @@ public class VisualizationViewDecisionTree extends Composite {
 					toolTipNodes.hide();
 					exitMouseNodeTree((DefaultNodeInRulesTreeLabel) sender);
 				}
-				
+
 				@Override
 				public void onShowToolTip(Widget sender, Event event){
 					String textToolTip = ((DefaultNodeInRulesTreeLabel) sender).getNode().getToolTip();
@@ -489,75 +513,217 @@ public class VisualizationViewDecisionTree extends Composite {
 		drawTree(label.getNode(), 50, NUMBER_LEVELS_DISPLAYED);
 	}
 
-	private void rigthClickNodeTree(final DefaultNodeInRulesTreeLabel label, Event event) {
+	private void rigthClickNodeTree(final DefaultNodeInRulesTreeLabel labelClick, Event event) {
 		int x = DOM.eventGetClientX(event);
 		int y = DOM.eventGetClientY(event);
-		if (label.getText().equals(NodeDecisionTree.CONSEQUENT_VALUE)) {
-			Command editRule = new Command() {
-				@Override
-				public void execute() {
-					rightClickMenuEdit.hide();
-					presenter.goToEditRule(label.getNode().getRuleName());
-				}
-			};
-			
-			MenuBar popupMenuBarEdit = new MenuBar(true);
-			MenuItem EditItem = new MenuItem("Edit Rule", true, editRule);
-			EditItem.setEnabled(writePermission);
-			if (writePermission)
-				EditItem.setStyleName(Resources.INSTANCE.swrleditor().menuItemDecisionTree());
-			else
-				EditItem.setStyleName(Resources.INSTANCE.swrleditor().menuItemDecisionTreeDisable());
-			
-			popupMenuBarEdit.addItem(EditItem);
-			popupMenuBarEdit.setVisible(true);
-			
-			rightClickMenuEdit.clear();
-			rightClickMenuEdit.add(popupMenuBarEdit);
-			
-			rightClickMenuEdit.setPopupPosition(x, y);
-			rightClickMenuEdit.show();
-		} else {
 
-			Command insertNewRule = new Command() {
-				@Override
-				public void execute() {
-					rightClickMenuInsert.hide();
-
-					String antecedent = "";
-					NodeDecisionTree node = label.getNode();
-					while (node.getAtomType() !=  ATOM_TYPE.ROOT){
-						
-						if (antecedent.isEmpty())
-							antecedent = node.getValue();
-						else
-							antecedent = antecedent + " ^ " + node.getValue();
-						
-						node = node.getParentNode();
+		if (!labelClick.getText().equals(SUSPENSION_POINTS))
+			if (labelClick.getNode().getRuleName()!= null && !labelClick.getNode().getRuleName().equals("")) {
+				Command editRule = new Command() {
+					@Override
+					public void execute() {
+						rightClickMenuEdit.hide();
+						presenter.goToEditRule(labelClick.getNode().getRuleName());
 					}
+				};
+
+				MenuBar popupMenuBarEdit = new MenuBar(true);
+				MenuItem EditItem = new MenuItem("Edit Rule", true, editRule);
+				EditItem.setEnabled(writePermission);
+				if (writePermission)
+					EditItem.setStyleName(Resources.INSTANCE.swrleditor().menuItemDecisionTree());
+				else
+					EditItem.setStyleName(Resources.INSTANCE.swrleditor().menuItemDecisionTreeDisable());
+
+				popupMenuBarEdit.addItem(EditItem);
+
+
+				if (labelClick.getNode().getRulesRelated()!=null && labelClick.getNode().getRulesRelated().size() > 0){
+					Command viewRulesGraph = new Command() {
+						@Override
+						public void execute() {
+
+							rightClickMenuEdit.hide();
+
+							if (graphAttributesNumber < graphAttributes.size()){
+
+								DefaultNodeInRulesTreeLabel labelConnect;
+								String labelText;
+								int x1=0;
+								int y1=0;
+								int x2=0;
+								int y2=0;
+								boolean draw = false;
+
+								for (int i = 0; i < panelTreeLabels.getWidgetCount(); i++){
+									if (panelTreeLabels.getWidget(i) instanceof DefaultNodeInRulesTreeLabel){
+										labelConnect = (DefaultNodeInRulesTreeLabel) panelTreeLabels.getWidget(i);
+
+										labelText = removesBrackets(labelConnect.getText());
+
+										for(String s: labelClick.getNode().getRulesRelated()){
+											s = removesBrackets(s);
+
+											if (labelText.equals(s) && 
+												testParents(s, labelClick.getNode().getParentNode(), labelClick.getNode().getChildren())) {
+												
+												
+												x1 = (labelClick.getAbsoluteLeft()+labelClick.getOffsetWidth())-canvasTree.getAbsoluteLeft()+3;
+												y1 = labelClick.getAbsoluteTop()-canvasTree.getAbsoluteTop();
+
+												x2 = (labelConnect.getAbsoluteLeft()+labelConnect.getOffsetWidth())-canvasTree.getAbsoluteLeft()+3;
+												y2 = labelConnect.getAbsoluteTop()-canvasTree.getAbsoluteTop();
+
+												drawQuad(graphAttributes.get(graphAttributesNumber).getColor(), 
+														labelClick.getAbsoluteLeft()-canvasTree.getAbsoluteLeft(),
+														labelClick.getAbsoluteTop()-canvasTree.getAbsoluteTop(),
+														labelClick.getOffsetWidth(), labelClick.getOffsetHeight());
+												
+												drawCurvaQuad(graphAttributes.get(graphAttributesNumber).getColor(),
+														graphAttributes.get(graphAttributesNumber).getxOffset(),
+														graphAttributes.get(graphAttributesNumber).getyOffset(),
+														x1, y1, x1, 10, x2, 10, x2, y2);
+												
+												draw = true;
+												
+												break;
+											}
+										}
+									}
+								}
+								
+								if (draw)
+									graphAttributesNumber++;
+							}
+						}
+
+						private String removesBrackets(String text){
+							if (text.startsWith("["))
+								return text.substring(text.indexOf("]")+1).trim();
+							
+							return text;
+						}
+						private boolean testParents(String ruleName, NodeDecisionTree parent, List<NodeDecisionTree> children){
+						
+							if (ruleName.equals(removesBrackets(parent.getValue())))
+								return false;
+							
+							for (NodeDecisionTree node : children)
+								if (ruleName.equals(removesBrackets(node.getValue())))
+									return false;
+							
+							return true;
+						}
+						
+						private void drawCurvaQuad(Color color, int deslocx, int deslocy, int x1, int y1, int devx1, int devy1, int devx2, int devy2, int x2, int y2){
+							
+							y1 += deslocy; 
+							devy1 += deslocy; 
+							devy2 += deslocy; 
+							y2 += deslocy; 
+							
+							canvasTree.beginPath();
+
+							canvasTree.setStrokeStyle(color);
+							
+							canvasTree.moveTo(x1, y1);
+							canvasTree.lineTo(x1+deslocx, y1);
+
+							canvasTree.moveTo(x1+deslocx, y1);
+							canvasTree.lineTo(devx1+deslocx, devy1);
+
+							canvasTree.moveTo(devx1+deslocx, devy1);
+							canvasTree.lineTo(devx2+deslocx, devy2);
+
+							canvasTree.moveTo(devx2+deslocx, devy2);
+							canvasTree.lineTo(x2+deslocx, y2);
+
+							canvasTree.moveTo(x2+deslocx, y2);
+							canvasTree.lineTo(x2, y2);
+
+							canvasTree.closePath();
+							canvasTree.stroke();
+						}
+						
+						private void drawQuad(Color color, int x, int y, int w, int h){
+							
+							canvasTree.beginPath();
+
+							canvasTree.setStrokeStyle(color);
+
+							canvasTree.moveTo(x, y);
+							canvasTree.lineTo(x, y+h);
+							
+							canvasTree.moveTo(x, y+h);
+							canvasTree.lineTo(x+w, y+h);
+		
+							canvasTree.moveTo(x+w, y+h);
+							canvasTree.lineTo(x+w, y);
+
+							canvasTree.moveTo(x+w, y);
+							canvasTree.lineTo(x, y);
+
+							canvasTree.closePath();
+							canvasTree.stroke();
+						}
+					};
+
 					
-					presenter.goToNewRule(antecedent);
+					MenuItem ViewGraphItem = new MenuItem("View Graph", true, viewRulesGraph);
+					ViewGraphItem.setEnabled(true);
+					ViewGraphItem.setStyleName(Resources.INSTANCE.swrleditor().menuItemDecisionTree());
+
+					popupMenuBarEdit.addItem(ViewGraphItem);
 				}
-			};
-			
-			MenuBar popupMenuBarInsert = new MenuBar(true);
-			MenuItem insertItem = new MenuItem("Insert in New Rule", true, insertNewRule);
-			
-			insertItem.setEnabled(writePermission);
-			if (writePermission)
-				insertItem.setStyleName(Resources.INSTANCE.swrleditor().menuItemDecisionTree());
-			else
-				insertItem.setStyleName(Resources.INSTANCE.swrleditor().menuItemDecisionTreeDisable());
 
-			popupMenuBarInsert.addItem(insertItem);
-			popupMenuBarInsert.setVisible(true);
-			rightClickMenuInsert.clear();
-			rightClickMenuInsert.add(popupMenuBarInsert);
+				popupMenuBarEdit.setVisible(true);
 
-			
-			rightClickMenuInsert.setPopupPosition(x, y);
-			rightClickMenuInsert.show();
-		}
+				rightClickMenuEdit.clear();
+				rightClickMenuEdit.add(popupMenuBarEdit);
+
+				rightClickMenuEdit.setPopupPosition(x, y);
+				rightClickMenuEdit.show();
+			} else {
+
+				Command insertNewRule = new Command() {
+					@Override
+					public void execute() {
+						rightClickMenuInsert.hide();
+
+						String antecedent = "";
+						NodeDecisionTree node = labelClick.getNode();
+						while (node.getAtomType() !=  ATOM_TYPE.ROOT){
+
+							if (antecedent.isEmpty())
+								antecedent = node.getValue();
+							else
+								antecedent = antecedent + " ^ " + node.getValue();
+
+							node = node.getParentNode();
+						}
+
+						presenter.goToNewRule(antecedent);
+					}
+				};
+
+				MenuBar popupMenuBarInsert = new MenuBar(true);
+				MenuItem insertItem = new MenuItem("Insert in New Rule", true, insertNewRule);
+
+				insertItem.setEnabled(writePermission);
+				if (writePermission)
+					insertItem.setStyleName(Resources.INSTANCE.swrleditor().menuItemDecisionTree());
+				else
+					insertItem.setStyleName(Resources.INSTANCE.swrleditor().menuItemDecisionTreeDisable());
+
+				popupMenuBarInsert.addItem(insertItem);
+				popupMenuBarInsert.setVisible(true);
+				rightClickMenuInsert.clear();
+				rightClickMenuInsert.add(popupMenuBarInsert);
+
+
+				rightClickMenuInsert.setPopupPosition(x, y);
+				rightClickMenuInsert.show();
+			}
 
 	}
 
@@ -573,7 +739,7 @@ public class VisualizationViewDecisionTree extends Composite {
 		String result = "Default";
 		if (listAlgorithm.getItemCount() != 0)
 			result = listAlgorithm
-					.getItemText(listAlgorithm.getSelectedIndex());
+			.getItemText(listAlgorithm.getSelectedIndex());
 
 		return result;
 	}
@@ -592,17 +758,17 @@ public class VisualizationViewDecisionTree extends Composite {
 		listAlgorithm.clear();
 		String defaultAlg = Options.getStringOption(config,
 				OptionsView.DefaultAlgorithmDecisionTreeStr, "");
-		
+
 		if (defaultAlg == null)
 			defaultAlg = "";
-			
+
 		int count = 0;
 
 		for (String algorithm : list) {
 			if (Options.getBooleanOption(config, Options
 					.removeCharInvalidForNameOptions(
 							OptionsView.AlgorithmDecisionTreeStr_, algorithm),
-					true)) {
+							true)) {
 				listAlgorithm.addItem(algorithm);
 
 				if (defaultAlg.equals(algorithm))
@@ -614,6 +780,30 @@ public class VisualizationViewDecisionTree extends Composite {
 
 		if (defaultAlg.equals(""))
 			listAlgorithm.setSelectedIndex(0);
+	}
+
+	private class GraphAttributes{
+		private Color color;
+		private int xOffset;
+		private int yOffset;
+
+
+		public GraphAttributes(Color color, int xOffset, int yOffset) {
+			super();
+			this.color = color;
+			this.xOffset = xOffset;
+			this.yOffset = yOffset;
+		}
+
+		public Color getColor() {
+			return color;
+		}
+		public int getxOffset() {
+			return xOffset;
+		}
+		public int getyOffset() {
+			return yOffset;
+		}
 	}
 
 }

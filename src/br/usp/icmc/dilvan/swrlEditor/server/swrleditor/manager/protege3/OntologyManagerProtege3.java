@@ -26,8 +26,7 @@ public class OntologyManagerProtege3 implements OntologyManager {
 	private String projectName;
 
 	public OntologyManagerProtege3(String projectName) {
-		serverProject = Protege3ProjectManager.getProjectManager()
-				.getServerProject(projectName, false);
+		serverProject = Protege3ProjectManager.getProjectManager().getServerProject(projectName, false);
 		owlModel = (JenaOWLModel) this.serverProject.getProject()
 				.getKnowledgeBase();
 		swrlManager = new SWRLManagerProtege3(this);
