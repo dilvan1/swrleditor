@@ -542,9 +542,13 @@ public class VisualizationViewDecisionTree extends Composite {
 					Command viewRulesGraph = new Command() {
 						@Override
 						public void execute() {
-
 							rightClickMenuEdit.hide();
+							drawGraph();
+						}
 
+						// método responsável por desenhar as linhas do grafo 
+						// este método é chamado pelo item do menu
+						private void drawGraph(){
 							if (graphAttributesNumber < graphAttributes.size()){
 
 								DefaultNodeInRulesTreeLabel labelConnect;
@@ -555,77 +559,96 @@ public class VisualizationViewDecisionTree extends Composite {
 								int y2=0;
 								boolean draw = false;
 
+								//percorre todos os componentes do panel que contém a árvore
 								for (int i = 0; i < panelTreeLabels.getWidgetCount(); i++){
+									
+									//teste para identificar só os nodos 
 									if (panelTreeLabels.getWidget(i) instanceof DefaultNodeInRulesTreeLabel){
 										labelConnect = (DefaultNodeInRulesTreeLabel) panelTreeLabels.getWidget(i);
 
 										labelText = removesBrackets(labelConnect.getText());
 
+										// Percorre todas as regras relaciondas com o nó que recebeu o comando 
 										for(String s: labelClick.getNode().getRulesRelated()){
 											s = removesBrackets(s);
 
+											//Testa se o nó está na lista dos nós do grafo
+											// além disso testa se o nó já está ligado (Pai ou Filho)
 											if (labelText.equals(s) && 
-												testParents(s, labelClick.getNode().getParentNode(), labelClick.getNode().getChildren())) {
-												
-												
+													testParents(s, labelClick.getNode().getParentNode(), labelClick.getNode().getChildren())) {
+
+
+												//Calcula a origem (X1, Y1) da linha do grafo
 												x1 = (labelClick.getAbsoluteLeft()+labelClick.getOffsetWidth())-canvasTree.getAbsoluteLeft()+3;
 												y1 = labelClick.getAbsoluteTop()-canvasTree.getAbsoluteTop();
 
+												//Calcula o destino (X2, Y2) da linha do grafo
 												x2 = (labelConnect.getAbsoluteLeft()+labelConnect.getOffsetWidth())-canvasTree.getAbsoluteLeft()+3;
 												y2 = labelConnect.getAbsoluteTop()-canvasTree.getAbsoluteTop();
 
+												
+												//Desenha um quadrado ao redor do nó da origem
 												drawQuad(graphAttributes.get(graphAttributesNumber).getColor(), 
 														labelClick.getAbsoluteLeft()-canvasTree.getAbsoluteLeft(),
 														labelClick.getAbsoluteTop()-canvasTree.getAbsoluteTop(),
 														labelClick.getOffsetWidth(), labelClick.getOffsetHeight());
-												
+
+												//Desenha linha ligando dois nós
 												drawCurvaQuad(graphAttributes.get(graphAttributesNumber).getColor(),
 														graphAttributes.get(graphAttributesNumber).getxOffset(),
 														graphAttributes.get(graphAttributesNumber).getyOffset(),
 														x1, y1, x1, 10, x2, 10, x2, y2);
+
+												
 												
 												draw = true;
-												
+
 												break;
 											}
 										}
 									}
 								}
-								
+
+								//Caso tenha desenhado a linha, incrementa graphAttributesNumber que identifica qual dos graphAttributes é usado
 								if (draw)
 									graphAttributesNumber++;
 							}
 						}
-
+						
+						//Método que remove colchetes do inicio de uma String
+						// necessário pois os nodos possuem o número de átomos em comum
 						private String removesBrackets(String text){
 							if (text.startsWith("["))
 								return text.substring(text.indexOf("]")+1).trim();
-							
+
 							return text;
 						}
-						private boolean testParents(String ruleName, NodeDecisionTree parent, List<NodeDecisionTree> children){
 						
+						//Metodo que testa se o nó já não é Pai ou Filho, ou seja, não precisa ligação no grafo  
+						private boolean testParents(String ruleName, NodeDecisionTree parent, List<NodeDecisionTree> children){
+
 							if (ruleName.equals(removesBrackets(parent.getValue())))
 								return false;
-							
+
 							for (NodeDecisionTree node : children)
 								if (ruleName.equals(removesBrackets(node.getValue())))
 									return false;
-							
-							return true;
+
+									return true;
 						}
-						
+
+						//Desenha a linha do grafo
 						private void drawCurvaQuad(Color color, int deslocx, int deslocy, int x1, int y1, int devx1, int devy1, int devx2, int devy2, int x2, int y2){
-							
+
 							y1 += deslocy; 
 							devy1 += deslocy; 
 							devy2 += deslocy; 
 							y2 += deslocy; 
-							
+
 							canvasTree.beginPath();
 
 							canvasTree.setStrokeStyle(color);
-							
+
 							canvasTree.moveTo(x1, y1);
 							canvasTree.lineTo(x1+deslocx, y1);
 
@@ -644,19 +667,20 @@ public class VisualizationViewDecisionTree extends Composite {
 							canvasTree.closePath();
 							canvasTree.stroke();
 						}
-						
+
+						//Desenha o quadrado ao redor do nó
 						private void drawQuad(Color color, int x, int y, int w, int h){
-							
+
 							canvasTree.beginPath();
 
 							canvasTree.setStrokeStyle(color);
 
 							canvasTree.moveTo(x, y);
 							canvasTree.lineTo(x, y+h);
-							
+
 							canvasTree.moveTo(x, y+h);
 							canvasTree.lineTo(x+w, y+h);
-		
+
 							canvasTree.moveTo(x+w, y+h);
 							canvasTree.lineTo(x+w, y);
 
@@ -668,7 +692,7 @@ public class VisualizationViewDecisionTree extends Composite {
 						}
 					};
 
-					
+
 					MenuItem ViewGraphItem = new MenuItem("View Graph", true, viewRulesGraph);
 					ViewGraphItem.setEnabled(true);
 					ViewGraphItem.setStyleName(Resources.INSTANCE.swrleditor().menuItemDecisionTree());
