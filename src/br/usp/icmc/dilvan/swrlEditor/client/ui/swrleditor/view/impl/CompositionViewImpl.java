@@ -142,6 +142,29 @@ public class CompositionViewImpl extends Composite implements CompositionView {
 		showRule();
 	}
 	
+	@Override
+	public void setNewRule(Rule rule) {
+		this.rule = rule;
+		txtRuleName.setText("");
+		editorSelected = null;
+		switch (tabsComposition.getSelectedIndex()) {
+		case 0:
+			editorSelected = editorList;
+			editorList.setNewRule(rule);
+			editorSWRL.setNewRule(rule);
+			break;
+			
+		case 1:
+			editorSelected = editorSWRL;
+			editorSWRL.setNewRule(rule);
+			editorList.setNewRule(rule);
+			break;
+
+		default:
+			break;
+		}		
+	}
+	
 	private void showRule(){
 		editorSelected = null;
 		switch (tabsComposition.getSelectedIndex()) {
@@ -167,6 +190,11 @@ public class CompositionViewImpl extends Composite implements CompositionView {
 
 	@Override
 	public void setSelectedOntologyItem(TYPE_ATOM typeAtom, String predicate, boolean isAntecedent) {
+		if (editorSelected == null){
+			editorSelected = editorList;
+			editorList.setRule(this.rule);
+		}
+			
 		editorSelected.addPredicate(typeAtom, predicate, isAntecedent);
 	}
 
@@ -274,5 +302,6 @@ public class CompositionViewImpl extends Composite implements CompositionView {
 	public void setSelfCompletion(List<String> suggest) {
 		editorList.setSelfCompletion(suggest);
 	}
+
 
 }

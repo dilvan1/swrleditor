@@ -64,6 +64,13 @@ public class CompositionTabSWRLView extends Composite implements
 	}
 
 	@Override
+	public void setNewRule(Rule r) {
+		swrlAntecedent.setHTML("");
+		swrlConsequent.setHTML("");
+		this.rule = r;
+	}
+	
+	@Override
 	public void setTypeView(TYPE_VIEW typeView) {
 		this.typeView = typeView;
 	}

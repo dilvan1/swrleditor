@@ -72,9 +72,12 @@ public class RuleImpl implements Rule {
 
 	@Override
 	public List<Atom> getAtoms() {
-		List<Atom> atoms = new ArrayList<Atom>();		
-		atoms.addAll(getAntecedent());
-		atoms.addAll(getConsequent());
+		List<Atom> atoms = new ArrayList<Atom>();	
+		if (getAntecedent() != null)
+			atoms.addAll(getAntecedent());
+		
+		if (getConsequent() != null)
+			atoms.addAll(getConsequent());
 		return atoms;
 	}
 	@Override

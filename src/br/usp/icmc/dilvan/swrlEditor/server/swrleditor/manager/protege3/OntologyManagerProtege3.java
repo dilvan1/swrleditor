@@ -98,13 +98,15 @@ public class OntologyManagerProtege3 implements OntologyManager {
 		List<String> result = new ArrayList<String>();
 
 		for (RDFSClass cls : (Collection<RDFSClass>) owlModel.getRDFSClasses()) {
-			for (String lbl : (Collection<String>) cls.getLabels()) {
-				if (lbl.equals(label))
-					if (!result.contains(cls.getBrowserText())) {
-						result.add(cls.getBrowserText());
-						if (returnFirst)
-							return result;
-					}
+			for (Object lbl : (Collection<?>) cls.getLabels()) {
+				if (lbl instanceof DefaultRDFSLiteral){
+					if (((DefaultRDFSLiteral)lbl).getBrowserText().equals(label))
+						if (!result.contains(cls.getBrowserText())) {
+							result.add(cls.getBrowserText());
+							if (returnFirst)
+								return result;
+						}
+				}
 			}
 		}
 
@@ -132,13 +134,15 @@ public class OntologyManagerProtege3 implements OntologyManager {
 		}
 
 		for (RDFSDatatype dataType : owlModel.getRDFSDatatypes()) {
-			for (String lbl : (Collection<String>) dataType.getLabels()) {
-				if (lbl.equals(label))
-					if (!result.contains(dataType.getBrowserText())) {
-						result.add(dataType.getBrowserText());
-						if (returnFirst)
-							return result;
-					}
+			for (Object lbl : (Collection<Object>) dataType.getLabels()) {
+				if (lbl instanceof DefaultRDFSLiteral){
+					if (((DefaultRDFSLiteral)lbl).getBrowserText().equals(label))
+						if (!result.contains(dataType.getBrowserText())) {
+							result.add(dataType.getBrowserText());
+							if (returnFirst)
+								return result;
+						}
+				}
 			}
 
 		}
@@ -171,11 +175,13 @@ public class OntologyManagerProtege3 implements OntologyManager {
 				else
 					continue;
 			}
-			for (String lbl : (Collection<String>) cls.getLabels()) {
-				if (lbl.startsWith(selfCompletion)) {
-					result.add(lbl);
-					count++;
-					break;
+			for (Object lbl : (Collection<?>) cls.getLabels()) {
+				if (lbl instanceof DefaultRDFSLiteral){
+					if (((DefaultRDFSLiteral) lbl).getBrowserText().startsWith(selfCompletion)) {
+						result.add(((DefaultRDFSLiteral) lbl).getBrowserText());
+						count++;
+						break;
+					}
 				}
 			}
 			if (count == maxTerms)
@@ -206,11 +212,13 @@ public class OntologyManagerProtege3 implements OntologyManager {
 					
 					
 				}
-				for (String lbl : (Collection<String>) property.getLabels()) {
-					if (lbl.startsWith(selfCompletion)) {
-						result.add(lbl);
-						count++;
-						break;
+				for (Object lbl : (Collection<?>) property.getLabels()) {
+					if (lbl instanceof DefaultRDFSLiteral){
+						if (((DefaultRDFSLiteral) lbl).getBrowserText().startsWith(selfCompletion)) {
+							result.add(((DefaultRDFSLiteral) lbl).getBrowserText());
+							count++;
+							break;
+						}
 					}
 				}
 				if (count == maxTerms)
@@ -240,11 +248,13 @@ public class OntologyManagerProtege3 implements OntologyManager {
 				else
 					continue;
 			}
-			for (String lbl : (Collection<String>) dataType.getLabels()) {
-				if (lbl.startsWith(selfCompletion)) {
-					result.add(lbl);
-					count++;
-					break;
+			for (Object lbl : (Collection<?>) dataType.getLabels()) {
+				if (lbl instanceof DefaultRDFSLiteral){
+					if (((DefaultRDFSLiteral) lbl).getBrowserText().startsWith(selfCompletion)) {
+						result.add(((DefaultRDFSLiteral) lbl).getBrowserText());
+						count++;
+						break;
+					}
 				}
 			}
 			if (count == maxTerms)
@@ -276,11 +286,13 @@ public class OntologyManagerProtege3 implements OntologyManager {
 					
 					
 				}
-				for (String lbl : (Collection<String>) property.getLabels()) {
-					if (lbl.startsWith(selfCompletion)) {
-						result.add(lbl);
-						count++;
-						break;
+				for (Object lbl : (Collection<?>) property.getLabels()) {
+					if (lbl instanceof DefaultRDFSLiteral){
+						if (((DefaultRDFSLiteral) lbl).getBrowserText().startsWith(selfCompletion)) {
+							result.add(((DefaultRDFSLiteral) lbl).getBrowserText());
+							count++;
+							break;
+						}
 					}
 				}
 				if (count == maxTerms)

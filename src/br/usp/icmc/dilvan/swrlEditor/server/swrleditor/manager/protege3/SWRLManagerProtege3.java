@@ -6,6 +6,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.protege.swrlapi.core.SWRLRuleEngine;
+import org.protege.swrlapi.exceptions.SWRLRuleEngineException;
+import org.protege.swrlapi.owl2rl.OWL2RLController;
+import org.protege.swrlapi.owl2rl.OWL2RLNames;
+import org.protege.swrlapi.owl2rl.OWL2RLNames.Table;
+import org.protege.swrlapi.ui.panels.SWRLControlPanel;
+import org.protege.swrltab.p3.P3SWRLRuleEngineFactory;
+
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.Errors;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.RuleEvent;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.RuleEvents;
@@ -26,9 +34,6 @@ import edu.stanford.smi.protege.exception.OntologyLoadException;
 import edu.stanford.smi.protegex.owl.model.RDFProperty;
 import edu.stanford.smi.protegex.owl.model.impl.DefaultOWLNamedClass;
 import edu.stanford.smi.protegex.owl.model.impl.DefaultRDFSLiteral;
-import edu.stanford.smi.protegex.owl.swrl.SWRLRuleEngine;
-import edu.stanford.smi.protegex.owl.swrl.bridge.SWRLRuleEngineFactory;
-import edu.stanford.smi.protegex.owl.swrl.exceptions.SWRLRuleEngineException;
 import edu.stanford.smi.protegex.owl.swrl.model.SWRLAtom;
 import edu.stanford.smi.protegex.owl.swrl.model.SWRLBuiltin;
 import edu.stanford.smi.protegex.owl.swrl.model.SWRLBuiltinAtom;
@@ -44,7 +49,7 @@ import edu.stanford.smi.protegex.owl.swrl.model.impl.DefaultSWRLVariable;
 import edu.stanford.smi.protegex.owl.swrl.parser.SWRLParseException;
 
 public class SWRLManagerProtege3 implements SWRLManager {
-	
+
 	//private RuleSet rules;
 
 	private SWRLFactory factory;
@@ -53,7 +58,7 @@ public class SWRLManagerProtege3 implements SWRLManager {
 	private ParaphraseRuleProtege3 paraphraseRule;
 
 	private List<RuleEvent> events;
-	
+
 	private String prefix = "";
 
 	public SWRLManagerProtege3(OntologyManagerProtege3 ontologyManager) {
@@ -75,7 +80,7 @@ public class SWRLManagerProtege3 implements SWRLManager {
 	public RuleSet getRules() {
 		return createRuleSet();
 	}
-	
+
 	@Override
 	public RuleEvents getRuleEvents(long version) {
 		RuleEvents result = new RuleEvents();
@@ -91,20 +96,20 @@ public class SWRLManagerProtege3 implements SWRLManager {
 	public SWRLFactory getSWRLFactory(){
 		return factory;
 	}
-	
+
 	private RuleSet createRuleSet() {
 		RDFProperty hrg = ontologyManager.getOwlModel().getRDFProperty("http://swrl.stanford.edu/ontologies/3.3/swrla.owl#hasRuleCategory");
 		RuleSet rulesSet = new RuleSetImpl();
 		//int count = 0;
 		for (SWRLImp rule : factory.getImps()){
-			
+
 			if (rule.getPropertyValue(hrg) == null)
 				setSignatureInRule(rule);
-			
+
 			if (!rule.getBrowserText().trim().equals("<EMPTY_RULE>")) {
-				
+
 				//count++;
-				
+
 				rule.getName();
 				rulesSet.add(createRule(rule));
 				//if (count == 5)
@@ -112,8 +117,8 @@ public class SWRLManagerProtege3 implements SWRLManager {
 			}
 		}
 		rulesSet.setVersionOntology(getVersion());
-		
-		
+
+
 		Comparator<Rule> comparador = new Comparator<Rule>() {  
 			public int compare(Rule r1, Rule r2) { 
 				String name1 = r1.getNameRule().toLowerCase();
@@ -121,10 +126,10 @@ public class SWRLManagerProtege3 implements SWRLManager {
 				return (name1.compareTo(name2) > 0) ? +1 : ((name1.compareTo(name2) < 0) ? -1 : 0);  
 			}  
 		};
-		
+
 		Collections.sort(rulesSet, comparador); 	
-		
-		
+
+
 		return rulesSet;
 	}
 
@@ -133,17 +138,17 @@ public class SWRLManagerProtege3 implements SWRLManager {
 
 		Rule newRule = new RuleImpl();
 
-		
+
 		if (prefix.isEmpty())
 			if (rule.getName().contains("#"))
 				prefix = rule.getName().substring(0, rule.getName().indexOf("#")+1).trim();
-		
-		
+
+
 		newRule.setNameRule(rule.getName().substring(rule.getName().indexOf("#") + 1).trim());
 
 		String paraphrase = paraphraseRule.createParaphrase(rule);
 		newRule.setParaphrase(ParaphraseRuleProtege3.getFormatedViewParaphrase(factory, paraphrase)); 
-		
+
 		newRule.setAntecedentParaphrase(ParaphraseRuleProtege3.getFormatedParaphraseAntecendent(factory, paraphrase));
 		newRule.setConsequentParaphrase(ParaphraseRuleProtege3.getFormatedParaphraseConsequent(factory, paraphrase));
 		newRule.setEnabled(rule.isEnabled());
@@ -152,11 +157,11 @@ public class SWRLManagerProtege3 implements SWRLManager {
 				.getValues())
 			newRule.addAntecedent(createAtom(swrlAtom));
 
-				for (SWRLAtom swrlAtom : (Collection<SWRLAtom>) rule.getHead()
-						.getValues())
-					newRule.addConsequent(createAtom(swrlAtom));
+		for (SWRLAtom swrlAtom : (Collection<SWRLAtom>) rule.getHead()
+				.getValues())
+			newRule.addConsequent(createAtom(swrlAtom));
 
-						return newRule;
+		return newRule;
 
 	}
 
@@ -168,12 +173,14 @@ public class SWRLManagerProtege3 implements SWRLManager {
 		if (swrlAtom instanceof SWRLClassAtom) {
 
 			SWRLClassAtom atom = (SWRLClassAtom) swrlAtom;
-			
+
 			//newAtom.setPredicateID(atom.getClassPredicate().getBrowserText());
-			
+
 			String name = ontologyManager.getUriToName(atom.getClassPredicate().getURI(), ontologyManager.getOwlModel());
-			
+
 			newAtom.setPredicateID(name);
+
+			//DefaultRDFSLiteral
 			
 			newAtom.setPredicateLabel(UtilProtege3
 					.parseCollectionArrayList(atom.getClassPredicate()
@@ -194,7 +201,7 @@ public class SWRLManagerProtege3 implements SWRLManager {
 			SWRLDatavaluedPropertyAtom atom = (SWRLDatavaluedPropertyAtom) swrlAtom;
 
 			//newAtom.setPredicateID(atom.getPropertyPredicate().getBrowserText());
-			
+
 			String name = ontologyManager.getUriToName(atom.getPropertyPredicate().getURI(), ontologyManager.getOwlModel());
 
 			newAtom.setPredicateID(name);
@@ -309,7 +316,7 @@ public class SWRLManagerProtege3 implements SWRLManager {
 			//newAtom.setPredicateID(atom.getBuiltin().getBrowserText());
 			String name = ontologyManager.getUriToName(atom.getBuiltin().getURI(), ontologyManager.getOwlModel());
 			newAtom.setPredicateID(name);
-			
+
 			newAtom.setPredicateLabel(UtilProtege3
 					.parseCollectionArrayList(atom.getBuiltin().getLabels()));
 			newAtom.setPredicateComment(UtilProtege3
@@ -345,7 +352,7 @@ public class SWRLManagerProtege3 implements SWRLManager {
 					Variable variable = createVariable(newAtom.getAtomType(), newAtom.getPredicateID(), var, count++, ((DefaultOWLNamedClass) arg).getLabels(), ((DefaultOWLNamedClass) arg).getComments());
 					variable.setTypeVariable(TYPE_VARIABLE.INDIVIDUALID);
 					newAtom.addVariable(variable);
-					
+
 				}else					
 					System.out.println("FALTOU:" + arg.getClass());
 			}
@@ -385,7 +392,7 @@ public class SWRLManagerProtege3 implements SWRLManager {
 		Collections.sort(list);
 		return list;
 	}
-	
+
 	@Override
 	public List<String> getBuiltins(String selfCompletion, int maxTerms) {
 		List<String> list = new ArrayList<String>();
@@ -403,7 +410,7 @@ public class SWRLManagerProtege3 implements SWRLManager {
 		return list;
 	}
 
-	
+
 
 	@Override
 	public boolean insertRule(String ruleName, Rule rule) {
@@ -415,7 +422,7 @@ public class SWRLManagerProtege3 implements SWRLManager {
 			try {
 				if (!ruleName.contains("#"))
 					ruleName = prefix + ruleName;
-				
+
 				ruleProtege = factory.createImp(ruleName, swrlRule);
 				setSignatureInRule(ruleProtege);
 				addEvent(new RuleEvent("", createRule(ruleProtege), TYPE_EVENT.INSERT, getVersion()+1));
@@ -438,14 +445,14 @@ public class SWRLManagerProtege3 implements SWRLManager {
 
 		if (ruleProtege != null) {
 			try {
-				
+
 				if (!ruleName.contains("#"))
 					ruleName = prefix + ruleName;
-				
+
 				ruleProtege.deleteImp();
 				ruleProtege = factory.createImp(ruleName, swrlRule);
 				setSignatureInRule(ruleProtege);
-	
+
 				addEvent(new RuleEvent(oldRuleName, createRule(ruleProtege), TYPE_EVENT.EDIT, getVersion()+1));
 			} catch (SWRLParseException e) {
 				e.printStackTrace();
@@ -527,32 +534,44 @@ public class SWRLManagerProtege3 implements SWRLManager {
 	private void addEvent(RuleEvent re){
 		events.add(re);
 	}
-	
+
 	@Override
 	public List<String> runRules() {
 		try {
-			
+
 			List<String> result =  new ArrayList<String>();
-			
-			SWRLRuleEngine ruleEngine = SWRLRuleEngineFactory.create(ontologyManager.getOwlModel());
+
+			SWRLRuleEngine ruleEngine = P3SWRLRuleEngineFactory.create("Drools", ontologyManager.getOwlModel()); 
+
+			OWL2RLController controller = ruleEngine.getOWL2RLController();
+			controller.disableTables(OWL2RLNames.Table.Table4);
+			controller.disableTables(OWL2RLNames.Table.Table5);
+			controller.disableTables(OWL2RLNames.Table.Table6);
+			controller.disableTables(OWL2RLNames.Table.Table7);
+			controller.enableTables(OWL2RLNames.Table.Table8);
+			controller.disableTables(OWL2RLNames.Table.Table9);
+
 			ruleEngine.reset();
+
 			ruleEngine.importSWRLRulesAndOWLKnowledge();
+
+			result.add("OWL axioms successfully transferred to rule engine.\n");
+			result.add("Number of SWRL rules exported to rule engine: " + ruleEngine.getNumberOfImportedSWRLRules() + "\n");
+			result.add("Number of OWL class declarations exported to rule engine: " + ruleEngine.getNumberOfAssertedOWLClassDeclarationAxioms() + "\n");
+			result.add("Number of OWL individual declarations exported to rule engine: " + ruleEngine.getNumberOfAssertedOWLIndividualDeclarationsAxioms() + "\n");
+			result.add("Number of OWL object property declarations exported to rule engine: " + ruleEngine.getNumberOfAssertedOWLObjectPropertyDeclarationAxioms() + "\n");
+			result.add("Number of OWL data property declarations exported to rule engine: " + ruleEngine.getNumberOfAssertedOWLDataPropertyDeclarationAxioms() + "\n");
+			result.add("Total number of OWL axioms exported to rule engine: " + ruleEngine.getNumberOfAssertedOWLAxioms() + "\n");
+
 			ruleEngine.run();
+			
+			result.add("Successful execution of rule engine.\n");
+			result.add("Number of inferred axioms: " + ruleEngine.getNumberOfInferredOWLAxioms() + "\n");
+	        if (ruleEngine.getNumberOfInjectedOWLAxioms() != 0) 
+	        	result.add("Number of axioms injected by built-ins: " + ruleEngine.getNumberOfInjectedOWLAxioms() + "\n");
+			
 			ruleEngine.writeInferredKnowledge2OWL();
-			
-			result.add("Number Of Imported OWLAxioms: "+ruleEngine.getNumberOfImportedOWLAxioms());
-			result.add("Number Of Imported OWLClasses: "+ruleEngine.getNumberOfImportedOWLClasses());
-			result.add("Number Of Imported OWLIndividuals: "+ruleEngine.getNumberOfImportedOWLIndividuals());
-			result.add("Number Of Imported SWRLRules: "+ruleEngine.getNumberOfImportedSWRLRules());
-			
-			result.add("Number Of Inferred OWLAxioms: "+ruleEngine.getNumberOfInferredOWLAxioms());
-			result.add("Number Of Inferred OWLIndividuals: "+ruleEngine.getNumberOfInferredOWLIndividuals());
-			result.add("Number Of Injected OWLAxioms: "+ruleEngine.getNumberOfInjectedOWLAxioms());
-			result.add("Number Of Injected OWLClasses: "+ruleEngine.getNumberOfInjectedOWLClasses());
-			result.add("Number Of Injected OWLIndividuals: "+ruleEngine.getNumberOfInjectedOWLIndividuals());
-			
-			/*ruleEngine.infer();*/
-			
+
 			return result;
 		} catch (SWRLRuleEngineException e) {
 			List<String> result =  new ArrayList<String>();
@@ -560,9 +579,9 @@ public class SWRLManagerProtege3 implements SWRLManager {
 			e.printStackTrace();
 			return result;
 		}
-		
+
 	}
-	
+
 	private void setSignatureInRule(SWRLImp rule){
 		CreateSignature cs = new CreateSignature();
 		try {
@@ -573,9 +592,9 @@ public class SWRLManagerProtege3 implements SWRLManager {
 		} catch (OntologyLoadException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
-			
+
+
 
 }

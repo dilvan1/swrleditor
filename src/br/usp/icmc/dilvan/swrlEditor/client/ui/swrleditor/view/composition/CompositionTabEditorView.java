@@ -8,6 +8,7 @@ import br.usp.icmc.dilvan.swrlEditor.client.resources.UtilResource;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.AtomImpl;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Rule;
+import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.RuleImpl;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Variable;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.VariableImpl;
 import br.usp.icmc.dilvan.swrlEditor.client.rpc.swrleditor.rule.Atom.TYPE_ATOM;
@@ -83,6 +84,7 @@ public class CompositionTabEditorView extends Composite implements CompositionTa
 	}
 
 	public CompositionTabEditorView() {
+		
 		sugPredicate = new SuggestBox (predicateSuggestions);
 		initWidget(binder.createAndBindUi(this));
 
@@ -99,6 +101,7 @@ public class CompositionTabEditorView extends Composite implements CompositionTa
 	@Override
 	public void setPresenter(Presenter presenter) {
 		this.presenter = presenter;
+		pnlProperties.setVisible(false);
 	}
 
 	@Override
@@ -113,8 +116,18 @@ public class CompositionTabEditorView extends Composite implements CompositionTa
 		presenter.getErrors();
 		loadAndShowRule();
 	}
+	
+	@Override
+	public void setNewRule(Rule r) {
+		this.rule = r;
+		pnlVariables.clear();
+		pnlAntecedent.clear();
+		pnlConsequent.clear();
+	}
+
 
 	private void loadAndShowRule() {
+		System.out.println("passou");
 		pnlProperties.setVisible(false);
 
 		pnlVariables.clear();
@@ -124,6 +137,7 @@ public class CompositionTabEditorView extends Composite implements CompositionTa
 		// List of variables
 		ArrayList<String> list = new ArrayList<String>();
 		ArrayList<String> formatedList = new ArrayList<String>();
+
 		for (Atom a : rule.getAtoms()) {
 			for (Variable p : a.getVariables()) {
 				if (p.getTypeVariable() == TYPE_VARIABLE.DATALITERAL
@@ -303,6 +317,11 @@ public class CompositionTabEditorView extends Composite implements CompositionTa
 	}
 
 	private void newAtom(boolean isAntecedent){
+		if (rule == null)
+			setRule(presenter.getRule());
+		if (rule == null)
+			rule = new RuleImpl();
+		
 		if (isAntecedent)
 			this.modeEditAtom = MODE.NEW_ANTECEDENT;
 		else

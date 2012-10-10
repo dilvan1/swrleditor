@@ -23,6 +23,7 @@ public interface CompositionView extends IsWidget
 	
 	void setBuiltins(List<String> builtins);
 	void setRule(Rule rule);
+	void setNewRule(Rule rule);
 	void setSelectedOntologyItem(TYPE_ATOM typeAtom, String predicate, boolean isAntecedent);
 	void setErrosAndWarnings(List<String> listErros, List<String> listWarnings);
 

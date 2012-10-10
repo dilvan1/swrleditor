@@ -1,6 +1,5 @@
 package br.usp.icmc.dilvan.swrlEditor.client.ui.swrleditor.activity;
 
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,6 +91,7 @@ public class CompositionActivity extends AbstractActivity implements
 			if (activityMapper.getNewAntecedent().equals("")) {
 				originalNameRule = "";
 				rule = new RuleImpl();
+				clientFactory.getCompositionView().setNewRule(rule);
 			} else {
 				clientFactory.getRpcService().getStringToRule(
 						clientFactory.getProjectName(),
@@ -408,4 +408,9 @@ public class CompositionActivity extends AbstractActivity implements
 
 	}
 
+
+	@Override
+	public Rule getRule() {
+		return rule;
+	}
 }

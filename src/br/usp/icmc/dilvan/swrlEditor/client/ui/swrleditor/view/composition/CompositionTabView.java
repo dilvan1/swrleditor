@@ -9,6 +9,7 @@ public interface CompositionTabView {
 
 	void setPresenter(Presenter presenter);
 	void setRule(Rule r);
+	void setNewRule(Rule r);
 	void setTypeView(TYPE_VIEW typeView);
 	void addAtom(Atom atom, boolean isAntecedent);
 	void addPredicate(TYPE_ATOM type, String predicate, boolean isAntecedent);
@@ -18,6 +19,7 @@ public interface CompositionTabView {
 		void setModifyRule();
 		boolean isModifiedRule();
 		void setRuleString(String newRule);
+		Rule getRule();
 		boolean isBlockedAlterRule();
 		
 		void getSelfCompletionInEditor(String text, int cursor, int maxTerms, TYPE_ATOM typeAtom);
